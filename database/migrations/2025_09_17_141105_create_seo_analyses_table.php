@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('seo_analyses', function (Blueprint $table) {
             $table->id();
+            $table->string('url', 2048);
+            $table->enum('status', ['pending', 'running', 'completed', 'failed'])->default('pending');
+            $table->tinyInteger('score')->nullable()->comment('SEO score 0-100');
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
+            
+            $table->index(['status', 'created_at']);
+            $table->index('score');
         });
     }
 

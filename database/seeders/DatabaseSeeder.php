@@ -19,5 +19,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Seed SEO Validator data
+        $this->call([
+            SeoAnalysisSeeder::class,
+        ]);
     }
 }
