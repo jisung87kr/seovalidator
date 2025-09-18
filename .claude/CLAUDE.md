@@ -65,3 +65,4 @@ Using the test-runner agent ensures:
 - NO RESOURCE LEAKS - Don't forget to close database connections, clear timeouts, remove event listeners, or clean up file handles
 
 - php artisan 명령 예제 :  docker exec -it  indigo404-ubuntu_php82-1 sh -c "cd seovalidator && php artisan list"
+- 개발주소: http://public.seovalidator.test:9920/ 

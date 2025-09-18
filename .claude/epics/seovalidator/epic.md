@@ -2,10 +2,10 @@
 name: seovalidator
 status: backlog
 created: 2025-09-17T13:30:00Z
-updated: 2025-09-17T13:56:42Z
+updated: 2025-09-18T10:36:10Z
 progress: 0%
 prd: .claude/prds/seovalidator.md
-github: https://github.com/jisung87kr/seovalidator/issues/2
+github: https://github.com/jisung87kr/seovalidator/issues/14
 ---
 
 # Epic: SEO Validator
