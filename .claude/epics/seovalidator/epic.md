@@ -4,7 +4,7 @@ status: backlog
 created: 2025-09-21T16:04:27Z
 progress: 0%
 prd: .claude/prds/seovalidator.md
-github: [Will be updated when synced to GitHub]
+github: https://github.com/jisung87kr/seovalidator/issues/1
 ---
 
 # Epic: seovalidator
@@ -71,31 +71,29 @@ High-level task categories that will be created:
 - **Code Quality**: 90%+ test coverage, PSR-12 coding standards compliance
 
 ## Tasks Created
-- [ ] 001.md - Laravel Application Setup & Configuration (parallel: true)
-- [ ] 002.md - Database Schema & Migration Setup (parallel: false)
-- [ ] 003.md - Queue System & Redis Configuration (parallel: false)
-- [ ] 004.md - Core Analysis Engine Architecture (parallel: false)
-- [ ] 005.md - Technical SEO Analyzer Module (parallel: true)
-- [ ] 006.md - Content & Performance Analyzer Module (parallel: true)
-- [ ] 007.md - Puppeteer Web Crawler Service (parallel: false)
-- [ ] 008.md - Mobile & Desktop Analysis Integration (parallel: false)
-- [ ] 009.md - Laravel Blade Dashboard Templates (parallel: false)
-- [ ] 010.md - Real-time Analysis Progress Updates (parallel: false)
-- [ ] 011.md - SEO Visualization Components (parallel: true)
-- [ ] 012.md - RESTful API Endpoints & Authentication (parallel: false)
-- [ ] 013.md - API Rate Limiting & Documentation (parallel: false)
-- [ ] 014.md - PDF Report Generation System (parallel: true)
-- [ ] 015.md - Excel Export & Custom Report Templates (parallel: true)
-- [ ] 016.md - Unit Tests & Feature Test Suite (parallel: true)
-- [ ] 017.md - API Integration Testing (parallel: true)
-- [ ] 018.md - Docker Configuration & Containerization (parallel: false)
-- [ ] 019.md - Production Deployment & CI/CD Pipeline (parallel: false)
+- [ ] #10 - Laravel Blade Dashboard Templates (parallel: false)
+- [ ] #11 - Queue System & Redis Configuration (parallel: false)
+- [ ] #12 - Core Analysis Engine Architecture (parallel: false)
+- [ ] #13 - Technical SEO Analyzer Module (parallel: true)
+- [ ] #14 - Content & Performance Analyzer Module (parallel: true)
+- [ ] #15 - API Integration Testing (parallel: true)
+- [ ] #16 - Real-time Analysis Progress Updates (parallel: false)
+- [ ] #17 - Docker Configuration & Containerization (parallel: false)
+- [ ] #18 - SEO Visualization Components (parallel: true)
+- [ ] #19 - Production Deployment & CI/CD Pipeline (parallel: false)
+- [ ] #2 - API Rate Limiting & Documentation (parallel: false)
+- [ ] #20 - RESTful API Endpoints & Authentication (parallel: false)
+- [ ] #3 - PDF Report Generation System (parallel: true)
+- [ ] #4 - Puppeteer Web Crawler Service (parallel: false)
+- [ ] #5 - Excel Export & Custom Report Templates (parallel: true)
+- [ ] #6 - Mobile & Desktop Analysis Integration (parallel: false)
+- [ ] #7 - Laravel Application Setup & Configuration (parallel: true)
+- [ ] #8 - Unit Tests & Feature Test Suite (parallel: true)
+- [ ] #9 - Database Schema & Migration Setup (parallel: false)
 
 Total tasks: 19
 Parallel tasks: 8
 Sequential tasks: 11
-Estimated total effort: 314-506 hours
-
 ## Estimated Effort
 - **Overall Timeline**: 3-4 months for MVP with phased delivery
 - **Resource Requirements**: 4 developers (2 full-stack, 2 backend specialists)
