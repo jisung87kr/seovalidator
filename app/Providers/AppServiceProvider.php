@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Horizon\Horizon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Configure Horizon authorization
+        Horizon::auth(function ($request) {
+            // In production, you should implement proper authentication
+            return app()->environment('local') || app()->environment('staging');
+        });
     }
 }
