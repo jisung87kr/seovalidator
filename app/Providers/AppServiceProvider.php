@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
         // Configure Horizon authorization
         Horizon::auth(function ($request) {
             // In production, you should implement proper authentication
-            return app()->environment('local') || app()->environment('staging');
+            return in_array(config('app.env'), ['local', 'staging']);
         });
 
         // Configure API rate limiting

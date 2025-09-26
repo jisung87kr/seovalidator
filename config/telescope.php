@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'enabled' => env('TELESCOPE_ENABLED', !app()->isProduction()),
+    'enabled' => env('TELESCOPE_ENABLED', env('APP_ENV') !== 'production'),
 
     /*
     |--------------------------------------------------------------------------
