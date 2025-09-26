@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: seovalidator-app-service
+  namespace: seovalidator
+  labels:
+    app: seovalidator
+    component: app
+spec:
+  selector:
+    app: seovalidator
+    component: app
+  ports:
+  - name: php-fpm
+    port: 9000
+    targetPort: 9000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seovalidator-nginx-service
+  namespace: seovalidator
+  labels:
+    app: seovalidator
+    component: nginx
+spec:
+  selector:
+    app: seovalidator
+    component: nginx
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: seovalidator
+  labels:
+    app: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: seovalidator
+  labels:
+    app: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+  type: ClusterIP

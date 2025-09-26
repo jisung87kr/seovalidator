@@ -1,0 +1,1062 @@
+openapi: 3.0.0
+info:
+  title: SEO Validator API
+  description: |
+    Comprehensive RESTful API for SEO analysis and validation.
+
+    ## Authentication
+    All API endpoints require authentication using Bearer tokens.
+    Obtain a token by registering or logging in through the `/api/auth` endpoints.
+
+    ## Rate Limiting
+    - General API: 60 requests per minute
+    - SEO Analysis: 10 requests per minute
+    - Batch Analysis: 5 requests per hour
+    - Webhooks: 20 requests per minute
+
+    ## Webhooks
+    Configure webhooks to receive notifications when analyses complete or fail.
+    Supported events: `analysis.completed`, `analysis.failed`, `batch.completed`, `batch.failed`
+
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@seovalidator.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.seovalidator.com/api
+    description: Production server
+  - url: http://localhost:8000/api
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the request was successful
+        message:
+          type: string
+          description: Human-readable message
+        data:
+          type: object
+          description: Response data (if applicable)
+        errors:
+          type: object
+          description: Validation errors (if applicable)
+
+    SeoAnalysis:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique analysis identifier
+        url:
+          type: string
+          format: uri
+          description: The analyzed URL
+        analyzed_at:
+          type: string
+          format: date-time
+          description: When the analysis was performed
+        analysis_duration_ms:
+          type: integer
+          description: Time taken to perform analysis in milliseconds
+        status:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: HTTP status code of the analyzed page
+            success:
+              type: boolean
+              description: Whether the page was successfully analyzed
+        seo_elements:
+          type: object
+          properties:
+            meta:
+              type: object
+              properties:
+                title:
+                  type: string
+                  nullable: true
+                title_length:
+                  type: integer
+                description:
+                  type: string
+                  nullable: true
+                description_length:
+                  type: integer
+                keywords:
+                  type: string
+                  nullable: true
+                robots:
+                  type: string
+                  nullable: true
+                canonical:
+                  type: string
+                  nullable: true
+                og_tags:
+                  type: object
+                twitter_tags:
+                  type: object
+            headings:
+              type: object
+              properties:
+                h1:
+                  type: array
+                  items:
+                    type: string
+                h2:
+                  type: array
+                  items:
+                    type: string
+                h3:
+                  type: array
+                  items:
+                    type: string
+                h4:
+                  type: array
+                  items:
+                    type: string
+                h5:
+                  type: array
+                  items:
+                    type: string
+                h6:
+                  type: array
+                  items:
+                    type: string
+                structure_valid:
+                  type: boolean
+            images:
+              type: object
+              properties:
+                total_count:
+                  type: integer
+                with_alt_count:
+                  type: integer
+                without_alt_count:
+                  type: integer
+            links:
+              type: object
+              properties:
+                internal_count:
+                  type: integer
+                external_count:
+                  type: integer
+                broken_count:
+                  type: integer
+            content:
+              type: object
+              properties:
+                word_count:
+                  type: integer
+                reading_time_minutes:
+                  type: number
+                language:
+                  type: string
+                  nullable: true
+        scores:
+          type: object
+          properties:
+            overall_score:
+              type: number
+              minimum: 0
+              maximum: 100
+            meta_score:
+              type: number
+              minimum: 0
+              maximum: 100
+            content_score:
+              type: number
+              minimum: 0
+              maximum: 100
+            technical_score:
+              type: number
+              minimum: 0
+              maximum: 100
+            performance_score:
+              type: number
+              minimum: 0
+              maximum: 100
+            accessibility_score:
+              type: number
+              minimum: 0
+              maximum: 100
+        recommendations:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [error, warning, info]
+                category:
+                  type: string
+                message:
+                  type: string
+                impact:
+                  type: string
+                  enum: [high, medium, low]
+                fix:
+                  type: string
+                priority:
+                  type: integer
+                  minimum: 1
+                  maximum: 4
+
+    BatchAnalysis:
+      type: object
+      properties:
+        batch_id:
+          type: string
+          format: uuid
+        submitted_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          enum: [processing, completed, failed]
+        summary:
+          type: object
+          properties:
+            total_urls:
+              type: integer
+            successful:
+              type: integer
+            failed:
+              type: integer
+            processing:
+              type: integer
+            success_rate:
+              type: number
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                format: uri
+              status:
+                type: string
+                enum: [completed, failed]
+              analysis:
+                $ref: '#/components/schemas/SeoAnalysis'
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                format: uri
+              status:
+                type: string
+                enum: [failed]
+              error:
+                type: string
+
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+            enum: [analysis.completed, analysis.failed, batch.completed, batch.failed]
+        active:
+          type: boolean
+        secret_configured:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        last_triggered_at:
+          type: string
+          format: date-time
+          nullable: true
+        delivery_stats:
+          type: object
+          properties:
+            total_deliveries:
+              type: integer
+            successful_deliveries:
+              type: integer
+            failed_deliveries:
+              type: integer
+            success_rate:
+              type: number
+
+    AnalyzeRequest:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: The URL to analyze
+          maxLength: 2048
+        options:
+          type: object
+          properties:
+            force_refresh:
+              type: boolean
+              description: Force refresh of cached results
+            include_quality_analysis:
+              type: boolean
+              description: Include quality analysis in results
+            include_technical_analysis:
+              type: boolean
+              description: Include technical SEO analysis
+            include_content_analysis:
+              type: boolean
+              description: Include content analysis
+            include_performance_analysis:
+              type: boolean
+              description: Include performance analysis
+            javascript_enabled:
+              type: boolean
+              description: Enable JavaScript when crawling
+            mobile_analysis:
+              type: boolean
+              description: Perform mobile-specific analysis
+            timeout:
+              type: integer
+              minimum: 5
+              maximum: 60
+              description: Request timeout in seconds
+        webhook_url:
+          type: string
+          format: uri
+          description: URL to receive webhook notifications
+          maxLength: 2048
+
+    BatchAnalyzeRequest:
+      type: object
+      required:
+        - urls
+      properties:
+        urls:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: string
+            format: uri
+            maxLength: 2048
+          description: Array of URLs to analyze
+        options:
+          type: object
+          properties:
+            force_refresh:
+              type: boolean
+            include_quality_analysis:
+              type: boolean
+            include_technical_analysis:
+              type: boolean
+            include_content_analysis:
+              type: boolean
+            include_performance_analysis:
+              type: boolean
+            javascript_enabled:
+              type: boolean
+            mobile_analysis:
+              type: boolean
+            timeout:
+              type: integer
+              minimum: 5
+              maximum: 60
+        webhook_url:
+          type: string
+          format: uri
+          maxLength: 2048
+        async:
+          type: boolean
+          description: Process batch asynchronously
+
+    WebhookRequest:
+      type: object
+      required:
+        - url
+        - events
+      properties:
+        url:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Webhook endpoint URL
+        events:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            enum: [analysis.completed, analysis.failed, batch.completed, batch.failed]
+          description: Events to subscribe to
+        secret:
+          type: string
+          minLength: 8
+          maxLength: 255
+          description: Secret for webhook signature verification
+        active:
+          type: boolean
+          description: Whether the webhook is active
+        name:
+          type: string
+          maxLength: 255
+          description: Human-readable name for the webhook
+        description:
+          type: string
+          maxLength: 1000
+          description: Description of the webhook
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          description: Error message
+        errors:
+          type: object
+          description: Detailed validation errors
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Create a new user account and receive an API token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          user:
+                            type: object
+                          token:
+                            type: string
+                          token_type:
+                            type: string
+                            example: Bearer
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      description: Authenticate user and receive an API token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          user:
+                            type: object
+                          token:
+                            type: string
+                          token_type:
+                            type: string
+        '422':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout user
+      description: Revoke the current API token
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /auth/user:
+    get:
+      tags:
+        - Authentication
+      summary: Get authenticated user
+      description: Get information about the currently authenticated user
+      responses:
+        '200':
+          description: User information retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          user:
+                            type: object
+
+  /v1/seo/analyze:
+    post:
+      tags:
+        - SEO Analysis
+      summary: Analyze single URL
+      description: Perform comprehensive SEO analysis on a single URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyzeRequest'
+            examples:
+              basic:
+                summary: Basic analysis
+                value:
+                  url: "https://example.com"
+              advanced:
+                summary: Advanced analysis with options
+                value:
+                  url: "https://example.com"
+                  options:
+                    force_refresh: true
+                    include_quality_analysis: true
+                    javascript_enabled: true
+                    timeout: 30
+                  webhook_url: "https://my-app.com/webhooks/seo"
+      responses:
+        '200':
+          description: Analysis completed successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SeoAnalysis'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Analysis failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/seo/analyze/batch:
+    post:
+      tags:
+        - SEO Analysis
+      summary: Analyze multiple URLs
+      description: Perform batch SEO analysis on multiple URLs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchAnalyzeRequest'
+            examples:
+              sync_batch:
+                summary: Synchronous batch analysis
+                value:
+                  urls:
+                    - "https://example.com"
+                    - "https://example.com/about"
+                    - "https://example.com/contact"
+                  options:
+                    include_quality_analysis: true
+                  async: false
+              async_batch:
+                summary: Asynchronous batch analysis
+                value:
+                  urls:
+                    - "https://example.com"
+                    - "https://example.com/blog"
+                  async: true
+                  webhook_url: "https://my-app.com/webhooks/batch"
+      responses:
+        '200':
+          description: Batch analysis completed (synchronous)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BatchAnalysis'
+        '202':
+          description: Batch analysis started (asynchronous)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/BatchAnalysis'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/seo/history:
+    get:
+      tags:
+        - SEO Analysis
+      summary: Get analysis history
+      description: Retrieve analysis history for the authenticated user
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          description: Results per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: url
+          in: query
+          description: Filter by specific URL
+          schema:
+            type: string
+            format: uri
+      responses:
+        '200':
+          description: Analysis history retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SeoAnalysis'
+                          pagination:
+                            type: object
+
+  /v1/seo/history/{id}:
+    get:
+      tags:
+        - SEO Analysis
+      summary: Get specific analysis
+      description: Retrieve a specific analysis by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Analysis ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Analysis retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SeoAnalysis'
+        '404':
+          description: Analysis not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /v1/seo/status/{jobId}:
+    get:
+      tags:
+        - SEO Analysis
+      summary: Get job status
+      description: Get status of an async analysis job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          description: Job ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Job status retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        oneOf:
+                          - $ref: '#/components/schemas/SeoAnalysis'
+                          - $ref: '#/components/schemas/BatchAnalysis'
+
+  /v1/webhooks:
+    get:
+      tags:
+        - Webhooks
+      summary: List webhooks
+      description: Get a list of configured webhooks for the authenticated user
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 15
+        - name: active
+          in: query
+          description: Filter by active status
+          schema:
+            type: boolean
+        - name: event
+          in: query
+          description: Filter by event type
+          schema:
+            type: string
+            enum: [analysis.completed, analysis.failed, batch.completed, batch.failed]
+      responses:
+        '200':
+          description: Webhooks retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Webhook'
+
+    post:
+      tags:
+        - Webhooks
+      summary: Create webhook
+      description: Create a new webhook configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequest'
+            examples:
+              basic_webhook:
+                summary: Basic webhook
+                value:
+                  url: "https://my-app.com/webhooks/seo"
+                  events: ["analysis.completed"]
+              full_webhook:
+                summary: Full webhook configuration
+                value:
+                  name: "My App Webhook"
+                  description: "Webhook for SEO analysis notifications"
+                  url: "https://my-app.com/webhooks/seo"
+                  events: ["analysis.completed", "analysis.failed"]
+                  secret: "my-secret-key"
+                  active: true
+      responses:
+        '201':
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Webhook'
+
+  /v1/webhooks/{webhook}:
+    get:
+      tags:
+        - Webhooks
+      summary: Get webhook
+      description: Get details of a specific webhook
+      parameters:
+        - name: webhook
+          in: path
+          required: true
+          description: Webhook ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Webhook retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Webhook'
+
+    put:
+      tags:
+        - Webhooks
+      summary: Update webhook
+      description: Update webhook configuration
+      parameters:
+        - name: webhook
+          in: path
+          required: true
+          description: Webhook ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequest'
+      responses:
+        '200':
+          description: Webhook updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Webhook'
+
+    delete:
+      tags:
+        - Webhooks
+      summary: Delete webhook
+      description: Delete a webhook configuration
+      parameters:
+        - name: webhook
+          in: path
+          required: true
+          description: Webhook ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Webhook deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /v1/webhooks/{webhook}/test:
+    post:
+      tags:
+        - Webhooks
+      summary: Test webhook
+      description: Send a test payload to the webhook endpoint
+      parameters:
+        - name: webhook
+          in: path
+          required: true
+          description: Webhook ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Webhook test successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          test_result:
+                            type: object
+                          webhook:
+                            $ref: '#/components/schemas/Webhook'
+
+  /v1/health:
+    get:
+      tags:
+        - System
+      summary: API health check
+      description: Check if the API is healthy and responsive
+      security: []
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  status:
+                    type: string
+                    example: "healthy"
+
+tags:
+  - name: Authentication
+    description: User authentication and token management
+  - name: SEO Analysis
+    description: SEO analysis endpoints for single URLs and batch processing
+  - name: Webhooks
+    description: Webhook configuration and management
+  - name: System
+    description: System health and status endpoints

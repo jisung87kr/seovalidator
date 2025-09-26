@@ -3,596 +3,619 @@
 namespace Tests\Unit\Services\Crawler;
 
 use App\Services\Crawler\DomExtractor;
-use Exception;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DomExtractorTest extends TestCase
 {
     private DomExtractor $domExtractor;
-    private string $sampleHtml;
-    private string $spaHtml;
+    private string $testHtml;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->domExtractor = new DomExtractor();
+        $this->testHtml = $this->createTestHtml();
+    }
 
-        $this->sampleHtml = <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Page</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="https://external.com">External</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h1>Main Title</h1>
-        <section>
-            <h2>Section Title</h2>
-            <p>This is a paragraph with some <strong>bold text</strong>.</p>
-            <img src="/test.jpg" alt="Test image" width="100" height="100">
-            <img src="/missing-alt.jpg">
-            <ul>
-                <li>Item 1</li>
-                <li>Item 2</li>
-            </ul>
+    /** @test */
+    public function it_can_extract_table_information()
+    {
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title></head>
+        <body>
             <table>
                 <caption>Test Table</caption>
                 <thead>
-                    <tr>
-                        <th>Header 1</th>
-                        <th>Header 2</th>
-                    </tr>
+                    <tr><th scope="col">Header 1</th><th scope="col">Header 2</th></tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Cell 1</td>
-                        <td>Cell 2</td>
-                    </tr>
+                    <tr><td headers="h1">Cell 1</td><td headers="h2">Cell 2</td></tr>
+                    <tr><td>Cell 3</td><td>Cell 4</td></tr>
                 </tbody>
             </table>
-        </section>
-        <form action="/submit" method="post">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <button type="submit">Submit</button>
-        </form>
-    </main>
-    <aside>
-        <h3>Sidebar</h3>
-        <p>Sidebar content</p>
-    </aside>
-    <footer>
-        <p>&copy; 2024 Test Site</p>
-    </footer>
-    <script src="/script.js"></script>
-    <script>console.log('Inline script');</script>
-    <link rel="stylesheet" href="/style.css">
-    <style>.test { color: red; }</style>
-</body>
-</html>
-HTML;
+            <table>
+                <tr><td>Simple table</td></tr>
+            </table>
+        </body>
+        </html>';
 
-        $this->spaHtml = <<<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>SPA Test</title>
-</head>
-<body ng-app="testApp">
-    <div id="app">
-        <router-outlet></router-outlet>
-        <div class="dynamic-content" data-router="main">
-            <custom-component></custom-component>
-            <img loading="lazy" data-src="/lazy-image.jpg" alt="Lazy image">
-        </div>
-    </div>
-    <script src="/angular.js"></script>
-    <script src="/app.js"></script>
-</body>
-</html>
-HTML;
-    }
-
-    public function testExtractFromHtmlBasicStructure(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractTables();
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('headings', $result);
-        $this->assertArrayHasKey('links', $result);
-        $this->assertArrayHasKey('images', $result);
-        $this->assertArrayHasKey('forms', $result);
+        $this->assertEquals(2, $result['total_count']);
         $this->assertArrayHasKey('tables', $result);
-        $this->assertArrayHasKey('lists', $result);
-        $this->assertArrayHasKey('semantic_structure', $result);
-        $this->assertArrayHasKey('accessibility', $result);
-        $this->assertArrayHasKey('scripts', $result);
-        $this->assertArrayHasKey('stylesheets', $result);
+        $this->assertCount(2, $result['tables']);
+
+        // Test first table (more complex)
+        $firstTable = $result['tables'][0];
+        $this->assertTrue($firstTable['has_caption']);
+        $this->assertTrue($firstTable['has_thead']);
+        $this->assertTrue($firstTable['has_tbody']);
+        $this->assertEquals(2, $firstTable['headers_count']);
+        $this->assertTrue($firstTable['has_scope_attributes']);
+        $this->assertTrue($firstTable['has_headers_attributes']);
+
+        // Test second table (simpler)
+        $secondTable = $result['tables'][1];
+        $this->assertFalse($secondTable['has_caption']);
+        $this->assertFalse($secondTable['has_thead']);
+        $this->assertFalse($secondTable['has_tbody']);
+        $this->assertEquals(0, $secondTable['headers_count']);
+        $this->assertFalse($secondTable['has_scope_attributes']);
     }
 
-    public function testExtractHeadings(): void
+    /** @test */
+    public function it_can_extract_form_information()
     {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $headings = $result['headings'];
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title></head>
+        <body>
+            <form action="/submit" method="POST" autocomplete="on">
+                <fieldset>
+                    <legend>Personal Info</legend>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required pattern="[^@]+@[^@]+\.[^@]+">
+                </fieldset>
+                <textarea name="comments" rows="4"></textarea>
+                <select name="country">
+                    <option value="us">US</option>
+                    <option value="ca">Canada</option>
+                </select>
+                <button type="submit">Submit</button>
+            </form>
+            <form action="/search" method="GET">
+                <input type="search" name="q">
+            </form>
+        </body>
+        </html>';
 
-        $this->assertIsArray($headings);
-        $this->assertArrayHasKey('structure', $headings);
-        $this->assertArrayHasKey('hierarchy', $headings);
-        $this->assertArrayHasKey('h1_count', $headings);
-        $this->assertArrayHasKey('total_count', $headings);
-        $this->assertArrayHasKey('hierarchy_valid', $headings);
-
-        $this->assertEquals(1, $headings['h1_count']);
-        $this->assertEquals(3, $headings['total_count']); // h1, h2, h3
-        $this->assertTrue($headings['hierarchy_valid']);
-
-        $this->assertEquals('Main Title', $headings['structure'][0]['text']);
-        $this->assertEquals(1, $headings['structure'][0]['level']);
-    }
-
-    public function testExtractLinks(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml, ['base_url' => 'https://example.com']);
-        $links = $result['links'];
-
-        $this->assertIsArray($links);
-        $this->assertArrayHasKey('links', $links);
-        $this->assertArrayHasKey('total_count', $links);
-        $this->assertArrayHasKey('internal_count', $links);
-        $this->assertArrayHasKey('external_count', $links);
-
-        $this->assertEquals(3, $links['total_count']);
-        $this->assertEquals(2, $links['internal_count']); // / and /about
-        $this->assertEquals(1, $links['external_count']); // https://external.com
-
-        // Test link classification
-        $linkData = $links['links'];
-        $this->assertEquals('internal', $linkData[0]['type']);
-        $this->assertEquals('internal', $linkData[1]['type']);
-        $this->assertEquals('external', $linkData[2]['type']);
-        $this->assertTrue($linkData[2]['external']);
-    }
-
-    public function testExtractImages(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $images = $result['images'];
-
-        $this->assertIsArray($images);
-        $this->assertArrayHasKey('images', $images);
-        $this->assertArrayHasKey('total_count', $images);
-        $this->assertArrayHasKey('missing_alt_count', $images);
-
-        $this->assertEquals(2, $images['total_count']);
-        $this->assertEquals(1, $images['missing_alt_count']); // One image without alt
-
-        $imageData = $images['images'];
-        $this->assertEquals('/test.jpg', $imageData[0]['src']);
-        $this->assertEquals('Test image', $imageData[0]['alt']);
-        $this->assertTrue($imageData[0]['has_alt']);
-
-        $this->assertEquals('/missing-alt.jpg', $imageData[1]['src']);
-        $this->assertEquals('', $imageData[1]['alt']);
-        $this->assertFalse($imageData[1]['has_alt']);
-    }
-
-    public function testExtractForms(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $forms = $result['forms'];
-
-        $this->assertIsArray($forms);
-        $this->assertArrayHasKey('forms', $forms);
-        $this->assertArrayHasKey('total_count', $forms);
-
-        $this->assertEquals(1, $forms['total_count']);
-
-        $formData = $forms['forms'][0];
-        $this->assertEquals('/submit', $formData['action']);
-        $this->assertEquals('POST', $formData['method']);
-        $this->assertIsArray($formData['inputs']);
-        $this->assertIsArray($formData['labels']);
-        $this->assertIsArray($formData['buttons']);
-
-        $this->assertEquals(1, count($formData['inputs'])); // email input
-        $this->assertEquals(1, count($formData['labels'])); // email label
-        $this->assertEquals(1, count($formData['buttons'])); // submit button
-    }
-
-    public function testExtractTables(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $tables = $result['tables'];
-
-        $this->assertIsArray($tables);
-        $this->assertArrayHasKey('tables', $tables);
-        $this->assertArrayHasKey('total_count', $tables);
-
-        $this->assertEquals(1, $tables['total_count']);
-
-        $tableData = $tables['tables'][0];
-        $this->assertEquals('Test Table', $tableData['caption']);
-        $this->assertIsArray($tableData['headers']);
-        $this->assertEquals(2, count($tableData['headers'])); // Header 1, Header 2
-        $this->assertTrue($tableData['has_thead']);
-        $this->assertTrue($tableData['has_tbody']);
-    }
-
-    public function testExtractLists(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $lists = $result['lists'];
-
-        $this->assertIsArray($lists);
-        $this->assertArrayHasKey('lists', $lists);
-        $this->assertArrayHasKey('total_count', $lists);
-
-        $this->assertEquals(2, $lists['total_count']); // nav ul + content ul
-
-        $listData = $lists['lists'];
-        foreach ($listData as $list) {
-            $this->assertEquals('ul', $list['type']);
-            $this->assertIsInt($list['items']);
-        }
-    }
-
-    public function testExtractSemanticStructure(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $semantic = $result['semantic_structure'];
-
-        $this->assertIsArray($semantic);
-        $this->assertArrayHasKey('semantic_elements', $semantic);
-        $this->assertArrayHasKey('has_main', $semantic);
-        $this->assertArrayHasKey('has_nav', $semantic);
-        $this->assertArrayHasKey('has_header', $semantic);
-        $this->assertArrayHasKey('has_footer', $semantic);
-
-        $this->assertTrue($semantic['has_main']);
-        $this->assertTrue($semantic['has_nav']);
-        $this->assertTrue($semantic['has_header']);
-        $this->assertTrue($semantic['has_footer']);
-
-        $elements = $semantic['semantic_elements'];
-        $this->assertEquals(1, $elements['header']);
-        $this->assertEquals(1, $elements['nav']);
-        $this->assertEquals(1, $elements['main']);
-        $this->assertEquals(1, $elements['section']);
-        $this->assertEquals(1, $elements['aside']);
-        $this->assertEquals(1, $elements['footer']);
-    }
-
-    public function testExtractAccessibility(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $accessibility = $result['accessibility'];
-
-        $this->assertIsArray($accessibility);
-        $this->assertArrayHasKey('lang_attribute', $accessibility);
-        $this->assertArrayHasKey('skip_links', $accessibility);
-        $this->assertArrayHasKey('aria_labels', $accessibility);
-
-        $this->assertTrue($accessibility['lang_attribute']); // html has lang="en"
-        $this->assertIsArray($accessibility['skip_links']);
-        $this->assertIsInt($accessibility['aria_labels']);
-    }
-
-    public function testExtractScripts(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $scripts = $result['scripts'];
-
-        $this->assertIsArray($scripts);
-        $this->assertArrayHasKey('scripts', $scripts);
-        $this->assertArrayHasKey('total_count', $scripts);
-        $this->assertArrayHasKey('external_count', $scripts);
-        $this->assertArrayHasKey('inline_count', $scripts);
-
-        $this->assertEquals(2, $scripts['total_count']);
-        $this->assertEquals(1, $scripts['external_count']); // /script.js
-        $this->assertEquals(1, $scripts['inline_count']); // console.log script
-
-        $scriptData = $scripts['scripts'];
-        $this->assertEquals('/script.js', $scriptData[0]['src']);
-        $this->assertFalse($scriptData[0]['inline']);
-        $this->assertEquals('', $scriptData[1]['src']);
-        $this->assertTrue($scriptData[1]['inline']);
-    }
-
-    public function testExtractStylesheets(): void
-    {
-        $result = $this->domExtractor->extractFromHtml($this->sampleHtml);
-        $stylesheets = $result['stylesheets'];
-
-        $this->assertIsArray($stylesheets);
-        $this->assertArrayHasKey('stylesheets', $stylesheets);
-        $this->assertArrayHasKey('total_count', $stylesheets);
-        $this->assertArrayHasKey('external_count', $stylesheets);
-        $this->assertArrayHasKey('inline_count', $stylesheets);
-
-        $this->assertEquals(2, $stylesheets['total_count']);
-        $this->assertEquals(1, $stylesheets['external_count']); // /style.css
-        $this->assertEquals(1, $stylesheets['inline_count']); // inline style
-
-        $stylesheetData = $stylesheets['stylesheets'];
-        $this->assertEquals('/style.css', $stylesheetData[0]['href']);
-        $this->assertEquals('external', $stylesheetData[0]['type']);
-        $this->assertEquals('inline', $stylesheetData[1]['type']);
-    }
-
-    public function testSelectElements(): void
-    {
-        $result = $this->domExtractor->selectElements($this->sampleHtml, 'h1');
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractForms();
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('selector', $result);
-        $this->assertArrayHasKey('count', $result);
-        $this->assertArrayHasKey('elements', $result);
+        $this->assertEquals(2, $result['total_count']);
+        $this->assertArrayHasKey('forms', $result);
+        $this->assertCount(2, $result['forms']);
 
-        $this->assertEquals('h1', $result['selector']);
-        $this->assertEquals(1, $result['count']);
-        $this->assertEquals('Main Title', $result['elements'][0]['text']);
+        // Test first form (complex)
+        $firstForm = $result['forms'][0];
+        $this->assertEquals('/submit', $firstForm['action']);
+        $this->assertEquals('POST', $firstForm['method']);
+        $this->assertTrue($firstForm['has_autocomplete']);
+        $this->assertEquals(4, $firstForm['inputs_count']); // text, email inputs + textarea + select + button
+        $this->assertEquals(2, $firstForm['labels_count']);
+        $this->assertEquals(1, $firstForm['fieldsets_count']);
+        $this->assertEquals(2, $firstForm['required_fields_count']);
+
+        // Check input types distribution
+        $this->assertArrayHasKey('input_types', $firstForm);
+        $this->assertArrayHasKey('text', $firstForm['input_types']);
+        $this->assertArrayHasKey('email', $firstForm['input_types']);
+
+        // Test validation attributes
+        $this->assertArrayHasKey('validation_attributes', $firstForm);
+
+        // Test second form (simpler)
+        $secondForm = $result['forms'][1];
+        $this->assertEquals('/search', $secondForm['action']);
+        $this->assertEquals('GET', $secondForm['method']);
+        $this->assertEquals(1, $secondForm['inputs_count']);
     }
 
-    public function testSelectElementsById(): void
+    /** @test */
+    public function it_can_extract_multimedia_elements()
     {
-        $result = $this->domExtractor->selectElements($this->sampleHtml, '#email');
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title></head>
+        <body>
+            <audio controls>
+                <source src="audio.mp3" type="audio/mpeg">
+                <source src="audio.ogg" type="audio/ogg">
+            </audio>
+            <video controls poster="poster.jpg" width="640" height="480">
+                <source src="video.mp4" type="video/mp4">
+                <track kind="captions" src="captions.vtt" srclang="en" label="English">
+            </video>
+            <iframe src="https://youtube.com/embed/123" title="Video" sandbox="allow-scripts">
+            </iframe>
+            <embed src="plugin.swf" type="application/x-shockwave-flash">
+            <object data="document.pdf" type="application/pdf">
+                <p>PDF cannot be displayed</p>
+            </object>
+        </body>
+        </html>';
 
-        $this->assertEquals(1, $result['count']);
-        $this->assertEquals('input', $result['elements'][0]['tag']);
-    }
-
-    public function testAnalyzeStructure(): void
-    {
-        $result = $this->domExtractor->analyzeStructure($this->sampleHtml);
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractMultimedia();
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('doctype', $result);
-        $this->assertArrayHasKey('html_attributes', $result);
-        $this->assertArrayHasKey('head_analysis', $result);
-        $this->assertArrayHasKey('body_structure', $result);
-        $this->assertArrayHasKey('nesting_depth', $result);
-        $this->assertArrayHasKey('element_counts', $result);
-        $this->assertArrayHasKey('semantic_score', $result);
+        $this->assertArrayHasKey('audio', $result);
+        $this->assertArrayHasKey('video', $result);
+        $this->assertArrayHasKey('iframes', $result);
+        $this->assertArrayHasKey('embeds', $result);
 
-        $this->assertIsArray($result['html_attributes']);
-        $this->assertEquals('en', $result['html_attributes']['lang']);
-        $this->assertIsInt($result['nesting_depth']);
-        $this->assertGreaterThan(0, $result['nesting_depth']);
-        $this->assertIsArray($result['element_counts']);
-        $this->assertIsInt($result['semantic_score']);
+        // Test audio
+        $audio = $result['audio'];
+        $this->assertEquals(1, $audio['total_count']);
+        $this->assertEquals(1, $audio['with_controls']);
+        $this->assertTrue($audio['audios'][0]['controls']);
+        $this->assertEquals(2, $audio['audios'][0]['sources_count']);
+
+        // Test video
+        $video = $result['video'];
+        $this->assertEquals(1, $video['total_count']);
+        $this->assertEquals(1, $video['with_controls']);
+        $this->assertEquals(1, $video['with_captions']);
+        $this->assertTrue($video['videos'][0]['controls']);
+        $this->assertEquals('poster.jpg', $video['videos'][0]['poster']);
+        $this->assertEquals(1, $video['videos'][0]['tracks_count']);
+        $this->assertTrue($video['videos'][0]['has_captions']);
+
+        // Test iframes
+        $iframes = $result['iframes'];
+        $this->assertEquals(1, $iframes['total_count']);
+        $this->assertEquals(1, $iframes['with_title']);
+        $this->assertEquals(1, $iframes['sandboxed']);
+        $this->assertTrue($iframes['iframes'][0]['has_title']);
+        $this->assertTrue($iframes['iframes'][0]['is_sandboxed']);
+
+        // Test embeds
+        $embeds = $result['embeds'];
+        $this->assertEquals(2, $embeds['total_count']); // embed + object
+        $this->assertEquals('embed', $embeds['embeds'][0]['tag_name']);
+        $this->assertEquals('object', $embeds['embeds'][1]['tag_name']);
     }
 
-    public function testExtractSpaElements(): void
+    /** @test */
+    public function it_can_extract_navigation_elements()
     {
-        $result = $this->domExtractor->extractSpaElements($this->spaHtml);
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title></head>
+        <body>
+            <a href="#main-content" class="skip-link">Skip to main content</a>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
+            </nav>
+            <nav aria-label="Breadcrumb" class="breadcrumb">
+                <ol>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/products">Products</a></li>
+                    <li>Current</li>
+                </ol>
+            </nav>
+            <div itemscope itemtype="http://schema.org/BreadcrumbList" class="breadcrumbs">
+                <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="/"><span itemprop="name">Home</span></a>
+                </span>
+            </div>
+            <main id="main-content">
+                <p>Content with <a href="#section1">internal link</a></p>
+                <section id="section1">
+                    <h2>Section 1</h2>
+                </section>
+            </main>
+        </body>
+        </html>';
+
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractNavigation();
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('spa_indicators', $result);
-        $this->assertArrayHasKey('dynamic_content_areas', $result);
-        $this->assertArrayHasKey('router_elements', $result);
-        $this->assertArrayHasKey('framework_detection', $result);
+        $this->assertArrayHasKey('nav_elements', $result);
+        $this->assertArrayHasKey('breadcrumbs', $result);
+        $this->assertArrayHasKey('skip_links', $result);
+        $this->assertArrayHasKey('anchor_links', $result);
 
-        $spaIndicators = $result['spa_indicators'];
-        $this->assertTrue($spaIndicators['has_router_outlet']);
-        $this->assertTrue($spaIndicators['has_ng_app']);
+        // Test nav elements
+        $navElements = $result['nav_elements'];
+        $this->assertEquals(2, $navElements['total_count']);
+        $this->assertEquals(2, $navElements['properly_labeled']);
 
-        $frameworks = $result['framework_detection'];
-        $this->assertContains('angular', $frameworks);
+        // Test breadcrumbs
+        $breadcrumbs = $result['breadcrumbs'];
+        $this->assertGreaterThanOrEqual(2, $breadcrumbs['total_count']);
+
+        // Test skip links
+        $skipLinks = $result['skip_links'];
+        $this->assertEquals(1, $skipLinks['total_count']);
+        $this->assertEquals('Skip to main content', $skipLinks['skip_links'][0]['text']);
+
+        // Test anchor links
+        $anchorLinks = $result['anchor_links'];
+        $this->assertEquals(2, $anchorLinks['total_count']); // #main-content and #section1
+        $this->assertEquals(2, $anchorLinks['with_valid_targets']);
     }
 
-    public function testFindByText(): void
+    /** @test */
+    public function it_can_extract_accessibility_features()
     {
-        $result = $this->domExtractor->findByText($this->sampleHtml, 'Main Title');
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title></head>
+        <body>
+            <header role="banner">
+                <h1>Main Title</h1>
+            </header>
+            <nav role="navigation" aria-label="Main menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </nav>
+            <main role="main">
+                <h2>Subheading</h2>
+                <p>Content with <span aria-describedby="help1">interactive element</span></p>
+                <div id="help1">Help text</div>
+                <button aria-label="Close dialog" tabindex="0">×</button>
+                <input type="text" aria-labelledby="label1">
+                <label id="label1">Input label</label>
+                <div tabindex="-1">Focusable div</div>
+                <section>
+                    <h4>Skipped H3</h4>
+                </section>
+            </main>
+            <aside role="complementary">
+                <h3>Sidebar</h3>
+            </aside>
+            <footer role="contentinfo">
+                <p>Footer content</p>
+            </footer>
+        </body>
+        </html>';
+
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractAccessibilityFeatures();
 
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('search_text', $result);
-        $this->assertArrayHasKey('count', $result);
-        $this->assertArrayHasKey('elements', $result);
 
-        $this->assertEquals('Main Title', $result['search_text']);
-        $this->assertEquals(1, $result['count']);
-        $this->assertEquals('h1', $result['elements'][0]['tag']);
-        $this->assertEquals('Main Title', $result['elements'][0]['text']);
+        // Test ARIA labels
+        $ariaLabels = $result['aria_labels'];
+        $this->assertGreaterThan(0, $ariaLabels['aria_label']);
+        $this->assertGreaterThan(0, $ariaLabels['aria_labelledby']);
+        $this->assertGreaterThan(0, $ariaLabels['aria_describedby']);
+
+        // Test landmarks
+        $landmarks = $result['landmarks'];
+        $this->assertGreaterThan(0, $landmarks['landmarks']['main']);
+        $this->assertGreaterThan(0, $landmarks['landmarks']['navigation']);
+        $this->assertGreaterThan(0, $landmarks['landmarks']['banner']);
+        $this->assertGreaterThan(0, $landmarks['landmarks']['contentinfo']);
+        $this->assertGreaterThan(0, $landmarks['landmarks']['complementary']);
+
+        // Test heading structure
+        $headingStructure = $result['heading_structure'];
+        $this->assertTrue($headingStructure['has_h1']);
+        $this->assertFalse($headingStructure['multiple_h1']);
+        // The HTML has H1, H2, H4, then H3 - so H3 is skipped between H2 and H4
+        $this->assertContains(3, $headingStructure['skipped_levels']); // H3 skipped between H2 and H4
+
+        // Test focus management
+        $focusManagement = $result['focus_management'];
+        $this->assertEquals(1, $focusManagement['tabindex_zero']);
+        $this->assertEquals(1, $focusManagement['tabindex_negative']);
+        $this->assertGreaterThan(0, $focusManagement['focusable_elements']);
     }
 
-    public function testFindByTextCaseInsensitive(): void
+    /** @test */
+    public function it_can_extract_performance_elements()
     {
-        $result = $this->domExtractor->findByText($this->sampleHtml, 'MAIN TITLE', ['case_sensitive' => false]);
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Test</title>
+            <link rel="preload" href="critical.css" as="style">
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="dns-prefetch" href="//analytics.google.com">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+            <script src="https://cdn.example.com/lib.js" integrity="sha256-abc123" crossorigin="anonymous"></script>
+        </head>
+        <body>
+            <img src="hero.jpg" loading="lazy" alt="Hero image">
+            <img src="above-fold.jpg" alt="Above fold image">
+            <iframe src="https://youtube.com/embed/123" loading="lazy"></iframe>
+            <script src="app.js" async></script>
+            <script src="analytics.js" defer></script>
+            <script>
+                // Inline script
+                console.log("Hello");
+            </script>
+        </body>
+        </html>';
 
-        $this->assertEquals(1, $result['count']);
-        $this->assertEquals('h1', $result['elements'][0]['tag']);
-    }
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractPerformanceElements();
 
-    public function testFindByTextPartialMatch(): void
-    {
-        $result = $this->domExtractor->findByText($this->sampleHtml, 'bold', ['exact_match' => false]);
-
-        $this->assertGreaterThan(0, $result['count']);
-        $this->assertContains('bold text', $result['elements'][0]['text']);
-    }
-
-    public function testExtractFromHtmlWithEmptyContent(): void
-    {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Empty HTML content provided');
-        $this->domExtractor->extractFromHtml('');
-    }
-
-    public function testExtractFromHtmlWithInvalidHtml(): void
-    {
-        $invalidHtml = '<html><body><div><p>Unclosed tags';
-
-        $result = $this->domExtractor->extractFromHtml($invalidHtml);
-
-        // Should still work with malformed HTML
         $this->assertIsArray($result);
-        $this->assertArrayHasKey('headings', $result);
+
+        // Test lazy loading
+        $lazyLoading = $result['lazy_loading'];
+        $this->assertEquals(1, $lazyLoading['img_lazy']);
+        $this->assertEquals(1, $lazyLoading['iframe_lazy']);
+
+        // Test preload hints
+        $preloadHints = $result['preload_hints'];
+        $this->assertEquals(1, $preloadHints['preload']);
+        $this->assertEquals(1, $preloadHints['preconnect']);
+        $this->assertEquals(1, $preloadHints['dns_prefetch']);
+
+        // Test resource hints
+        $resourceHints = $result['resource_hints'];
+        $this->assertArrayHasKey('preload', $resourceHints);
+        $this->assertArrayHasKey('preconnect', $resourceHints);
+        $this->assertArrayHasKey('dns-prefetch', $resourceHints);
+
+        // Test web fonts
+        $webFonts = $result['web_fonts'];
+        $this->assertEquals(1, $webFonts['total_count']);
+        $this->assertEquals(1, $webFonts['google_fonts_count']);
+        $this->assertTrue($webFonts['fonts'][0]['is_google_fonts']);
+
+        // Test third-party scripts
+        $thirdPartyScripts = $result['third_party_scripts'];
+        $this->assertEquals(1, $thirdPartyScripts['total_count']);
+        $this->assertEquals(1, $thirdPartyScripts['unique_domains']);
+        $this->assertEquals(1, $thirdPartyScripts['with_integrity']);
+        $this->assertContains('cdn.example.com', $thirdPartyScripts['domains']);
     }
 
-    public function testCustomElements(): void
+    /** @test */
+    public function it_can_extract_security_elements()
     {
-        $customHtml = <<<HTML
-<html>
-<body>
-    <my-custom-element data-value="test">Content</my-custom-element>
-    <another-component></another-component>
-    <x-ms-webview></x-ms-webview>
-</body>
-</html>
-HTML;
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Test</title>
+            <meta http-equiv="Content-Security-Policy" content="default-src \'self\'">
+            <script src="https://cdn.example.com/lib.js" integrity="sha256-abc123" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css" integrity="sha256-def456">
+        </head>
+        <body>
+            <form action="/submit" method="POST">
+                <input type="hidden" name="_token" value="csrf123">
+                <input type="password" name="password">
+            </form>
+            <form action="/search" method="GET" autocomplete="off">
+                <input type="text" name="q">
+            </form>
+            <iframe src="https://youtube.com/embed/123" sandbox="allow-scripts allow-same-origin"></iframe>
+            <iframe src="https://untrusted.com/widget"></iframe>
+            <a href="https://external.com" target="_blank" rel="noopener noreferrer">External link</a>
+            <a href="https://another.com" target="_blank">Unsafe external link</a>
+        </body>
+        </html>';
 
-        $result = $this->domExtractor->extractFromHtml($customHtml);
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractSecurityElements();
+
+        $this->assertIsArray($result);
+
+        // Test CSP headers
+        $cspHeaders = $result['csp_headers'];
+        $this->assertTrue($cspHeaders['has_csp_meta']);
+        $this->assertEquals('default-src \'self\'', $cspHeaders['csp_content']);
+
+        // Test integrity attributes
+        $integrityAttrs = $result['integrity_attributes'];
+        $this->assertEquals(1, $integrityAttrs['script_integrity']);
+        $this->assertEquals(1, $integrityAttrs['link_integrity']);
+
+        // Test external links security
+        $externalLinksSecurity = $result['external_links_security'];
+        $this->assertEquals(2, $externalLinksSecurity['external_blank_links']);
+        $this->assertEquals(1, $externalLinksSecurity['without_noopener']);
+        $this->assertEquals(1, $externalLinksSecurity['without_noreferrer']);
+
+        // Test form security
+        $formSecurity = $result['form_security'];
+        $this->assertEquals(1, $formSecurity['forms_without_csrf']); // GET form doesn't need CSRF
+        $this->assertEquals(1, $formSecurity['forms_with_autocomplete_off']);
+        $this->assertEquals(1, $formSecurity['password_fields']);
+
+        // Test iframe security
+        $iframeSecurity = $result['iframe_security'];
+        $this->assertEquals(1, $iframeSecurity['iframes_without_sandbox']);
+    }
+
+    /** @test */
+    public function it_can_extract_semantic_elements()
+    {
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title></head>
+        <body>
+            <header>
+                <h1>Site Title</h1>
+                <nav>Navigation</nav>
+            </header>
+            <main>
+                <article>
+                    <header>
+                        <h2>Article Title</h2>
+                        <time datetime="2023-01-01">January 1, 2023</time>
+                    </header>
+                    <section>
+                        <p>Article content with <mark>highlighted text</mark></p>
+                        <figure>
+                            <img src="image.jpg" alt="Description">
+                            <figcaption>Image caption</figcaption>
+                        </figure>
+                    </section>
+                    <details>
+                        <summary>More info</summary>
+                        <p>Hidden content</p>
+                    </details>
+                </article>
+            </main>
+            <aside>
+                <section>
+                    <h3>Related Articles</h3>
+                </section>
+            </aside>
+            <footer>
+                <p>Copyright info</p>
+            </footer>
+        </body>
+        </html>';
+
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractSemanticElements();
+
+        $this->assertIsArray($result);
+
+        $usage = $result['semantic_elements_usage'];
+        $this->assertGreaterThan(0, $usage['article']);
+        $this->assertGreaterThan(0, $usage['section']);
+        $this->assertGreaterThan(0, $usage['aside']);
+        $this->assertGreaterThan(0, $usage['header']);
+        $this->assertGreaterThan(0, $usage['footer']);
+        $this->assertGreaterThan(0, $usage['main']);
+        $this->assertGreaterThan(0, $usage['nav']);
+        $this->assertGreaterThan(0, $usage['figure']);
+        $this->assertGreaterThan(0, $usage['figcaption']);
+        $this->assertGreaterThan(0, $usage['time']);
+        $this->assertGreaterThan(0, $usage['mark']);
+        $this->assertGreaterThan(0, $usage['details']);
+        $this->assertGreaterThan(0, $usage['summary']);
+
+        $this->assertGreaterThan(50, $result['semantic_score']); // Should have good semantic usage
+        $this->assertGreaterThan(10, $result['total_semantic_elements']);
+    }
+
+    /** @test */
+    public function it_can_extract_custom_data()
+    {
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title></head>
+        <body>
+            <div data-component="carousel" data-slides="5" data-auto-play="true">
+                <div slot="slide1">Slide content</div>
+            </div>
+            <custom-element data-value="123">
+                <template>Template content</template>
+            </custom-element>
+            <div class="h-card">
+                <span class="p-name">John Doe</span>
+                <span class="p-org">Company</span>
+            </div>
+            <div class="h-event">
+                <span class="p-name">Event Name</span>
+                <time class="dt-start" datetime="2023-01-01">January 1</time>
+            </div>
+        </body>
+        </html>';
+
+        $this->domExtractor->initialize($html, 'https://example.com');
+        $result = $this->domExtractor->extractCustomData();
+
+        $this->assertIsArray($result);
+
+        // Test data attributes
+        $dataAttrs = $result['data_attributes'];
+        $this->assertGreaterThan(0, $dataAttrs['elements_with_data_attrs']);
+        $this->assertGreaterThan(0, $dataAttrs['total_data_attributes']);
+
+        // Test microformats
+        $microformats = $result['microformats'];
+        $this->assertEquals(1, $microformats['hcard']);
+        $this->assertEquals(1, $microformats['hcalendar']);
+
+        // Test custom elements
         $customElements = $result['custom_elements'];
+        $this->assertEquals(1, $customElements['unique_custom_elements']);
+        $this->assertArrayHasKey('custom-element', $customElements['custom_elements']);
 
-        $this->assertIsArray($customElements);
-        $this->assertEquals(2, $customElements['total_count']); // x-ms-webview excluded
-        $this->assertContains('my-custom-element', $customElements['unique_tags']);
-        $this->assertContains('another-component', $customElements['unique_tags']);
-        $this->assertNotContains('x-ms-webview', $customElements['unique_tags']);
-    }
-
-    public function testWebComponentsDetection(): void
-    {
-        $webComponentsHtml = <<<HTML
-<html>
-<body>
-    <my-element></my-element>
-    <template id="my-template">
-        <slot name="content"></slot>
-    </template>
-    <script src="webcomponents-polyfill.js"></script>
-</body>
-</html>
-HTML;
-
-        $result = $this->domExtractor->extractFromHtml($webComponentsHtml);
+        // Test web components
         $webComponents = $result['web_components'];
-
-        $this->assertIsArray($webComponents);
-        $this->assertTrue($webComponents['likely_using_web_components']);
-        $this->assertTrue($webComponents['indicators']['custom_elements']);
-        $this->assertEquals(1, $webComponents['indicators']['template_elements']);
-        $this->assertEquals(1, $webComponents['indicators']['slot_elements']);
+        $this->assertEquals(1, $webComponents['template_elements']);
+        $this->assertEquals(0, $webComponents['slot_elements']); // slot is not recognized in regular HTML parsing
+        $this->assertEquals(1, $webComponents['shadow_dom_usage']);
     }
 
-    public function testAccessibilityAnalysis(): void
+    /** @test */
+    public function it_handles_malformed_html_gracefully()
     {
-        $accessibleHtml = <<<HTML
-<html lang="en">
-<body>
-    <a href="#main" class="skip-link">Skip to main content</a>
-    <main id="main">
-        <h1>Main Heading</h1>
-        <img src="test.jpg" alt="Descriptive alt text">
-        <button aria-label="Close dialog">×</button>
-        <form>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name">
-        </form>
-    </main>
-</body>
-</html>
-HTML;
+        $malformedHtml = '
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test</title>
+        <body>
+            <p>Unclosed paragraph
+            <div>Nested improperly</p>
+            <img src="image.jpg" alt="Missing closing tag"
+            <table>
+                <tr><td>Cell without proper table structure
+            </div>
+        </body>';
 
-        $result = $this->domExtractor->extractFromHtml($accessibleHtml);
-        $accessibility = $result['accessibility'];
+        $this->domExtractor->initialize($malformedHtml, 'https://example.com');
 
-        $this->assertTrue($accessibility['lang_attribute']);
-        $this->assertGreaterThan(0, count($accessibility['skip_links']));
-        $this->assertGreaterThan(0, $accessibility['aria_labels']);
-        $this->assertIsArray($accessibility['form_labels']);
+        // Should not throw exceptions
+        $tables = $this->domExtractor->extractTables();
+        $this->assertIsArray($tables);
+
+        $multimedia = $this->domExtractor->extractMultimedia();
+        $this->assertIsArray($multimedia);
+
+        $accessibility = $this->domExtractor->extractAccessibilityFeatures();
+        $this->assertIsArray($accessibility);
     }
 
-    public function testPerformanceMetadataExtraction(): void
+    private function createTestHtml(): string
     {
-        $performanceHtml = <<<HTML
-<html>
-<head>
-    <link rel="dns-prefetch" href="//example.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preload" href="critical.css" as="style">
-    <link rel="prefetch" href="next-page.html">
-</head>
-<body>Content</body>
-</html>
-HTML;
-
-        $result = $this->domExtractor->extractFromHtml($performanceHtml);
-
-        // Performance hints should be included in link relations or scripts/stylesheets analysis
-        $this->assertIsArray($result);
-    }
-
-    public function testMalformedHtmlHandling(): void
-    {
-        $malformedHtml = <<<HTML
-<html>
-<head>
-    <title>Test</title>
-<body>
-    <div>
-        <p>Unclosed paragraph
-        <img src="test.jpg">
-    </div>
-    <script>
-        // Unclosed script
-HTML;
-
-        $result = $this->domExtractor->extractFromHtml($malformedHtml);
-
-        // Should handle malformed HTML gracefully
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('headings', $result);
-        $this->assertArrayHasKey('images', $result);
-    }
-
-    public function testLargeDocumentHandling(): void
-    {
-        // Generate a large HTML document
-        $largeHtml = '<html><body>';
-        for ($i = 0; $i < 1000; $i++) {
-            $largeHtml .= "<p>Paragraph $i with some content</p>";
-            if ($i % 100 === 0) {
-                $largeHtml .= "<h2>Section $i</h2>";
-            }
-        }
-        $largeHtml .= '</body></html>';
-
-        $result = $this->domExtractor->extractFromHtml($largeHtml);
-
-        $this->assertIsArray($result);
-        $this->assertGreaterThan(900, $result['content']['paragraph_count'] ?? 0);
-    }
-
-    public function testLanguageDetection(): void
-    {
-        $multiLangHtml = <<<HTML
-<html lang="en">
-<body>
-    <div lang="fr">Bonjour le monde</div>
-    <div lang="es">Hola mundo</div>
-    <p>Hello world</p>
-</body>
-</html>
-HTML;
-
-        $result = $this->domExtractor->extractFromHtml($multiLangHtml);
-
-        // Language detection should identify the primary language
-        $this->assertIsArray($result);
-        $this->assertTrue($result['accessibility']['lang_attribute']);
+        return '
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Test Page</title>
+        </head>
+        <body>
+            <h1>Main Heading</h1>
+            <p>Test content</p>
+            <img src="test.jpg" alt="Test image">
+            <a href="https://example.com">External link</a>
+            <a href="/internal">Internal link</a>
+        </body>
+        </html>';
     }
 }

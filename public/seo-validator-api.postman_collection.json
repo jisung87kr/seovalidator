@@ -1,0 +1,669 @@
+{
+  "info": {
+    "name": "SEO Validator API",
+    "description": "Comprehensive API collection for SEO analysis and validation.\n\n## Setup Instructions\n\n1. Import this collection into Postman\n2. Set the `base_url` environment variable (e.g., `http://localhost:8000/api`)\n3. Register/Login to get a Bearer token\n4. Set the `auth_token` environment variable with your Bearer token\n5. Start analyzing URLs!\n\n## Rate Limits\n\n- General API: 60 requests per minute\n- SEO Analysis: 10 requests per minute\n- Batch Analysis: 5 requests per hour\n- Webhooks: 20 requests per minute",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "seo-validator-api-collection",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "description": "Base URL for the API"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "description": "Bearer token for authentication"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.environment.set('auth_token', response.data.token);",
+                  "    pm.test('Registration successful', () => {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.token).to.exist;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.environment.set('auth_token', response.data.token);",
+                  "    pm.test('Login successful', () => {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.token).to.exist;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login with existing credentials"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/user",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "user"]
+            },
+            "description": "Get authenticated user information"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Logout and revoke current token"
+          },
+          "response": []
+        }
+      ],
+      "description": "User authentication endpoints"
+    },
+    {
+      "name": "SEO Analysis",
+      "item": [
+        {
+          "name": "Analyze Single URL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Analysis successful', () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.url).to.exist;",
+                  "    pm.expect(response.data.scores.overall_score).to.be.a('number');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"url\": \"https://example.com\",\n    \"options\": {\n        \"include_quality_analysis\": true,\n        \"javascript_enabled\": false,\n        \"timeout\": 30\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/seo/analyze",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "analyze"]
+            },
+            "description": "Analyze a single URL for SEO metrics"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze with Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"url\": \"https://example.com\",\n    \"webhook_url\": \"https://webhook.site/unique-id\",\n    \"options\": {\n        \"force_refresh\": true,\n        \"include_quality_analysis\": true\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/seo/analyze",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "analyze"]
+            },
+            "description": "Analyze URL and receive webhook notification"
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Analysis (Sync)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Batch analysis successful', () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.batch_id).to.exist;",
+                  "    pm.expect(response.data.summary.total_urls).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"urls\": [\n        \"https://example.com\",\n        \"https://example.org\",\n        \"https://example.net\"\n    ],\n    \"options\": {\n        \"include_quality_analysis\": true\n    },\n    \"async\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/seo/analyze/batch",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "analyze", "batch"]
+            },
+            "description": "Analyze multiple URLs synchronously"
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Analysis (Async)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Async batch started', () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([202]);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.data.batch_id).to.exist;",
+                  "    pm.expect(response.data.status).to.equal('processing');",
+                  "    pm.environment.set('batch_id', response.data.batch_id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"urls\": [\n        \"https://example.com\",\n        \"https://example.org\"\n    ],\n    \"async\": true,\n    \"webhook_url\": \"https://webhook.site/unique-id\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/seo/analyze/batch",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "analyze", "batch"]
+            },
+            "description": "Start asynchronous batch analysis"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Batch Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/seo/batch/{{batch_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "batch", "{{batch_id}}"]
+            },
+            "description": "Check status of async batch analysis"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Analysis History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/seo/history?page=1&per_page=20",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "history"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get analysis history for authenticated user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Analysis History by URL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/seo/history?url=https://example.com",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "history"],
+              "query": [
+                {
+                  "key": "url",
+                  "value": "https://example.com"
+                }
+              ]
+            },
+            "description": "Filter analysis history by specific URL"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/seo/history/analysis-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "history", "analysis-id-here"]
+            },
+            "description": "Get a specific analysis by ID"
+          },
+          "response": []
+        }
+      ],
+      "description": "SEO analysis endpoints"
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "List Webhooks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks"]
+            },
+            "description": "Get list of configured webhooks"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Webhook",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.environment.set('webhook_id', response.data.id);",
+                  "    pm.test('Webhook created successfully', () => {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.id).to.exist;",
+                  "        pm.expect(response.data.url).to.exist;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"My API Webhook\",\n    \"description\": \"Webhook for receiving SEO analysis notifications\",\n    \"url\": \"https://webhook.site/unique-id\",\n    \"events\": [\"analysis.completed\", \"analysis.failed\"],\n    \"secret\": \"my-webhook-secret-key\",\n    \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks"]
+            },
+            "description": "Create a new webhook configuration"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Webhook",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks/{{webhook_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks", "{{webhook_id}}"]
+            },
+            "description": "Get specific webhook details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Webhook",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Webhook Name\",\n    \"url\": \"https://new-webhook.site/unique-id\",\n    \"events\": [\"analysis.completed\", \"batch.completed\"],\n    \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks/{{webhook_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks", "{{webhook_id}}"]
+            },
+            "description": "Update webhook configuration"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Webhook",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Webhook test completed', () => {",
+                  "    const response = pm.response.json();",
+                  "    if (pm.response.code === 200) {",
+                  "        pm.expect(response.success).to.be.true;",
+                  "        pm.expect(response.data.test_result).to.exist;",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks/{{webhook_id}}/test",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks", "{{webhook_id}}", "test"]
+            },
+            "description": "Send a test payload to the webhook"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Webhook",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks/{{webhook_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks", "{{webhook_id}}"]
+            },
+            "description": "Delete webhook configuration"
+          },
+          "response": []
+        },
+        {
+          "name": "Filter Active Webhooks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks?active=true",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks"],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Filter webhooks by active status"
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by Event Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/webhooks?event=analysis.completed",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "webhooks"],
+              "query": [
+                {
+                  "key": "event",
+                  "value": "analysis.completed"
+                }
+              ]
+            },
+            "description": "Filter webhooks by event type"
+          },
+          "response": []
+        }
+      ],
+      "description": "Webhook configuration and management"
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "API Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('API is healthy', () => {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.true;",
+                  "    pm.expect(response.status).to.equal('healthy');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/health",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "health"]
+            },
+            "description": "Check API health status"
+          },
+          "response": []
+        }
+      ],
+      "description": "System health and status endpoints"
+    },
+    {
+      "name": "Error Examples",
+      "item": [
+        {
+          "name": "Invalid URL Analysis",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error returned', () => {",
+                  "    pm.expect(pm.response.code).to.equal(422);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.be.false;",
+                  "    pm.expect(response.errors).to.exist;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"url\": \"not-a-valid-url\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/seo/analyze",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "analyze"]
+            },
+            "description": "Example of validation error response"
+          },
+          "response": []
+        },
+        {
+          "name": "Unauthorized Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Unauthorized error returned', () => {",
+                  "    pm.expect(pm.response.code).to.equal(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/seo/history",
+              "host": ["{{base_url}}"],
+              "path": ["v1", "seo", "history"]
+            },
+            "description": "Example of unauthorized request"
+          },
+          "response": []
+        }
+      ],
+      "description": "Examples of error responses and edge cases"
+    }
+  ]
+}
