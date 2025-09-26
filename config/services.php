@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'google' => [
+        'pagespeed_api_key' => env('GOOGLE_PAGESPEED_API_KEY'),
+    ],
+
 ];
