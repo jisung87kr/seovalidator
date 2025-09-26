@@ -4,15 +4,107 @@ namespace Tests\Unit\Services\Score;
 
 use Tests\TestCase;
 use App\Services\Score\ScoreCalculatorService;
+use App\Services\Analysis\SeoMetrics;
+use App\Services\Cache\AnalysisCache;
+use App\Services\Analysis\RecommendationEngine;
+use Mockery;
 
 class ScoreCalculatorServiceTest extends TestCase
 {
     private ScoreCalculatorService $scoreCalculator;
+    private SeoMetrics $seoMetrics;
+    private AnalysisCache $analysisCache;
+    private RecommendationEngine $recommendationEngine;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->scoreCalculator = new ScoreCalculatorService();
+
+        // Mock dependencies
+        $this->seoMetrics = Mockery::mock(SeoMetrics::class);
+        $this->analysisCache = Mockery::mock(AnalysisCache::class);
+        $this->recommendationEngine = Mockery::mock(RecommendationEngine::class);
+
+        // Create service with mocked dependencies
+        $this->scoreCalculator = new ScoreCalculatorService(
+            $this->seoMetrics,
+            $this->analysisCache,
+            $this->recommendationEngine
+        );
+
+        // Setup default mock behavior
+        $this->setupDefaultMocks();
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
+    private function setupDefaultMocks(): void
+    {
+        // Default SeoMetrics behavior
+        $this->seoMetrics->shouldReceive('getIndustryWeights')
+            ->andReturn([
+                'title' => 20,
+                'meta_description' => 15,
+                'headings' => 15,
+                'content' => 20,
+                'images' => 10,
+                'links' => 8,
+                'technical' => 7,
+                'social_media' => 3,
+                'structured_data' => 2
+            ])
+            ->byDefault();
+
+        $this->seoMetrics->shouldReceive('getCompetitiveDifficultyMultiplier')
+            ->andReturn(1.0)
+            ->byDefault();
+
+        // Default advanced scoring methods
+        $this->seoMetrics->shouldReceive('calculateAdvancedTitleScore')
+            ->andReturn([
+                'score' => 85,
+                'max_score' => 100,
+                'weight' => 20,
+                'issues' => [],
+                'recommendations' => [],
+                'metrics' => ['length' => 45, 'word_count' => 6]
+            ])
+            ->byDefault();
+
+        $this->seoMetrics->shouldReceive('calculateAdvancedContentScore')
+            ->andReturn([
+                'score' => 80,
+                'max_score' => 100,
+                'weight' => 20,
+                'issues' => [],
+                'recommendations' => [],
+                'metrics' => ['word_count' => 500, 'text_to_html_ratio' => 25]
+            ])
+            ->byDefault();
+
+        $this->seoMetrics->shouldReceive('calculateTechnicalPerformanceScore')
+            ->andReturn([
+                'score' => 75,
+                'max_score' => 100,
+                'weight' => 7,
+                'issues' => [],
+                'recommendations' => [],
+                'metrics' => ['ssl' => true, 'mobile_friendly' => true]
+            ])
+            ->byDefault();
+
+        // Default cache behavior - no cached results
+        $this->analysisCache->shouldReceive('getAnalysis')
+            ->andReturn(null)
+            ->byDefault();
+
+        $this->analysisCache->shouldReceive('storeAnalysis')
+            ->andReturn(true)
+            ->byDefault();
     }
 
     public function test_calculate_returns_comprehensive_score_data()
@@ -23,7 +115,7 @@ class ScoreCalculatorServiceTest extends TestCase
         // Act
         $result = $this->scoreCalculator->calculate($parsedData);
 
-        // Assert
+        // Assert - Basic structure
         $this->assertIsArray($result);
         $this->assertArrayHasKey('overall_score', $result);
         $this->assertArrayHasKey('grade', $result);
@@ -33,11 +125,142 @@ class ScoreCalculatorServiceTest extends TestCase
         $this->assertArrayHasKey('scoring_version', $result);
         $this->assertArrayHasKey('calculated_at', $result);
 
+        // Assert - New advanced fields
+        $this->assertArrayHasKey('scoring_method', $result);
+        $this->assertArrayHasKey('industry', $result);
+        $this->assertArrayHasKey('weights_used', $result);
+        $this->assertArrayHasKey('performance_metrics', $result);
+        $this->assertArrayHasKey('competitive_factors', $result);
+
+        // Assert - Score validity
         $this->assertIsInt($result['overall_score']);
         $this->assertGreaterThanOrEqual(0, $result['overall_score']);
         $this->assertLessThanOrEqual(100, $result['overall_score']);
         $this->assertEquals(100, $result['max_possible_score']);
         $this->assertContains($result['grade'], ['A', 'B', 'C', 'D', 'F']);
+
+        // Assert - Advanced scoring version
+        $this->assertEquals('2.0.0', $result['scoring_version']);
+        $this->assertEquals('advanced_weighted_algorithm', $result['scoring_method']);
+    }
+
+    public function test_calculate_with_industry_context()
+    {
+        // Arrange
+        $parsedData = $this->getValidParsedData();
+        $context = ['industry' => 'e-commerce'];
+
+        $ecommerceWeights = [
+            'title' => 20,
+            'meta_description' => 15,
+            'headings' => 15,
+            'content' => 15,
+            'images' => 15,      // Higher for e-commerce
+            'links' => 8,
+            'technical' => 12,    // Higher for e-commerce
+            'social_media' => 3,
+            'structured_data' => 8 // Higher for e-commerce
+        ];
+
+        $this->seoMetrics->shouldReceive('getIndustryWeights')
+            ->with('e-commerce')
+            ->andReturn($ecommerceWeights)
+            ->atLeast()->once();
+
+        // Act
+        $result = $this->scoreCalculator->calculate($parsedData, $context);
+
+        // Assert
+        $this->assertEquals('e-commerce', $result['industry']);
+        $this->assertArrayHasKey('images', $result['weights_used']);
+        $this->assertEquals(15, $result['weights_used']['images']); // E-commerce should have higher image weight
+    }
+
+    public function test_calculate_with_competitive_factors()
+    {
+        // Arrange
+        $parsedData = $this->getValidParsedData();
+        $context = [
+            'keyword_difficulty' => 'high',
+            'search_volume' => 'very_high',
+            'competitor_count' => 50
+        ];
+
+        $this->seoMetrics->shouldReceive('getCompetitiveDifficultyMultiplier')
+            ->with('high', 'very_high')
+            ->andReturn(1.3)
+            ->atLeast()->once();
+
+        // Act
+        $result = $this->scoreCalculator->calculate($parsedData, $context);
+
+        // Assert
+        $this->assertArrayHasKey('competitive_factors', $result);
+        $competitiveFactors = $result['competitive_factors'];
+
+        $this->assertEquals('high', $competitiveFactors['keyword_difficulty']);
+        $this->assertEquals('very_high', $competitiveFactors['search_volume']);
+        $this->assertEquals(50, $competitiveFactors['competitor_count']);
+        $this->assertEquals(1.3, $competitiveFactors['difficulty_multiplier']);
+    }
+
+    public function test_calculate_with_caching_enabled()
+    {
+        // Arrange
+        $parsedData = $this->getValidParsedData();
+        $context = ['url' => 'https://example.com'];
+
+        // Mock cache hit
+        $cachedResult = ['cached' => true, 'overall_score' => 85];
+        $this->analysisCache->shouldReceive('getAnalysis')
+            ->with('https://example.com', ['type' => 'score_calculation'])
+            ->andReturn($cachedResult)
+            ->once();
+
+        // Act
+        $result = $this->scoreCalculator->calculate($parsedData, $context);
+
+        // Assert
+        $this->assertEquals($cachedResult, $result);
+    }
+
+    public function test_calculate_with_caching_disabled()
+    {
+        // Arrange
+        $parsedData = $this->getValidParsedData();
+        $context = ['disable_cache' => true];
+
+        // Cache should not be called
+        $this->analysisCache->shouldNotReceive('getAnalysis');
+
+        // Act
+        $result = $this->scoreCalculator->calculate($parsedData, $context);
+
+        // Assert
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('overall_score', $result);
+    }
+
+    public function test_calculate_performance_metrics()
+    {
+        // Arrange
+        $parsedData = $this->getValidParsedData();
+
+        // Act
+        $result = $this->scoreCalculator->calculate($parsedData);
+
+        // Assert
+        $this->assertArrayHasKey('performance_metrics', $result);
+        $metrics = $result['performance_metrics'];
+
+        $this->assertArrayHasKey('calculation_time_ms', $metrics);
+        $this->assertArrayHasKey('calculation_time_human', $metrics);
+        $this->assertArrayHasKey('memory_usage_mb', $metrics);
+        $this->assertArrayHasKey('peak_memory_mb', $metrics);
+        $this->assertArrayHasKey('timestamp', $metrics);
+
+        $this->assertIsFloat($metrics['calculation_time_ms']);
+        $this->assertGreaterThan(0, $metrics['calculation_time_ms']);
     }
 
     public function test_calculate_scores_perfect_title()
@@ -93,6 +316,18 @@ class ScoreCalculatorServiceTest extends TestCase
         $parsedData = $this->getBasicParsedData();
         $parsedData['meta']['title'] = '';
         $parsedData['meta']['title_length'] = 0;
+
+        // Mock for missing title scenario
+        $this->seoMetrics->shouldReceive('calculateAdvancedTitleScore')
+            ->with(['title' => '', 'title_length' => 0], Mockery::any())
+            ->andReturn([
+                'score' => 0,
+                'max_score' => 100,
+                'weight' => 20,
+                'issues' => ['Missing title tag'],
+                'recommendations' => ['Add a descriptive title tag to your page'],
+                'metrics' => ['length' => 0, 'has_title' => false]
+            ]);
 
         // Act
         $result = $this->scoreCalculator->calculate($parsedData);

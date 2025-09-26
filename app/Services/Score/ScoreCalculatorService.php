@@ -2,12 +2,21 @@
 
 namespace App\Services\Score;
 
+use App\Services\Analysis\SeoMetrics;
+use App\Services\Cache\AnalysisCache;
+use App\Services\Analysis\RecommendationEngine;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class ScoreCalculatorService
 {
+    private SeoMetrics $seoMetrics;
+    private AnalysisCache $cache;
+    private RecommendationEngine $recommendationEngine;
+
     /**
-     * Scoring weights configuration
+     * Legacy weights - now managed by SeoMetrics service
+     * @deprecated Use SeoMetrics service for weight management
      */
     private array $weights = [
         'title' => 20,           // Title tag optimization
@@ -21,34 +30,53 @@ class ScoreCalculatorService
         'structured_data' => 2   // Schema markup, JSON-LD
     ];
 
+    public function __construct(
+        SeoMetrics $seoMetrics,
+        AnalysisCache $cache,
+        RecommendationEngine $recommendationEngine
+    ) {
+        $this->seoMetrics = $seoMetrics;
+        $this->cache = $cache;
+        $this->recommendationEngine = $recommendationEngine;
+    }
+
     /**
-     * Calculate comprehensive SEO scores
+     * Calculate comprehensive SEO scores with caching and advanced algorithms
      */
-    public function calculate(array $parsedData): array
+    public function calculate(array $parsedData, array $context = []): array
     {
-        Log::debug('Starting SEO score calculation');
+        Log::debug('Starting advanced SEO score calculation');
+
+        $startTime = microtime(true);
+        $url = $context['url'] ?? 'unknown';
+        $cacheKey = $this->generateScoreCacheKey($parsedData, $context);
 
         try {
-            $scores = [
-                'title' => $this->scoreTitleOptimization($parsedData['meta'] ?? []),
-                'meta_description' => $this->scoreMetaDescription($parsedData['meta'] ?? []),
-                'headings' => $this->scoreHeadingsStructure($parsedData['headings'] ?? []),
-                'content' => $this->scoreContentQuality($parsedData['content'] ?? []),
-                'images' => $this->scoreImageOptimization($parsedData['images'] ?? []),
-                'links' => $this->scoreLinkStructure($parsedData['links'] ?? []),
-                'technical' => $this->scoreTechnicalSeo($parsedData['technical'] ?? []),
-                'social_media' => $this->scoreSocialMediaTags($parsedData['social_media'] ?? []),
-                'structured_data' => $this->scoreStructuredData($parsedData['structured_data'] ?? [])
-            ];
+            // Try to get cached results first
+            if ($this->shouldUseCache($context)) {
+                $cachedResult = $this->cache->getAnalysis($url, ['type' => 'score_calculation']);
+                if ($cachedResult !== null) {
+                    Log::debug('Returning cached score calculation');
+                    return $cachedResult;
+                }
+            }
 
-            // Calculate weighted overall score
-            $overallScore = $this->calculateOverallScore($scores);
+            // Use advanced metrics for scoring
+            $industry = $context['industry'] ?? 'general';
+            $weights = $this->seoMetrics->getIndustryWeights($industry);
+
+            // Calculate scores using advanced algorithms
+            $scores = $this->calculateAdvancedScores($parsedData, $context, $weights);
+
+            // Calculate weighted overall score with competitive factors
+            $overallScore = $this->calculateAdvancedOverallScore($scores, $context);
 
             // Generate detailed breakdown
-            $breakdown = $this->generateScoreBreakdown($scores);
+            $breakdown = $this->generateAdvancedScoreBreakdown($scores, $weights);
 
-            // Determine grade and recommendations
+            // Determine grade and performance metrics
             $grade = $this->calculateGrade($overallScore);
+            $performanceMetrics = $this->calculatePerformanceMetrics($startTime);
 
             $result = [
                 'overall_score' => $overallScore,
@@ -56,13 +84,26 @@ class ScoreCalculatorService
                 'category_scores' => $scores,
                 'breakdown' => $breakdown,
                 'max_possible_score' => 100,
-                'scoring_version' => '1.0.0',
-                'calculated_at' => now()->toISOString()
+                'scoring_version' => '2.0.0', // Updated version with advanced algorithms
+                'scoring_method' => 'advanced_weighted_algorithm',
+                'industry' => $industry,
+                'weights_used' => $weights,
+                'performance_metrics' => $performanceMetrics,
+                'competitive_factors' => $this->getCompetitiveFactors($context),
+                'calculated_at' => now()->toISOString(),
+                'cache_key' => $cacheKey
             ];
 
-            Log::debug('SEO score calculation completed', [
+            // Cache the results for future use
+            if ($this->shouldUseCache($context)) {
+                $this->cache->storeAnalysis($url, $result, 'score_only', $context);
+            }
+
+            Log::debug('Advanced SEO score calculation completed', [
                 'overall_score' => $overallScore,
-                'grade' => $grade
+                'grade' => $grade,
+                'calculation_time_ms' => $performanceMetrics['calculation_time_ms'],
+                'industry' => $industry
             ]);
 
             return $result;
@@ -812,6 +853,257 @@ class ScoreCalculatorService
         }
 
         return true;
+    }
+
+    /**
+     * Calculate advanced scores using SeoMetrics service
+     */
+    private function calculateAdvancedScores(array $parsedData, array $context, array $weights): array
+    {
+        $scores = [];
+
+        // Use SeoMetrics for advanced calculations
+        if (isset($parsedData['meta'])) {
+            $titleData = [
+                'title' => $parsedData['meta']['title'] ?? '',
+                'title_length' => $parsedData['meta']['title_length'] ?? 0
+            ];
+            $scores['title'] = $this->seoMetrics->calculateAdvancedTitleScore($titleData, $context);
+        } else {
+            // Fallback to legacy method
+            $scores['title'] = $this->scoreTitleOptimization($parsedData['meta'] ?? []);
+        }
+
+        // Meta description
+        if (isset($parsedData['meta'])) {
+            $scores['meta_description'] = $this->scoreMetaDescription($parsedData['meta']);
+        }
+
+        // Content with advanced metrics
+        if (isset($parsedData['content'])) {
+            $scores['content'] = $this->seoMetrics->calculateAdvancedContentScore($parsedData['content'], $context);
+        } else {
+            $scores['content'] = $this->scoreContentQuality($parsedData['content'] ?? []);
+        }
+
+        // Headings
+        if (isset($parsedData['headings'])) {
+            $scores['headings'] = $this->scoreHeadingsStructure($parsedData['headings']);
+        }
+
+        // Images
+        if (isset($parsedData['images'])) {
+            $scores['images'] = $this->scoreImageOptimization($parsedData['images']);
+        }
+
+        // Links
+        if (isset($parsedData['links'])) {
+            $scores['links'] = $this->scoreLinkStructure($parsedData['links']);
+        }
+
+        // Technical with performance integration
+        if (isset($parsedData['technical'])) {
+            $performanceData = $parsedData['performance'] ?? [];
+            $scores['technical'] = $this->seoMetrics->calculateTechnicalPerformanceScore($parsedData['technical'], $performanceData);
+        } else {
+            $scores['technical'] = $this->scoreTechnicalSeo($parsedData['technical'] ?? []);
+        }
+
+        // Social media
+        if (isset($parsedData['social_media'])) {
+            $scores['social_media'] = $this->scoreSocialMediaTags($parsedData['social_media']);
+        }
+
+        // Structured data
+        if (isset($parsedData['structured_data'])) {
+            $scores['structured_data'] = $this->scoreStructuredData($parsedData['structured_data']);
+        }
+
+        return $scores;
+    }
+
+    /**
+     * Calculate advanced overall score with competitive factors
+     */
+    private function calculateAdvancedOverallScore(array $scores, array $context): int
+    {
+        $industry = $context['industry'] ?? 'general';
+        $weights = $this->seoMetrics->getIndustryWeights($industry);
+
+        $totalWeightedScore = 0;
+        $totalWeight = array_sum($weights);
+
+        foreach ($scores as $category => $scoreData) {
+            $categoryScore = $scoreData['score'] ?? 0;
+            $weight = $weights[$category] ?? 0;
+            $weightedScore = ($categoryScore / 100) * $weight;
+            $totalWeightedScore += $weightedScore;
+        }
+
+        $baseScore = ($totalWeightedScore / $totalWeight) * 100;
+
+        // Apply competitive factors
+        $competitiveFactor = $this->getCompetitiveDifficultyMultiplier($context);
+        $adjustedScore = $baseScore * $competitiveFactor;
+
+        // Apply freshness factor if content age is provided
+        if (isset($context['content_age_months'])) {
+            $contentType = $context['content_type'] ?? 'evergreen';
+            $freshnessFactor = $this->seoMetrics->getFreshnessFactor($contentType, $context['content_age_months']);
+            $adjustedScore = $adjustedScore * $freshnessFactor;
+        }
+
+        return min(100, max(0, round($adjustedScore)));
+    }
+
+    /**
+     * Generate advanced score breakdown with detailed analytics
+     */
+    private function generateAdvancedScoreBreakdown(array $scores, array $weights): array
+    {
+        $breakdown = [];
+        $totalWeight = array_sum($weights);
+
+        foreach ($scores as $category => $scoreData) {
+            $score = $scoreData['score'] ?? 0;
+            $weight = $weights[$category] ?? 0;
+            $contribution = round(($weight / $totalWeight) * ($score / 100) * 100, 1);
+
+            $breakdown[$category] = [
+                'score' => $score,
+                'weight_percentage' => round(($weight / $totalWeight) * 100, 1),
+                'contribution_to_overall' => $contribution,
+                'status' => $this->getScoreStatus($score),
+                'impact_level' => $this->getImpactLevel($score, $weight),
+                'recommendations_count' => count($scoreData['recommendations'] ?? []),
+                'issues_count' => count($scoreData['issues'] ?? []),
+                'metrics' => $scoreData['metrics'] ?? []
+            ];
+        }
+
+        return $breakdown;
+    }
+
+    /**
+     * Calculate performance metrics for scoring process
+     */
+    private function calculatePerformanceMetrics(float $startTime): array
+    {
+        $endTime = microtime(true);
+        $executionTime = ($endTime - $startTime) * 1000; // Convert to milliseconds
+
+        return [
+            'calculation_time_ms' => round($executionTime, 2),
+            'calculation_time_human' => $this->formatExecutionTime($executionTime),
+            'memory_usage_mb' => round(memory_get_usage(true) / 1024 / 1024, 2),
+            'peak_memory_mb' => round(memory_get_peak_usage(true) / 1024 / 1024, 2),
+            'timestamp' => now()->toISOString()
+        ];
+    }
+
+    /**
+     * Get competitive factors from context
+     */
+    private function getCompetitiveFactors(array $context): array
+    {
+        $keywordDifficulty = $context['keyword_difficulty'] ?? 'medium';
+        $searchVolume = $context['search_volume'] ?? 'medium';
+        $competitorCount = $context['competitor_count'] ?? 0;
+
+        return [
+            'keyword_difficulty' => $keywordDifficulty,
+            'search_volume' => $searchVolume,
+            'competitor_count' => $competitorCount,
+            'difficulty_multiplier' => $this->getCompetitiveDifficultyMultiplier($context),
+            'market_saturation' => $this->calculateMarketSaturation($context)
+        ];
+    }
+
+    /**
+     * Get competitive difficulty multiplier
+     */
+    private function getCompetitiveDifficultyMultiplier(array $context): float
+    {
+        $keywordDifficulty = $context['keyword_difficulty'] ?? 'medium';
+        $searchVolume = $context['search_volume'] ?? 'medium';
+
+        return $this->seoMetrics->getCompetitiveDifficultyMultiplier($keywordDifficulty, $searchVolume);
+    }
+
+    /**
+     * Calculate market saturation level
+     */
+    private function calculateMarketSaturation(array $context): string
+    {
+        $competitorCount = $context['competitor_count'] ?? 0;
+        $keywordDifficulty = $context['keyword_difficulty'] ?? 'medium';
+
+        if ($competitorCount > 100 && $keywordDifficulty === 'very_high') {
+            return 'oversaturated';
+        } elseif ($competitorCount > 50 && in_array($keywordDifficulty, ['high', 'very_high'])) {
+            return 'saturated';
+        } elseif ($competitorCount > 20) {
+            return 'competitive';
+        } else {
+            return 'open';
+        }
+    }
+
+    /**
+     * Generate cache key for scoring results
+     */
+    private function generateScoreCacheKey(array $parsedData, array $context): string
+    {
+        $keyData = [
+            'data_hash' => md5(serialize($parsedData)),
+            'context_hash' => md5(serialize($context)),
+            'version' => '2.0.0'
+        ];
+
+        return 'score_calc_' . md5(serialize($keyData));
+    }
+
+    /**
+     * Check if caching should be used
+     */
+    private function shouldUseCache(array $context): bool
+    {
+        $cacheDisabled = $context['disable_cache'] ?? false;
+        $isRealTime = $context['real_time'] ?? false;
+
+        return !$cacheDisabled && !$isRealTime;
+    }
+
+    /**
+     * Get impact level based on score and weight
+     */
+    private function getImpactLevel(int $score, float $weight): string
+    {
+        $impactScore = ($score / 100) * $weight;
+
+        if ($impactScore >= 15) return 'critical';
+        if ($impactScore >= 10) return 'high';
+        if ($impactScore >= 5) return 'medium';
+        return 'low';
+    }
+
+    /**
+     * Format execution time for human readability
+     */
+    private function formatExecutionTime(float $milliseconds): string
+    {
+        if ($milliseconds < 1000) {
+            return round($milliseconds, 1) . ' ms';
+        }
+
+        $seconds = $milliseconds / 1000;
+        if ($seconds < 60) {
+            return round($seconds, 2) . ' seconds';
+        }
+
+        $minutes = floor($seconds / 60);
+        $remainingSeconds = $seconds % 60;
+        return $minutes . 'm ' . round($remainingSeconds, 1) . 's';
     }
 }
 
