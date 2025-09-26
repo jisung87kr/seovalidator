@@ -30,6 +30,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/revoke-all-tokens', [AuthController::class, 'revokeAllTokens']);
     });
 
-    // API routes for authenticated users will be added here
-    // Future: SEO validation endpoints, reports, etc.
+    // Include versioned API routes
+    require base_path('routes/api/v1.php');
 });

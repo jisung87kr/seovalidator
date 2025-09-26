@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Validator API Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007acc;
+        }
+        .header h1 {
+            color: #007acc;
+            margin-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007acc;
+        }
+        .section h2 {
+            color: #007acc;
+            margin-top: 0;
+        }
+        .endpoint-group {
+            margin-bottom: 20px;
+        }
+        .endpoint {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .method.get { background-color: #28a745; }
+        .method.post { background-color: #007bff; }
+        .method.put { background-color: #ffc107; color: #212529; }
+        .method.delete { background-color: #dc3545; }
+        .path {
+            font-family: 'Monaco', 'Consolas', monospace;
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .download-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #007acc;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .download-btn:hover {
+            background: #005999;
+        }
+        .rate-limits {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .rate-limits h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+        .auth-section {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .auth-section h3 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SEO Validator API</h1>
+        <p>Comprehensive RESTful API for SEO analysis and validation</p>
+        <p><strong>Version:</strong> 1.0.0 | <strong>Base URL:</strong> <code>/api</code></p>
+    </div>
+
+    <div class="download-links">
+        <a href="/api-docs.yaml" class="download-btn">📄 OpenAPI Spec</a>
+        <a href="/seo-validator-api.postman_collection.json" class="download-btn">📮 Postman Collection</a>
+    </div>
+
+    <div class="auth-section">
+        <h3>🔐 Authentication</h3>
+        <p>All API endpoints (except health check and auth endpoints) require authentication using Bearer tokens.</p>
+        <p><strong>Header:</strong> <code>Authorization: Bearer YOUR_TOKEN</code></p>
+        <p>Obtain a token by registering or logging in through the authentication endpoints below.</p>
+    </div>
+
+    <div class="rate-limits">
+        <h3>⚡ Rate Limits</h3>
+        <ul>
+            <li><strong>General API:</strong> 60 requests per minute</li>
+            <li><strong>SEO Analysis:</strong> 10 requests per minute</li>
+            <li><strong>Batch Analysis:</strong> 5 requests per hour</li>
+            <li><strong>Webhooks:</strong> 20 requests per minute</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔑 Authentication Endpoints</h2>
+        <div class="endpoint-group">
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/auth/register</span>
+                <p>Register a new user account and receive an API token</p>
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/auth/login</span>
+                <p>Login with existing credentials and receive an API token</p>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/auth/user</span>
+                <p>Get authenticated user information</p>
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/auth/logout</span>
+                <p>Logout and revoke the current token</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔍 SEO Analysis Endpoints</h2>
+        <div class="endpoint-group">
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/v1/seo/analyze</span>
+                <p>Analyze a single URL for comprehensive SEO metrics</p>
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/v1/seo/analyze/batch</span>
+                <p>Analyze multiple URLs in batch (up to 10 URLs)</p>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/v1/seo/history</span>
+                <p>Get analysis history for the authenticated user</p>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/v1/seo/history/{id}</span>
+                <p>Get a specific analysis by ID</p>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/v1/seo/status/{jobId}</span>
+                <p>Get status of an async analysis job</p>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/v1/seo/batch/{batch_id}</span>
+                <p>Get batch analysis status by batch ID</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🪝 Webhook Endpoints</h2>
+        <div class="endpoint-group">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/v1/webhooks</span>
+                <p>List all configured webhooks for the authenticated user</p>
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/v1/webhooks</span>
+                <p>Create a new webhook configuration</p>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/v1/webhooks/{id}</span>
+                <p>Get details of a specific webhook</p>
+            </div>
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="path">/v1/webhooks/{id}</span>
+                <p>Update webhook configuration</p>
+            </div>
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="path">/v1/webhooks/{id}</span>
+                <p>Delete a webhook configuration</p>
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="path">/v1/webhooks/{id}/test</span>
+                <p>Send a test payload to the webhook endpoint</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🩺 System Endpoints</h2>
+        <div class="endpoint-group">
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="path">/v1/health</span>
+                <p>Check API health status (no authentication required)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Analysis Options</h2>
+        <p>When performing SEO analysis, you can include these optional parameters:</p>
+        <ul>
+            <li><strong>force_refresh:</strong> Force refresh of cached results</li>
+            <li><strong>include_quality_analysis:</strong> Include content quality assessment</li>
+            <li><strong>include_technical_analysis:</strong> Include technical SEO checks</li>
+            <li><strong>include_content_analysis:</strong> Include content analysis</li>
+            <li><strong>include_performance_analysis:</strong> Include performance metrics</li>
+            <li><strong>javascript_enabled:</strong> Enable JavaScript when crawling</li>
+            <li><strong>mobile_analysis:</strong> Perform mobile-specific analysis</li>
+            <li><strong>timeout:</strong> Request timeout in seconds (5-60)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔔 Webhook Events</h2>
+        <p>Webhooks can be configured to listen for these events:</p>
+        <ul>
+            <li><strong>analysis.completed:</strong> Single URL analysis completed successfully</li>
+            <li><strong>analysis.failed:</strong> Single URL analysis failed</li>
+            <li><strong>batch.completed:</strong> Batch analysis completed successfully</li>
+            <li><strong>batch.failed:</strong> Batch analysis failed</li>
+        </ul>
+        <p>Webhook payloads include event metadata and analysis results. Optionally configure a secret for payload verification using HMAC-SHA256.</p>
+    </div>
+
+    <div class="section">
+        <h2>🚀 Getting Started</h2>
+        <ol>
+            <li><strong>Import the Postman Collection:</strong> Download and import the collection above into Postman</li>
+            <li><strong>Set Environment Variables:</strong> Configure <code>base_url</code> (e.g., <code>http://localhost:8000/api</code>)</li>
+            <li><strong>Register/Login:</strong> Use the authentication endpoints to get a Bearer token</li>
+            <li><strong>Set Auth Token:</strong> The token will be automatically saved to the <code>auth_token</code> variable</li>
+            <li><strong>Start Analyzing:</strong> Use the SEO analysis endpoints to analyze your URLs</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>📊 Response Format</h2>
+        <p>All API responses follow a consistent format:</p>
+        <pre><code>{
+  "success": true|false,
+  "message": "Human-readable message",
+  "data": { ... }, // Response data (if applicable)
+  "errors": { ... } // Validation errors (if applicable)
+}</code></pre>
+    </div>
+
+    <footer style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #6c757d;">
+        <p>SEO Validator API v1.0.0 | Built with Laravel | <a href="mailto:support@seovalidator.com">Support</a></p>
+    </footer>
+</body>
+</html>
