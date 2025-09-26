@@ -54,9 +54,11 @@ Using the test-runner agent ensures:
 ## ABSOLUTE RULES:
 
 - NO PARTIAL IMPLEMENTATION
+- NO CONCEPTUAL DESIGN ONLY : Always create actual files and write real code. Don't just describe what should be done - actually implement it. When asked to implement a feature or task, always create the necessary files, write the actual code, and ensure it's runnable.
 - NO SIMPLIFICATION : no "//This is simplified stuff for now, complete implementation would blablabla"
 - NO CODE DUPLICATION : check existing codebase to reuse functions and constants Read files before writing new functions. Use common sense function name to find them easily.
 - NO DEAD CODE : either use or delete from codebase completely
+- ALWAYS CREATE FILES : When implementing features, always create the actual files - don't just plan or describe. If asked to implement something, write the code immediately.
 - IMPLEMENT TEST FOR EVERY FUNCTIONS
 - NO CHEATER TESTS : test must be accurate, reflect real usage and be designed to reveal flaws. No useless tests! Design tests to be verbose so we can use them for debuging.
 - NO INCONSISTENT NAMING - read existing codebase naming patterns.
