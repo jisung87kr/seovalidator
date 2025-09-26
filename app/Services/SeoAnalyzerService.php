@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\Crawler\CrawlerService;
 use App\Services\Crawler\UrlValidator;
+use App\Services\Crawler\PageAnalyzer;
 use App\Services\Parser\HtmlParserService;
 use App\Services\Score\ScoreCalculatorService;
 use Illuminate\Support\Facades\Redis;
@@ -16,7 +17,8 @@ class SeoAnalyzerService
         private CrawlerService $crawlerService,
         private UrlValidator $urlValidator,
         private HtmlParserService $htmlParserService,
-        private ScoreCalculatorService $scoreCalculatorService
+        private ScoreCalculatorService $scoreCalculatorService,
+        private PageAnalyzer $pageAnalyzer
     ) {}
 
     /**
@@ -51,8 +53,14 @@ class SeoAnalyzerService
             // Step 4: Calculate SEO scores
             $scores = $this->scoreCalculatorService->calculate($parsedData);
 
-            // Step 5: Combine all analysis data
-            $analysis = $this->buildAnalysisResult($validatedUrl, $crawlData, $parsedData, $scores, $options);
+            // Step 5: Perform comprehensive page analysis (quality assessment)
+            $pageAnalysis = null;
+            if ($options['include_quality_analysis'] ?? true) {
+                $pageAnalysis = $this->pageAnalyzer->analyze($crawlData['html'], $validatedUrl, $parsedData, $options);
+            }
+
+            // Step 6: Combine all analysis data
+            $analysis = $this->buildAnalysisResult($validatedUrl, $crawlData, $parsedData, $scores, $pageAnalysis, $options);
 
             // Cache the result
             $this->cacheResult($cacheKey, $analysis);
@@ -124,6 +132,7 @@ class SeoAnalyzerService
         array $crawlData,
         array $parsedData,
         array $scores,
+        ?array $pageAnalysis,
         array $options
     ): array {
         return [
@@ -143,7 +152,8 @@ class SeoAnalyzerService
             ],
             'seo_elements' => $parsedData,
             'scores' => $scores,
-            'recommendations' => $this->generateRecommendations($parsedData, $scores),
+            'page_analysis' => $pageAnalysis,
+            'recommendations' => $this->generateRecommendations($parsedData, $scores, $pageAnalysis),
             'metadata' => [
                 'analysis_version' => '1.0.0',
                 'options' => $options
@@ -154,7 +164,7 @@ class SeoAnalyzerService
     /**
      * Generate SEO recommendations based on analysis
      */
-    private function generateRecommendations(array $parsedData, array $scores): array
+    private function generateRecommendations(array $parsedData, array $scores, ?array $pageAnalysis = null): array
     {
         $recommendations = [];
 
@@ -254,6 +264,11 @@ class SeoAnalyzerService
                 'impact' => 'medium',
                 'fix' => 'Add more valuable content (aim for 300+ words)'
             ];
+        }
+
+        // Add page analysis recommendations if available
+        if ($pageAnalysis && isset($pageAnalysis['recommendations'])) {
+            $recommendations = array_merge($recommendations, $pageAnalysis['recommendations']);
         }
 
         return $recommendations;
