@@ -1,8 +1,9 @@
 ---
 name: seovalidator
-status: backlog
+status: completed
 created: 2025-09-26T11:20:06Z
-progress: 0%
+completed: 2025-09-26T16:46:49Z
+progress: 100%
 prd: .claude/prds/seovalidator.md
 github: https://github.com/jisung87kr/seovalidator/issues/87
 ---
