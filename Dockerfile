@@ -1,38 +1,41 @@
-# Use official PHP 8.2 FPM image
-FROM php:8.2-fpm
+# Multi-stage Docker build for Laravel SEO Validator
+FROM php:8.2-fpm-alpine AS base
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install system dependencies (Alpine packages)
+RUN apk add --no-cache \
     git \
     curl \
     libpng-dev \
-    libonig-dev \
     libxml2-dev \
     zip \
     unzip \
-    nginx \
-    supervisor \
+    oniguruma-dev \
     libzip-dev \
-    libicu-dev \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+    freetype-dev \
+    libjpeg-turbo-dev \
+    icu-dev \
+    mysql-client \
+    nodejs \
+    npm \
+    supervisor \
+    nginx
 
 # Install PHP extensions
-RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
-    && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
-    && docker-php-ext-install \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         mysqli \
-        mbstring \
-        exif \
-        pcntl \
-        bcmath \
         gd \
+        xml \
         zip \
-        intl
+        mbstring \
+        intl \
+        opcache \
+        pcntl \
+        bcmath
 
 # Install Redis extension
 RUN pecl install redis \

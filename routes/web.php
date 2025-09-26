@@ -50,3 +50,23 @@ Route::get('/demo/analyze-url', function () {
         'monitor_at' => url('/horizon')
     ]);
 });
+
+// Health Check Routes
+Route::prefix('health')->group(function () {
+    Route::get('/', [App\Http\Controllers\HealthController::class, 'index']);
+    Route::get('/comprehensive', [App\Http\Controllers\HealthController::class, 'comprehensive']);
+    Route::get('/database', [App\Http\Controllers\HealthController::class, 'database']);
+    Route::get('/cache', [App\Http\Controllers\HealthController::class, 'cache']);
+    Route::get('/queue', [App\Http\Controllers\HealthController::class, 'queue']);
+    Route::get('/storage', [App\Http\Controllers\HealthController::class, 'storage']);
+    Route::get('/external', [App\Http\Controllers\HealthController::class, 'external']);
+    Route::get('/performance', [App\Http\Controllers\HealthController::class, 'performance']);
+    Route::get('/seo-analysis', [App\Http\Controllers\HealthController::class, 'seoAnalysis']);
+});
+
+// Kubernetes Health Probes
+Route::get('/ready', [App\Http\Controllers\HealthController::class, 'ready']);
+Route::get('/live', [App\Http\Controllers\HealthController::class, 'live']);
+
+// Metrics endpoint
+Route::get('/metrics', [App\Http\Controllers\HealthController::class, 'metrics']);
