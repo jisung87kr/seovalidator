@@ -8,7 +8,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
 
 class CrawlUrl implements ShouldQueue
 {
@@ -31,61 +30,20 @@ class CrawlUrl implements ShouldQueue
 
     /**
      * Execute the job.
+     *
+     * Note: This job is now deprecated in favor of direct SeoAnalyzerService usage.
+     * The SeoAnalyzerService handles both crawling and analysis in a single operation.
      */
     public function handle(): void
     {
-        Log::info('Starting URL crawl', [
+        Log::info('CrawlUrl job executed - redirecting to AnalyzeUrl', [
             'url' => $this->url,
             'user_id' => $this->userId,
             'options' => $this->options
         ]);
 
-        try {
-            // Simulate crawling with HTTP request
-            $response = Http::timeout(30)
-                ->withUserAgent('SEO Validator Bot/1.0')
-                ->get($this->url);
-
-            if ($response->successful()) {
-                $html = $response->body();
-
-                // Store crawl result temporarily (in real implementation, save to database)
-                $crawlData = [
-                    'url' => $this->url,
-                    'html' => $html,
-                    'status_code' => $response->status(),
-                    'headers' => $response->headers(),
-                    'crawled_at' => now(),
-                    'size_bytes' => strlen($html)
-                ];
-
-                Log::info('URL crawl completed successfully', [
-                    'url' => $this->url,
-                    'status_code' => $response->status(),
-                    'size_bytes' => strlen($html)
-                ]);
-
-                // Dispatch analysis job
-                AnalyzeUrl::dispatch($this->url, $crawlData, $this->userId);
-
-            } else {
-                Log::warning('URL crawl failed with HTTP error', [
-                    'url' => $this->url,
-                    'status_code' => $response->status()
-                ]);
-
-                $this->fail(new \Exception("HTTP {$response->status()} error for URL: {$this->url}"));
-            }
-
-        } catch (\Exception $e) {
-            Log::error('URL crawl failed with exception', [
-                'url' => $this->url,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            throw $e;
-        }
+        // Directly dispatch the analysis job which will handle crawling internally
+        AnalyzeUrl::dispatch($this->url, $this->userId, $this->options);
     }
 
     /**
