@@ -6,17 +6,17 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Compare Analyses</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">Compare multiple SEO analyses side by side</p>
+        <h1 class="text-3xl font-bold text-gray-900">Compare Analyses</h1>
+        <p class="mt-2 text-gray-600">Compare multiple SEO analyses side by side</p>
     </div>
 
     <!-- Selection Panel -->
-    <div class="mb-8 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Select Analyses to Compare</h2>
+    <div class="mb-8 bg-white shadow rounded-lg p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Select Analyses to Compare</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">First Analysis</label>
-                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <label class="block text-sm font-medium text-gray-700">First Analysis</label>
+                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Select an analysis...</option>
                     <option value="1">https://example.com (Score: 78)</option>
                     <option value="2">https://test-site.com (Score: 85)</option>
@@ -24,8 +24,8 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Second Analysis</label>
-                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <label class="block text-sm font-medium text-gray-700">Second Analysis</label>
+                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Select an analysis...</option>
                     <option value="1">https://example.com (Score: 78)</option>
                     <option value="2" selected>https://test-site.com (Score: 85)</option>
@@ -43,10 +43,10 @@
     <!-- Comparison Results -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Site A -->
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <div class="bg-white shadow rounded-lg p-6">
             <div class="text-center mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">https://example.com</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Analyzed 2 hours ago</p>
+                <h3 class="text-lg font-semibold text-gray-900">https://example.com</h3>
+                <p class="text-sm text-gray-500">Analyzed 2 hours ago</p>
                 <div class="mt-4">
                     <div class="text-4xl font-bold text-yellow-600">78</div>
                     <div class="text-sm text-gray-500">Overall Score</div>
@@ -55,7 +55,7 @@
 
             <div class="space-y-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Technical SEO</span>
+                    <span class="text-sm text-gray-600">Technical SEO</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-green-600 h-2 rounded-full" style="width: 85%"></div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Content</span>
+                    <span class="text-sm text-gray-600">Content</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-yellow-600 h-2 rounded-full" style="width: 72%"></div>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Performance</span>
+                    <span class="text-sm text-gray-600">Performance</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-red-600 h-2 rounded-full" style="width: 68%"></div>
@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Accessibility</span>
+                    <span class="text-sm text-gray-600">Accessibility</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-green-600 h-2 rounded-full" style="width: 83%"></div>
@@ -94,10 +94,10 @@
         </div>
 
         <!-- Site B -->
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <div class="bg-white shadow rounded-lg p-6">
             <div class="text-center mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">https://test-site.com</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Analyzed 1 day ago</p>
+                <h3 class="text-lg font-semibold text-gray-900">https://test-site.com</h3>
+                <p class="text-sm text-gray-500">Analyzed 1 day ago</p>
                 <div class="mt-4">
                     <div class="text-4xl font-bold text-green-600">85</div>
                     <div class="text-sm text-gray-500">Overall Score</div>
@@ -106,7 +106,7 @@
 
             <div class="space-y-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Technical SEO</span>
+                    <span class="text-sm text-gray-600">Technical SEO</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-green-600 h-2 rounded-full" style="width: 88%"></div>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Content</span>
+                    <span class="text-sm text-gray-600">Content</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-green-600 h-2 rounded-full" style="width: 82%"></div>
@@ -124,7 +124,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Performance</span>
+                    <span class="text-sm text-gray-600">Performance</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-green-600 h-2 rounded-full" style="width: 85%"></div>
@@ -133,7 +133,7 @@
                     </div>
                 </div>
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-600 dark:text-gray-300">Accessibility</span>
+                    <span class="text-sm text-gray-600">Accessibility</span>
                     <div class="flex items-center space-x-2">
                         <div class="w-20 bg-gray-200 rounded-full h-2">
                             <div class="bg-green-600 h-2 rounded-full" style="width: 85%"></div>
@@ -146,16 +146,16 @@
     </div>
 
     <!-- Comparison Chart -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Score Comparison</h3>
+    <div class="bg-white shadow rounded-lg p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Score Comparison</h3>
         <div class="h-64">
             <canvas id="comparisonChart"></canvas>
         </div>
     </div>
 
     <!-- Detailed Differences -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Key Differences</h3>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Key Differences</h3>
         <div class="space-y-4">
             <div class="border-l-4 border-green-500 bg-green-50 p-4">
                 <div class="flex">

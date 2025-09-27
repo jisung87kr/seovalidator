@@ -1,7 +1,7 @@
-<div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+<div class="bg-white shadow rounded-lg p-6">
     <div class="mb-4">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Analyze URL</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Enter a URL to start SEO analysis</p>
+        <h2 class="text-xl font-semibold text-gray-900">Analyze URL</h2>
+        <p class="text-sm text-gray-600">Enter a URL to start SEO analysis</p>
     </div>
 
     @if (session()->has('success'))
@@ -12,7 +12,7 @@
 
     <form wire:submit.prevent="analyzeUrl" class="space-y-4">
         <div>
-            <label for="url" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label for="url" class="block text-sm font-medium text-gray-700">
                 Website URL
             </label>
             <div class="mt-1 relative">
@@ -21,10 +21,10 @@
                     id="url"
                     wire:model.live.debounce.500ms="url"
                     placeholder="https://example.com"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500 @error('url') border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500 @enderror"
+                    class="block w-full px-3 py-2 border {{ $errors && $errors->has('url') ? 'border-red-300' : 'border-gray-300' }} rounded-md shadow-sm placeholder-gray-400 focus:outline-none {{ $errors && $errors->has('url') ? 'focus:ring-red-500 focus:border-red-500 text-red-900 placeholder-red-300' : 'focus:ring-indigo-500 focus:border-indigo-500' }}"
                     {{ $isAnalyzing ? 'disabled' : '' }}
                 >
-                @if ($url && !$errors->has('url'))
+                @if ($url && (!$errors || !$errors->has('url')))
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                         <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -43,7 +43,7 @@
                 wire:loading.attr="disabled"
                 wire:target="analyzeUrl"
                 class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                {{ $isAnalyzing || !$url || $errors->has('url') ? 'disabled' : '' }}
+                {{ $isAnalyzing || !$url || ($errors && $errors->has('url')) ? 'disabled' : '' }}
             >
                 <span wire:loading.remove wire:target="analyzeUrl">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,8 +73,8 @@
     </form>
 
     @if ($currentAnalysis)
-        <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
-            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
+        <div class="mt-6 border-t border-gray-200 pt-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
                 <div class="flex">
                     <div class="flex-shrink-0">
                         <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,10 +82,10 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">
+                        <h3 class="text-sm font-medium text-blue-800">
                             Analysis Started
                         </h3>
-                        <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                        <div class="mt-2 text-sm text-blue-700">
                             <p>URL: <span class="font-mono">{{ $currentAnalysis['url'] }}</span></p>
                             <p>Status: <span class="capitalize">{{ $currentAnalysis['status'] }}</span></p>
                             <p>Started: {{ $currentAnalysis['created_at'] }}</p>
@@ -97,7 +97,7 @@
                                     <div class="rounded-full bg-blue-400 h-2 w-2"></div>
                                     <div class="rounded-full bg-blue-400 h-2 w-2"></div>
                                 </div>
-                                <span class="ml-3 text-sm text-blue-600 dark:text-blue-400">Processing...</span>
+                                <span class="ml-3 text-sm text-blue-600">Processing...</span>
                             </div>
                         </div>
                     </div>

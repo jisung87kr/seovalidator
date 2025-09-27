@@ -6,8 +6,8 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Dashboard Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">SEO Dashboard</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">Analyze and track your website's SEO performance</p>
+        <h1 class="text-3xl font-bold text-gray-900">SEO Dashboard</h1>
+        <p class="mt-2 text-gray-600">Analyze and track your website's SEO performance</p>
     </div>
 
     <!-- URL Analysis Form -->
@@ -17,7 +17,7 @@
 
     <!-- Dashboard Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -29,15 +29,15 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Analyses</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">0</dd>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Total Analyses</dt>
+                            <dd class="text-lg font-medium text-gray-900">0</dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -49,15 +49,15 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Avg. Score</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">--</dd>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Avg. Score</dt>
+                            <dd class="text-lg font-medium text-gray-900">--</dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -69,15 +69,15 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">This Month</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">0</dd>
+                            <dt class="text-sm font-medium text-gray-500 truncate">This Month</dt>
+                            <dd class="text-lg font-medium text-gray-900">0</dd>
                         </dl>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -89,8 +89,8 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Issues Found</dt>
-                            <dd class="text-lg font-medium text-gray-900 dark:text-white">0</dd>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Issues Found</dt>
+                            <dd class="text-lg font-medium text-gray-900">0</dd>
                         </dl>
                     </div>
                 </div>
@@ -104,9 +104,9 @@
     </div>
 
     <!-- Recent Analyses -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+    <div class="bg-white shadow rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Recent Analyses</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Recent Analyses</h3>
             @livewire('recent-analyses-list')
         </div>
     </div>

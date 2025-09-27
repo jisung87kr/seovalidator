@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard.index');
     })->name('dashboard');
@@ -31,14 +31,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/api-keys', function () {
         return view('dashboard.api-keys');
     })->name('user.api-keys');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Auth Routes (temporary placeholders)
-Route::post('/logout', function () {
-    return redirect('/');
-})->name('logout');
-
-// Demo route to test queue jobs
 Route::get('/demo/analyze-url', function () {
     $url = request('url', 'https://example.com');
 
@@ -70,3 +68,6 @@ Route::get('/live', [App\Http\Controllers\HealthController::class, 'live']);
 
 // Metrics endpoint
 Route::get('/metrics', [App\Http\Controllers\HealthController::class, 'metrics']);
+
+
+require __DIR__.'/auth.php';

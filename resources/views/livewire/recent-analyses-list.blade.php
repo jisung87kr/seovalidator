@@ -1,7 +1,7 @@
 <div>
     @if(count($analyses) > 0)
         <div class="overflow-hidden">
-            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            <ul class="divide-y divide-gray-200">
                 @foreach($analyses as $analysis)
                     <li class="py-4">
                         <div class="flex items-center justify-between">
@@ -28,10 +28,10 @@
                                     @endif
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    <p class="text-sm font-medium text-gray-900 truncate">
                                         {{ $analysis['url'] }}
                                     </p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    <p class="text-sm text-gray-500">
                                         {{ $analysis['status'] === 'processing' ? 'Processing...' : 'Analyzed' }}
                                         {{ \Carbon\Carbon::parse($analysis['analyzed_at'])->diffForHumans() }}
                                     </p>
@@ -81,8 +81,8 @@
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No analyses yet</h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by analyzing your first URL.</p>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No analyses yet</h3>
+            <p class="mt-1 text-sm text-gray-500">Get started by analyzing your first URL.</p>
         </div>
     @endif
 </div>

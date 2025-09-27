@@ -14,7 +14,6 @@ class UrlAnalysisForm extends Component
 
     public $isAnalyzing = false;
     public $currentAnalysis = null;
-    public $errors = [];
 
     public function mount()
     {

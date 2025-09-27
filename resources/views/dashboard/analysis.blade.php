@@ -8,7 +8,7 @@
     <nav class="flex mb-8" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-                <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
                     Dashboard
                 </a>
             </li>
@@ -17,7 +17,7 @@
                     <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>
-                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Analysis #{{ $id }}</span>
+                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Analysis #{{ $id }}</span>
                 </div>
             </li>
         </ol>
@@ -31,16 +31,16 @@
     <!-- Detailed Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <!-- Score Trends Chart -->
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Score Breakdown</h3>
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Score Breakdown</h3>
             <div class="h-64" id="scoreChart">
                 <canvas id="scoreBreakdownChart"></canvas>
             </div>
         </div>
 
         <!-- Performance Metrics -->
-        <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Metrics</h3>
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
             <div class="h-64" id="performanceChart">
                 <canvas id="performanceMetricsChart"></canvas>
             </div>
@@ -48,8 +48,8 @@
     </div>
 
     <!-- Recommendations Section -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recommendations</h3>
+    <div class="bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recommendations</h3>
         <div class="space-y-4">
             <div class="border-l-4 border-red-500 bg-red-50 p-4">
                 <div class="flex">

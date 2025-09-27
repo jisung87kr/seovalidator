@@ -6,20 +6,20 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Analysis History</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">View and manage all your SEO analyses</p>
+        <h1 class="text-3xl font-bold text-gray-900">Analysis History</h1>
+        <p class="mt-2 text-gray-600">View and manage all your SEO analyses</p>
     </div>
 
     <!-- Filters and Search -->
-    <div class="mb-6 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+    <div class="mb-6 bg-white shadow rounded-lg p-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Search URL</label>
-                <input type="text" placeholder="Enter URL..." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <label class="block text-sm font-medium text-gray-700">Search URL</label>
+                <input type="text" placeholder="Enter URL..." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <label class="block text-sm font-medium text-gray-700">Status</label>
+                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">All Status</option>
                     <option value="completed">Completed</option>
                     <option value="processing">Processing</option>
@@ -27,8 +27,8 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Score Range</label>
-                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <label class="block text-sm font-medium text-gray-700">Score Range</label>
+                <select class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">All Scores</option>
                     <option value="80-100">80-100 (Excellent)</option>
                     <option value="60-79">60-79 (Good)</option>
@@ -44,28 +44,28 @@
     </div>
 
     <!-- Analysis List -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+    <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="px-4 py-5 sm:p-6">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-700">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">URL</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Overall Score</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Technical</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Content</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Performance</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Overall Score</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technical</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Content</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performance</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody class="bg-white divide-y divide-gray-200">
                         <!-- Sample row 1 -->
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white font-medium">https://example.com</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">Sample Website</div>
+                                <div class="text-sm text-gray-900 font-medium">https://example.com</div>
+                                <div class="text-sm text-gray-500">Sample Website</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
@@ -81,25 +81,25 @@
                                     Completed
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 2 hours ago
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
-                                    <a href="{{ route('analysis.show', 1) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">View</a>
+                                    <a href="{{ route('analysis.show', 1) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
                                     <span class="text-gray-300">|</span>
-                                    <button class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">Download</button>
+                                    <button class="text-gray-600 hover:text-gray-900">Download</button>
                                     <span class="text-gray-300">|</span>
-                                    <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                                    <button class="text-red-600 hover:text-red-900">Delete</button>
                                 </div>
                             </td>
                         </tr>
 
                         <!-- Sample row 2 -->
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white font-medium">https://test-site.com</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">Test Site</div>
+                                <div class="text-sm text-gray-900 font-medium">https://test-site.com</div>
+                                <div class="text-sm text-gray-500">Test Site</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
@@ -115,25 +115,25 @@
                                     Completed
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 1 day ago
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
-                                    <a href="{{ route('analysis.show', 2) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">View</a>
+                                    <a href="{{ route('analysis.show', 2) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
                                     <span class="text-gray-300">|</span>
-                                    <button class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300">Download</button>
+                                    <button class="text-gray-600 hover:text-gray-900">Download</button>
                                     <span class="text-gray-300">|</span>
-                                    <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                                    <button class="text-red-600 hover:text-red-900">Delete</button>
                                 </div>
                             </td>
                         </tr>
 
                         <!-- Sample row 3 -->
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-white font-medium">https://another-site.net</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">Another Site</div>
+                                <div class="text-sm text-gray-900 font-medium">https://another-site.net</div>
+                                <div class="text-sm text-gray-500">Another Site</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
@@ -151,14 +151,14 @@
                                     Processing
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 15 minutes ago
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
                                     <button class="text-gray-400 cursor-not-allowed">View</button>
                                     <span class="text-gray-300">|</span>
-                                    <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Cancel</button>
+                                    <button class="text-red-600 hover:text-red-900">Cancel</button>
                                 </div>
                             </td>
                         </tr>
@@ -167,14 +167,14 @@
             </div>
 
             <!-- Pagination -->
-            <div class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 sm:px-6">
+            <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                 <div class="flex flex-1 justify-between sm:hidden">
                     <button class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</button>
                     <button class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</button>
                 </div>
                 <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                     <div>
-                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                        <p class="text-sm text-gray-700">
                             Showing <span class="font-medium">1</span> to <span class="font-medium">3</span> of <span class="font-medium">3</span> results
                         </p>
                     </div>
