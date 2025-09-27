@@ -204,9 +204,9 @@ class PageAnalyzer
         $resourceHints = $performanceElements['resource_hints'] ?? [];
 
         $perfScore = 0;
-        $perfScore += min(15, ($lazyLoading['img_lazy'] ?? 0) * 2); // Lazy loading images
-        $perfScore += min(10, ($preloadHints['preload'] ?? 0) * 3); // Preload hints
-        $perfScore += min(10, ($resourceHints['preconnect'] ?? 0) * 3); // Preconnect hints
+        $perfScore += min(15, (is_array($lazyLoading['img_lazy'] ?? 0) ? count($lazyLoading['img_lazy']) : ($lazyLoading['img_lazy'] ?? 0)) * 2); // Lazy loading images
+        $perfScore += min(10, (is_array($preloadHints['preload'] ?? 0) ? count($preloadHints['preload']) : ($preloadHints['preload'] ?? 0)) * 3); // Preload hints
+        $perfScore += min(10, (is_array($resourceHints['preconnect'] ?? 0) ? count($resourceHints['preconnect']) : ($resourceHints['preconnect'] ?? 0)) * 3); // Preconnect hints
         $perfScore += min(15, 15 - (($performanceElements['third_party_scripts']['total_count'] ?? 0) * 2)); // Fewer third-party scripts
 
         $score += $perfScore;

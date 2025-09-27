@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AnalysisController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -8,21 +10,11 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard.index');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/analysis/history', function () {
-        return view('dashboard.history');
-    })->name('analysis.history');
-
-    Route::get('/analysis/compare', function () {
-        return view('dashboard.compare');
-    })->name('analysis.compare');
-
-    Route::get('/analysis/{id}', function ($id) {
-        return view('dashboard.analysis', compact('id'));
-    })->name('analysis.show');
+    Route::get('/analysis/history', [AnalysisController::class, 'history'])->name('analysis.history');
+    Route::get('/analysis/compare', [AnalysisController::class, 'compare'])->name('analysis.compare');
+    Route::get('/analysis/{id}', [AnalysisController::class, 'show'])->name('analysis.show');
 
     Route::get('/user/profile', function () {
         return view('dashboard.profile');

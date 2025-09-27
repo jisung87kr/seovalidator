@@ -10,6 +10,7 @@ use Laravel\Horizon\Horizon;
 use App\Services\SeoAnalyzerService;
 use App\Services\Crawler\CrawlerService;
 use App\Services\Crawler\UrlValidator;
+use App\Services\Crawler\PageAnalyzer;
 use App\Services\Parser\HtmlParserService;
 use App\Services\Score\ScoreCalculatorService;
 
@@ -25,13 +26,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CrawlerService::class);
         $this->app->singleton(HtmlParserService::class);
         $this->app->singleton(ScoreCalculatorService::class);
+        $this->app->singleton(PageAnalyzer::class);
 
         $this->app->singleton(SeoAnalyzerService::class, function ($app) {
             return new SeoAnalyzerService(
                 $app->make(CrawlerService::class),
                 $app->make(UrlValidator::class),
                 $app->make(HtmlParserService::class),
-                $app->make(ScoreCalculatorService::class)
+                $app->make(ScoreCalculatorService::class),
+                $app->make(PageAnalyzer::class)
             );
         });
     }

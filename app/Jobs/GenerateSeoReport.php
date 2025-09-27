@@ -88,20 +88,23 @@ class GenerateSeoReport implements ShouldQueue
         $warnings = [];
         $successes = [];
 
-        // Analyze meta tags
-        $meta = $this->analysisData['meta'];
+        // Extract seo_elements from the full analysis data
+        $seoElements = $this->analysisData['seo_elements'] ?? $this->analysisData;
 
-        if (empty($meta['title'])) {
+        // Analyze meta tags
+        $meta = $seoElements['meta'] ?? [];
+
+        if (empty($meta['title'] ?? null)) {
             $issues[] = 'Missing page title';
-        } elseif ($meta['title_length'] < 30 || $meta['title_length'] > 60) {
-            $warnings[] = "Page title length ({$meta['title_length']} chars) should be between 30-60 characters";
+        } elseif (($meta['title_length'] ?? 0) < 30 || ($meta['title_length'] ?? 0) > 60) {
+            $warnings[] = "Page title length (" . ($meta['title_length'] ?? 0) . " chars) should be between 30-60 characters";
         } else {
             $successes[] = 'Page title length is optimal';
         }
 
-        if (empty($meta['description'])) {
+        if (empty($meta['description'] ?? null)) {
             $issues[] = 'Missing meta description';
-        } elseif ($meta['description_length'] < 120 || $meta['description_length'] > 160) {
+        } elseif (($meta['description_length'] ?? 0) < 120 || ($meta['description_length'] ?? 0) > 160) {
             $warnings[] = "Meta description length ({$meta['description_length']} chars) should be between 120-160 characters";
         } else {
             $successes[] = 'Meta description length is optimal';
@@ -114,7 +117,7 @@ class GenerateSeoReport implements ShouldQueue
         }
 
         // Analyze headings
-        $headings = $this->analysisData['headings'];
+        $headings = $seoElements['headings'] ?? [];
         if (empty($headings['h1'])) {
             $issues[] = 'Missing H1 tag';
         } elseif (count($headings['h1']) > 1) {
@@ -124,7 +127,7 @@ class GenerateSeoReport implements ShouldQueue
         }
 
         // Analyze images
-        $images = $this->analysisData['images'];
+        $images = $seoElements['images'] ?? [];
         if ($images['without_alt_count'] > 0) {
             $issues[] = "{$images['without_alt_count']} images missing alt attributes";
         }
@@ -134,13 +137,13 @@ class GenerateSeoReport implements ShouldQueue
         }
 
         // Analyze links
-        $links = $this->analysisData['links'];
+        $links = $seoElements['links'] ?? [];
         if ($links['external_count'] > 0 && $links['nofollow_count'] === 0) {
             $warnings[] = 'Consider adding rel="nofollow" to some external links';
         }
 
         // Analyze content
-        $content = $this->analysisData['content'];
+        $content = $seoElements['content'] ?? [];
         if ($content['word_count'] < 300) {
             $warnings[] = "Content is quite short ({$content['word_count']} words) - consider adding more content";
         } elseif ($content['word_count'] > 300) {
@@ -151,10 +154,12 @@ class GenerateSeoReport implements ShouldQueue
             $warnings[] = "Text to HTML ratio is low ({$content['text_to_html_ratio']}%) - too much markup relative to content";
         }
 
-        // Analyze technical aspects
-        $technical = $this->analysisData['technical'];
-        if ($technical['status_code'] !== 200) {
-            $issues[] = "Non-200 status code: {$technical['status_code']}";
+        // Analyze technical aspects - check from the main analysis data structure
+        $technical = $seoElements['technical'] ?? [];
+        $statusCode = $this->analysisData['status']['code'] ?? $technical['status_code'] ?? 200;
+
+        if ($statusCode !== 200) {
+            $issues[] = "Non-200 status code: {$statusCode}";
         } else {
             $successes[] = 'Page returns 200 OK status';
         }
@@ -176,45 +181,48 @@ class GenerateSeoReport implements ShouldQueue
      */
     private function calculateSeoScore(): array
     {
-        $meta = $this->analysisData['meta'];
-        $headings = $this->analysisData['headings'];
-        $images = $this->analysisData['images'];
-        $content = $this->analysisData['content'];
-        $technical = $this->analysisData['technical'];
+        $seoElements = $this->analysisData['seo_elements'] ?? $this->analysisData;
+        $meta = $seoElements['meta'] ?? [];
+        $headings = $seoElements['headings'] ?? [];
+        $images = $seoElements['images'] ?? [];
+        $content = $seoElements['content'] ?? [];
+        $technical = $seoElements['technical'] ?? [];
 
         $scores = [];
 
         // Meta score (30% weight)
         $metaScore = 0;
-        if (!empty($meta['title']) && $meta['title_length'] >= 30 && $meta['title_length'] <= 60) $metaScore += 40;
-        if (!empty($meta['description']) && $meta['description_length'] >= 120 && $meta['description_length'] <= 160) $metaScore += 40;
-        if (!empty($meta['canonical'])) $metaScore += 20;
+        if (!empty($meta['title'] ?? null) && ($meta['title_length'] ?? 0) >= 30 && ($meta['title_length'] ?? 0) <= 60) $metaScore += 40;
+        if (!empty($meta['description'] ?? null) && ($meta['description_length'] ?? 0) >= 120 && ($meta['description_length'] ?? 0) <= 160) $metaScore += 40;
+        if (!empty($meta['canonical'] ?? null)) $metaScore += 20;
         $scores['meta'] = $metaScore;
 
         // Content score (25% weight)
         $contentScore = 0;
-        if ($content['word_count'] >= 300) $contentScore += 40;
-        if ($content['text_to_html_ratio'] >= 15) $contentScore += 30;
-        if (!empty($headings['h1']) && count($headings['h1']) === 1) $contentScore += 30;
+        if (($content['word_count'] ?? 0) >= 300) $contentScore += 40;
+        if (($content['text_to_html_ratio'] ?? 0) >= 15) $contentScore += 30;
+        if (!empty($headings['h1'] ?? []) && count($headings['h1']) === 1) $contentScore += 30;
         $scores['content'] = $contentScore;
 
         // Images score (15% weight)
         $imageScore = 100;
-        if ($images['total_count'] > 0) {
-            $imageScore = max(0, 100 - (($images['without_alt_count'] / $images['total_count']) * 100));
+        if (($images['total_count'] ?? 0) > 0) {
+            $imageScore = max(0, 100 - ((($images['without_alt_count'] ?? 0) / ($images['total_count'] ?? 1)) * 100));
         }
         $scores['images'] = $imageScore;
 
         // Technical score (20% weight)
         $technicalScore = 0;
-        if ($technical['status_code'] === 200) $technicalScore += 100;
+        $statusCode = $this->analysisData['status']['code'] ?? $technical['status_code'] ?? 200;
+        if ($statusCode === 200) $technicalScore += 100;
         $scores['technical'] = $technicalScore;
 
         // Performance score (10% weight)
-        $performance = $this->analysisData['performance'];
+        $performance = $seoElements['performance'] ?? [];
         $performanceScore = 100;
-        if ($performance['html_size_kb'] > 500) $performanceScore -= 20;
-        if ($performance['html_size_kb'] > 1000) $performanceScore -= 30;
+        $htmlSizeKb = $performance['html_size_kb'] ?? ($this->analysisData['crawl_data']['html_size'] ?? 0) / 1024;
+        if ($htmlSizeKb > 500) $performanceScore -= 20;
+        if ($htmlSizeKb > 1000) $performanceScore -= 30;
         $scores['performance'] = max(0, $performanceScore);
 
         // Calculate weighted overall score

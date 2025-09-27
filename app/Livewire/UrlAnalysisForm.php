@@ -58,26 +58,18 @@ class UrlAnalysisForm extends Component
         try {
             $this->isAnalyzing = true;
 
-            // For now, create a mock analysis since we don't have database connection
-            $this->currentAnalysis = [
-                'id' => uniqid(),
+            // Create analysis record and dispatch job
+            $analysis = SeoAnalysis::create([
+                'user_id' => auth()->id(),
                 'url' => $this->url,
-                'status' => 'processing',
-                'created_at' => now()->format('Y-m-d H:i:s')
-            ];
+                'status' => 'pending'
+            ]);
 
-            // In a real implementation, this would be:
-            // $analysis = SeoAnalysis::create([
-            //     'user_id' => auth()->id(),
-            //     'url' => $this->url,
-            //     'status' => 'pending'
-            // ]);
-            //
-            // AnalyzeUrl::dispatch($analysis);
-            // $this->currentAnalysis = $analysis;
+            AnalyzeUrl::dispatch($analysis->url, auth()->id());
+            $this->currentAnalysis = $analysis;
 
             // Simulate processing time
-            $this->dispatch('analysis-started', $this->currentAnalysis);
+            //$this->dispatch('analysis-started', $this->currentAnalysis);
 
             session()->flash('success', 'Analysis started for: ' . $this->url);
 

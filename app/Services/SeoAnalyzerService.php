@@ -7,7 +7,7 @@ use App\Services\Crawler\UrlValidator;
 use App\Services\Crawler\PageAnalyzer;
 use App\Services\Parser\HtmlParserService;
 use App\Services\Score\ScoreCalculatorService;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
@@ -289,8 +289,7 @@ class SeoAnalyzerService
     private function getCachedResult(string $cacheKey): ?array
     {
         try {
-            $cached = Redis::get($cacheKey);
-            return $cached ? json_decode($cached, true) : null;
+            return Cache::get($cacheKey);
         } catch (\Exception $e) {
             Log::warning('Failed to retrieve cached analysis result', [
                 'cache_key' => $cacheKey,
@@ -308,7 +307,7 @@ class SeoAnalyzerService
         try {
             // Cache for 1 hour by default
             $ttl = config('seo.cache_ttl', 3600);
-            Redis::setex($cacheKey, $ttl, json_encode($analysis));
+            Cache::put($cacheKey, $analysis, $ttl);
 
             Log::debug('Analysis result cached', [
                 'cache_key' => $cacheKey,

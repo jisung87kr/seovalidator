@@ -345,7 +345,7 @@ class HtmlParserService
             'text_to_html_ratio' => $htmlSize > 0 ? round(($characterCount / $htmlSize) * 100, 2) : 0,
             'reading_time_minutes' => ceil($wordCount / 200), // Average reading speed
             'sentences' => $this->countSentences($textContent),
-            'paragraphs' => $this->xpath->query('//p')->length,
+            'paragraphs' => ($result = $this->xpath->query('//p')) !== false ? $result->length : 0,
             'average_words_per_sentence' => $this->calculateAverageWordsPerSentence($textContent)
         ];
     }
@@ -364,8 +364,8 @@ class HtmlParserService
             'amp_present' => $this->isAmpPage(),
             'ssl_required' => $this->requiresSSL(),
             'external_resources' => $this->getExternalResources(),
-            'inline_styles_count' => $this->xpath->query('//style')->length,
-            'inline_scripts_count' => $this->xpath->query('//script[not(@src)]')->length
+            'inline_styles_count' => ($result = $this->xpath->query('//style')) !== false ? $result->length : 0,
+            'inline_scripts_count' => ($result = $this->xpath->query('//script[not(@src)]')) !== false ? $result->length : 0
         ];
     }
 
@@ -480,12 +480,12 @@ class HtmlParserService
     private function extractPerformanceHints(): array
     {
         return [
-            'dns_prefetch_count' => $this->xpath->query('//link[@rel="dns-prefetch"]')->length,
-            'preconnect_count' => $this->xpath->query('//link[@rel="preconnect"]')->length,
-            'prefetch_count' => $this->xpath->query('//link[@rel="prefetch"]')->length,
-            'preload_count' => $this->xpath->query('//link[@rel="preload"]')->length,
-            'external_css_count' => $this->xpath->query('//link[@rel="stylesheet" and @href]')->length,
-            'external_js_count' => $this->xpath->query('//script[@src]')->length
+            'dns_prefetch_count' => ($result = $this->xpath->query('//link[@rel="dns-prefetch"]')) !== false ? $result->length : 0,
+            'preconnect_count' => ($result = $this->xpath->query('//link[@rel="preconnect"]')) !== false ? $result->length : 0,
+            'prefetch_count' => ($result = $this->xpath->query('//link[@rel="prefetch"]')) !== false ? $result->length : 0,
+            'preload_count' => ($result = $this->xpath->query('//link[@rel="preload"]')) !== false ? $result->length : 0,
+            'external_css_count' => ($result = $this->xpath->query('//link[@rel="stylesheet" and @href]')) !== false ? $result->length : 0,
+            'external_js_count' => ($result = $this->xpath->query('//script[@src]')) !== false ? $result->length : 0
         ];
     }
 
@@ -628,29 +628,33 @@ class HtmlParserService
 
     private function hasSchemaMarkup(): bool
     {
-        return $this->xpath->query('//script[@type="application/ld+json"] | //*[@itemscope] | //*[@typeof]')->length > 0;
+        $result = $this->xpath->query('//script[@type="application/ld+json"] | //*[@itemscope] | //*[@typeof]');
+        return $result !== false && $result->length > 0;
     }
 
     private function hasOpenGraph(): bool
     {
-        return $this->xpath->query('//meta[starts-with(@property, "og:")]')->length > 0;
+        $result = $this->xpath->query('//meta[starts-with(@property, "og:")]');
+        return $result !== false && $result->length > 0;
     }
 
     private function hasTwitterCards(): bool
     {
-        return $this->xpath->query('//meta[starts-with(@name, "twitter:")]')->length > 0;
+        $result = $this->xpath->query('//meta[starts-with(@name, "twitter:")]');
+        return $result !== false && $result->length > 0;
     }
 
     private function isAmpPage(): bool
     {
-        return $this->xpath->query('//html[@amp] | //html[@⚡]')->length > 0;
+        $result = $this->xpath->query('//html[@amp] | //html[@⚡]');
+        return $result !== false && $result->length > 0;
     }
 
     private function requiresSSL(): bool
     {
         // Check for security-related meta tags or HTTPS-only content
         $httpsOnlyNodes = $this->xpath->query('//meta[@http-equiv="Content-Security-Policy" and contains(@content, "upgrade-insecure-requests")]');
-        return $httpsOnlyNodes->length > 0 || str_contains($this->baseUrl, 'https://');
+        return ($httpsOnlyNodes !== false && $httpsOnlyNodes->length > 0) || str_contains($this->baseUrl, 'https://');
     }
 
     private function getExternalResources(): array

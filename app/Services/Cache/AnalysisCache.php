@@ -2,7 +2,7 @@
 
 namespace App\Services\Cache;
 
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -49,8 +49,10 @@ class AnalysisCache
 
     public function __construct()
     {
-        // Verify Redis connection
-        $this->verifyConnection();
+        // Verify cache connection only if using Redis
+        if (config('cache.default') === 'redis') {
+            $this->verifyConnection();
+        }
     }
 
     /**
@@ -69,7 +71,7 @@ class AnalysisCache
             $serializedData = $this->serializeData($cacheData);
 
             // Store in Redis with appropriate TTL
-            $success = Redis::setex($cacheKey, $ttl, $serializedData);
+            $success = Cache::put($cacheKey, $serializedData, $ttl);
 
             if ($success) {
                 $this->trackCacheOperation('store', $cacheKey, strlen($serializedData));
@@ -101,7 +103,7 @@ class AnalysisCache
     {
         try {
             $cacheKey = $this->generateCacheKey('url_analysis', $url, $context);
-            $cachedData = Redis::get($cacheKey);
+            $cachedData = Cache::get($cacheKey);
 
             if ($cachedData === null) {
                 $this->trackCacheOperation('miss', $cacheKey);
@@ -153,7 +155,7 @@ class AnalysisCache
             ];
 
             $serializedData = $this->serializeData($cacheData);
-            $success = Redis::setex($cacheKey, $ttl, $serializedData);
+            $success = Cache::put($cacheKey, $serializedData, $ttl);
 
             if ($success) {
                 $this->trackCacheOperation('batch_store', $cacheKey, strlen($serializedData));
@@ -177,7 +179,7 @@ class AnalysisCache
     {
         try {
             $cacheKey = $this->generateCacheKey('batch_analysis', $batchId);
-            $cachedData = Redis::get($cacheKey);
+            $cachedData = Cache::get($cacheKey);
 
             if ($cachedData === null) {
                 return null;
@@ -210,7 +212,7 @@ class AnalysisCache
             $cacheData['user_preferences'] = $userPreferences;
 
             $serializedData = $this->serializeData($cacheData);
-            return Redis::setex($cacheKey, $ttl, $serializedData);
+            return Cache::put($cacheKey, $serializedData, $ttl);
 
         } catch (Exception $e) {
             Log::error('Failed to store user analysis in cache', [
@@ -229,13 +231,17 @@ class AnalysisCache
     {
         try {
             $pattern = $this->keyPrefix . "*" . $this->hashUrl($url) . "*";
-            $keys = Redis::keys($pattern);
+            // File cache doesn't support pattern matching, return empty array
+            if (config('cache.default') !== 'redis') {
+                return true;
+            }
+            $keys = \Illuminate\Support\Facades\Redis::keys($pattern);
 
             if (empty($keys)) {
                 return 0;
             }
 
-            $deleted = Redis::del($keys);
+            $deleted = \Illuminate\Support\Facades\Redis::del($keys);
 
             Log::info('Cache invalidated for URL', [
                 'url' => $url,
@@ -261,13 +267,17 @@ class AnalysisCache
     {
         try {
             $pattern = $this->keyPrefix . "*{$domain}*";
-            $keys = Redis::keys($pattern);
+            // File cache doesn't support pattern matching, return empty array
+            if (config('cache.default') !== 'redis') {
+                return true;
+            }
+            $keys = \Illuminate\Support\Facades\Redis::keys($pattern);
 
             if (empty($keys)) {
                 return 0;
             }
 
-            $deleted = Redis::del($keys);
+            $deleted = \Illuminate\Support\Facades\Redis::del($keys);
 
             Log::info('Cache invalidated for domain', [
                 'domain' => $domain,
@@ -291,15 +301,29 @@ class AnalysisCache
     public function getCacheStatistics(): array
     {
         try {
-            $info = Redis::info();
+            // File cache doesn't support Redis info
+            if (config('cache.default') !== 'redis') {
+                return [
+                    'total_keys' => 0,
+                    'total_size' => 0,
+                    'hit_ratio' => 0,
+                    'memory_usage' => 0,
+                    'avg_size' => 0
+                ];
+            }
+            $info = \Illuminate\Support\Facades\Redis::info();
             $pattern = $this->keyPrefix . "*";
-            $keys = Redis::keys($pattern);
+            // File cache doesn't support pattern matching, return empty array
+            if (config('cache.default') !== 'redis') {
+                return true;
+            }
+            $keys = \Illuminate\Support\Facades\Redis::keys($pattern);
 
             $totalSize = 0;
             $keysByType = [];
 
             foreach ($keys as $key) {
-                $size = Redis::memory('usage', $key) ?? 0;
+                $size = \Illuminate\Support\Facades\Redis::memory('usage', $key) ?? 0;
                 $totalSize += $size;
 
                 // Extract type from key pattern
@@ -381,15 +405,19 @@ class AnalysisCache
     {
         try {
             $pattern = $this->keyPrefix . "*";
-            $keys = Redis::keys($pattern);
+            // File cache doesn't support pattern matching, return empty array
+            if (config('cache.default') !== 'redis') {
+                return true;
+            }
+            $keys = \Illuminate\Support\Facades\Redis::keys($pattern);
             $cleaned = 0;
 
             foreach ($keys as $key) {
-                $ttl = Redis::ttl($key);
+                $ttl = \Illuminate\Support\Facades\Redis::ttl($key);
 
                 // Remove keys that are expired or have invalid TTL
                 if ($ttl === -1 || $ttl === -2) {
-                    if (Redis::del($key)) {
+                    if (\Illuminate\Support\Facades\Redis::del($key)) {
                         $cleaned++;
                     }
                 }
@@ -411,7 +439,9 @@ class AnalysisCache
     private function verifyConnection(): void
     {
         try {
-            Redis::ping();
+            if (config('cache.default') === 'redis') {
+                \Illuminate\Support\Facades\Redis::ping();
+            }
         } catch (Exception $e) {
             Log::error('Redis connection failed', ['error' => $e->getMessage()]);
             throw new Exception('Redis cache is not available');
@@ -547,7 +577,7 @@ class AnalysisCache
     private function invalidateKey(string $key): bool
     {
         try {
-            return Redis::del($key) > 0;
+            return Cache::forget($key);
         } catch (Exception $e) {
             Log::error('Failed to invalidate cache key', [
                 'key' => $key,
