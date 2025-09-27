@@ -7,11 +7,11 @@
             <div class="mb-8">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">Analysis History</h1>
-                        <p class="mt-2 text-gray-600">View and manage all your SEO analysis results</p>
+                        <h1 class="text-3xl font-bold text-gray-900">{{ __('analysis.history_title') }}</h1>
+                        <p class="mt-2 text-gray-600">{{ __('analysis.history_subtitle') }}</p>
                     </div>
                     <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
-                        Back to Dashboard
+                        {{ __('analysis.back_to_dashboard') }}
                     </a>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Total Analyses</p>
+                                <p class="text-sm font-medium text-gray-500">{{ __('dashboard.total_analyses') }}</p>
                                 <p class="text-2xl font-semibold text-gray-900">{{ $totalAnalyses }}</p>
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Completed</p>
+                                <p class="text-sm font-medium text-gray-500">{{ __('dashboard.completed') }}</p>
                                 <p class="text-2xl font-semibold text-gray-900">{{ $completedAnalyses }}</p>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Average Score</p>
+                                <p class="text-sm font-medium text-gray-500">{{ __('dashboard.average_score') }}</p>
                                 <p class="text-2xl font-semibold text-gray-900">
                                     {{ $averageScore ? number_format($averageScore, 1) : '--' }}
                                 </p>
@@ -80,49 +80,49 @@
                 <div class="p-6">
                     <form method="GET" action="{{ route('analysis.history') }}" class="space-y-4 sm:space-y-0 sm:flex sm:items-end sm:space-x-4">
                         <div class="flex-1">
-                            <label for="search" class="block text-sm font-medium text-gray-700">Search URLs</label>
+                            <label for="search" class="block text-sm font-medium text-gray-700">{{ __('analysis.search_urls') }}</label>
                             <input type="text"
                                    id="search"
                                    name="search"
                                    value="{{ request('search') }}"
-                                   placeholder="Enter URL to search..."
+                                   placeholder="{{ __('analysis.enter_url_to_search') }}"
                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
 
                         <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                            <label for="status" class="block text-sm font-medium text-gray-700">{{ __('ui.status') }}</label>
                             <select id="status"
                                     name="status"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="">All Statuses</option>
-                                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>Processing</option>
-                                <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>Failed</option>
+                                <option value="">{{ __('analysis.all_statuses') }}</option>
+                                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>{{ __('analysis.status_pending') }}</option>
+                                <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>{{ __('analysis.status_processing') }}</option>
+                                <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>{{ __('analysis.status_completed') }}</option>
+                                <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>{{ __('analysis.status_failed') }}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label for="score_range" class="block text-sm font-medium text-gray-700">Score Range</label>
+                            <label for="score_range" class="block text-sm font-medium text-gray-700">{{ __('analysis.score_range') }}</label>
                             <select id="score_range"
                                     name="score_range"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="">All Scores</option>
-                                <option value="excellent" {{ request('score_range') === 'excellent' ? 'selected' : '' }}>Excellent (90+)</option>
-                                <option value="good" {{ request('score_range') === 'good' ? 'selected' : '' }}>Good (70-89)</option>
-                                <option value="fair" {{ request('score_range') === 'fair' ? 'selected' : '' }}>Fair (50-69)</option>
-                                <option value="poor" {{ request('score_range') === 'poor' ? 'selected' : '' }}>Poor (<50)</option>
+                                <option value="">{{ __('analysis.all_scores') }}</option>
+                                <option value="excellent" {{ request('score_range') === 'excellent' ? 'selected' : '' }}>{{ __('dashboard.excellent') }}</option>
+                                <option value="good" {{ request('score_range') === 'good' ? 'selected' : '' }}>{{ __('dashboard.good') }}</option>
+                                <option value="fair" {{ request('score_range') === 'fair' ? 'selected' : '' }}>{{ __('dashboard.fair') }}</option>
+                                <option value="poor" {{ request('score_range') === 'poor' ? 'selected' : '' }}>{{ __('dashboard.poor') }}</option>
                             </select>
                         </div>
 
                         <div class="flex space-x-3">
                             <button type="submit"
                                     class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
-                                Filter
+                                {{ __('ui.filter') }}
                             </button>
                             <a href="{{ route('analysis.history') }}"
                                class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                                Clear
+                                {{ __('analysis.clear') }}
                             </a>
                         </div>
                     </form>
@@ -137,13 +137,13 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Overall Score</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Technical</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Content</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.url') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.status') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('analysis.overall_score') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('analysis.technical') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('analysis.content') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.date') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -168,7 +168,7 @@
                                                     @elseif($analysis->status === 'failed') bg-red-100 text-red-800
                                                     @else bg-gray-100 text-gray-800
                                                     @endif">
-                                                    {{ ucfirst($analysis->status) }}
+                                                    {{ __('analysis.status_' . $analysis->status) }}
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
@@ -206,10 +206,10 @@
                                                 @if($analysis->status === 'completed')
                                                     <div class="flex space-x-2">
                                                         <a href="{{ route('analysis.show', $analysis->id) }}"
-                                                           class="text-indigo-600 hover:text-indigo-900">View</a>
+                                                           class="text-indigo-600 hover:text-indigo-900">{{ __('ui.view') }}</a>
                                                         <span class="text-gray-300">|</span>
                                                         <a href="{{ route('analysis.compare') }}?analysis1={{ $analysis->id }}"
-                                                           class="text-green-600 hover:text-green-900">Compare</a>
+                                                           class="text-green-600 hover:text-green-900">{{ __('analysis.compare') }}</a>
                                                     </div>
                                                 @else
                                                     <span class="text-gray-400">--</span>
@@ -230,12 +230,12 @@
                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                 <path d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0zm12 6a4 4 0 11-8 0 4 4 0 018 0zm-28 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">No analyses found</h3>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('analysis.no_analyses_found') }}</h3>
                             <p class="mt-1 text-sm text-gray-500">
                                 @if(request()->hasAny(['search', 'status', 'score_range']))
-                                    Try adjusting your filters or <a href="{{ route('analysis.history') }}" class="text-indigo-600 hover:text-indigo-500">clear all filters</a>.
+                                    {{ __('analysis.try_adjusting_filters') }} <a href="{{ route('analysis.history') }}" class="text-indigo-600 hover:text-indigo-500">{{ __('analysis.clear_all_filters') }}</a>.
                                 @else
-                                    Get started by <a href="{{ route('dashboard') }}" class="text-indigo-600 hover:text-indigo-500">analyzing your first URL</a>.
+                                    {{ __('analysis.get_started_by') }} <a href="{{ route('dashboard') }}" class="text-indigo-600 hover:text-indigo-500">{{ __('analysis.analyzing_first_url') }}</a>.
                                 @endif
                             </p>
                         </div>

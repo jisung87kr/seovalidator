@@ -7,24 +7,24 @@
             <div class="mb-8">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">SEO Analysis Details</h1>
+                        <h1 class="text-3xl font-bold text-gray-900">{{ __('analysis.details_title') }}</h1>
                         <p class="mt-2 text-gray-600 max-w-2xl truncate" title="{{ $analysis->url }}">{{ $analysis->url }}</p>
                         <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                            <span>Analyzed: {{ $analysis->created_at->format('M j, Y \a\t H:i') }}</span>
+                            <span>{{ __('analysis.analyzed') }}: {{ $analysis->created_at->format('M j, Y \a\t H:i') }}</span>
                             @if($analysis->analyzed_at)
                                 <span>•</span>
-                                <span>Completed: {{ $analysis->analyzed_at->format('M j, Y \a\t H:i') }}</span>
+                                <span>{{ __('analysis.completed') }}: {{ $analysis->analyzed_at->format('M j, Y \a\t H:i') }}</span>
                             @endif
                         </div>
                     </div>
                     <div class="flex space-x-3">
                         <a href="{{ route('analysis.compare') }}?analysis1={{ $analysis->id }}"
                            class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
-                            Compare
+                            {{ __('analysis.compare') }}
                         </a>
                         <a href="{{ route('analysis.history') }}"
                            class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                            Back to History
+                            {{ __('analysis.back_to_history') }}
                         </a>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                                 @elseif($analysis->status === 'failed') text-red-800
                                 @else text-gray-800
                                 @endif">
-                                Analysis {{ ucfirst($analysis->status) }}
+                                {{ __('analysis.analysis_status', ['status' => __('analysis.status_' . $analysis->status)]) }}
                             </h3>
                             <div class="mt-2 text-sm
                                 @if($analysis->status === 'processing') text-yellow-700
@@ -68,14 +68,14 @@
                                 @else text-gray-700
                                 @endif">
                                 @if($analysis->status === 'processing')
-                                    Your SEO analysis is currently being processed. Please check back in a few minutes.
+                                    {{ __('analysis.processing_message') }}
                                 @elseif($analysis->status === 'failed')
-                                    The SEO analysis failed to complete.
+                                    {{ __('analysis.failed_message') }}
                                     @if($analysis->error_message)
-                                        Error: {{ $analysis->error_message }}
+                                        {{ __('analysis.error_prefix') }}: {{ $analysis->error_message }}
                                     @endif
                                 @else
-                                    This analysis is pending processing.
+                                    {{ __('analysis.pending_message') }}
                                 @endif
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                     <!-- Score Overview -->
                     <div class="bg-white shadow-sm rounded-lg">
                         <div class="p-6">
-                            <h2 class="text-lg font-medium text-gray-900 mb-6">Overall SEO Score</h2>
+                            <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.overall_seo_score') }}</h2>
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                 <!-- Main Score -->
                                 <div class="flex items-center justify-center">
@@ -110,10 +110,10 @@
                                                 @elseif($analysis->overall_score >= 50) bg-yellow-100 text-yellow-800
                                                 @else bg-red-100 text-red-800
                                                 @endif">
-                                                @if($analysis->overall_score >= 90) Excellent
-                                                @elseif($analysis->overall_score >= 70) Good
-                                                @elseif($analysis->overall_score >= 50) Fair
-                                                @else Poor
+                                                @if($analysis->overall_score >= 90) {{ __('analysis.excellent_label') }}
+                                                @elseif($analysis->overall_score >= 70) {{ __('analysis.good_label') }}
+                                                @elseif($analysis->overall_score >= 50) {{ __('analysis.fair_label') }}
+                                                @else {{ __('analysis.poor_label') }}
                                                 @endif
                                             </span>
                                         </div>
@@ -123,7 +123,7 @@
                                 <!-- Score Breakdown -->
                                 <div class="space-y-4">
                                     <div class="flex justify-between items-center">
-                                        <span class="text-sm font-medium text-gray-700">Technical SEO</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('analysis.technical_seo') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->technical_score ? number_format($analysis->technical_score, 1) : '--' }}</span>
                                             <div class="w-20 h-2 bg-gray-200 rounded-full">
@@ -135,7 +135,7 @@
                                     </div>
 
                                     <div class="flex justify-between items-center">
-                                        <span class="text-sm font-medium text-gray-700">Content Quality</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('analysis.content_quality') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->content_score ? number_format($analysis->content_score, 1) : '--' }}</span>
                                             <div class="w-20 h-2 bg-gray-200 rounded-full">
@@ -147,7 +147,7 @@
                                     </div>
 
                                     <div class="flex justify-between items-center">
-                                        <span class="text-sm font-medium text-gray-700">Performance</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('analysis.performance') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->performance_score ? number_format($analysis->performance_score, 1) : '--' }}</span>
                                             <div class="w-20 h-2 bg-gray-200 rounded-full">
@@ -159,7 +159,7 @@
                                     </div>
 
                                     <div class="flex justify-between items-center">
-                                        <span class="text-sm font-medium text-gray-700">Accessibility</span>
+                                        <span class="text-sm font-medium text-gray-700">{{ __('analysis.accessibility') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->accessibility_score ? number_format($analysis->accessibility_score, 1) : '--' }}</span>
                                             <div class="w-20 h-2 bg-gray-200 rounded-full">
@@ -179,25 +179,25 @@
                         @if(isset($analysisData['seo_elements']['meta']))
                             <div class="bg-white shadow-sm rounded-lg">
                                 <div class="p-6">
-                                    <h2 class="text-lg font-medium text-gray-900 mb-6">Page Information</h2>
+                                    <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.page_information') }}</h2>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">Page Title</h3>
+                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.page_title') }}</h3>
                                             <p class="text-sm text-gray-900 bg-gray-50 p-3 rounded">
-                                                {{ $analysisData['seo_elements']['meta']['title'] ?? 'No title found' }}
+                                                {{ $analysisData['seo_elements']['meta']['title'] ?? __('analysis.no_title_found') }}
                                             </p>
                                             @if(isset($analysisData['seo_elements']['meta']['title_length']))
-                                                <p class="text-xs text-gray-500 mt-1">Length: {{ $analysisData['seo_elements']['meta']['title_length'] }} characters</p>
+                                                <p class="text-xs text-gray-500 mt-1">{{ __('analysis.length') }}: {{ $analysisData['seo_elements']['meta']['title_length'] }} {{ __('analysis.characters') }}</p>
                                             @endif
                                         </div>
 
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">Meta Description</h3>
+                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.meta_description') }}</h3>
                                             <p class="text-sm text-gray-900 bg-gray-50 p-3 rounded">
-                                                {{ $analysisData['seo_elements']['meta']['description'] ?? 'No description found' }}
+                                                {{ $analysisData['seo_elements']['meta']['description'] ?? __('analysis.no_description_found') }}
                                             </p>
                                             @if(isset($analysisData['seo_elements']['meta']['description_length']))
-                                                <p class="text-xs text-gray-500 mt-1">Length: {{ $analysisData['seo_elements']['meta']['description_length'] }} characters</p>
+                                                <p class="text-xs text-gray-500 mt-1">{{ __('analysis.length') }}: {{ $analysisData['seo_elements']['meta']['description_length'] }} {{ __('analysis.characters') }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -209,7 +209,7 @@
                         @if(isset($analysisData['scores']['category_scores']))
                             <div class="bg-white shadow-sm rounded-lg">
                                 <div class="p-6">
-                                    <h2 class="text-lg font-medium text-gray-900 mb-6">Issues and Recommendations</h2>
+                                    <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.issues_and_recommendations') }}</h2>
                                     <div class="space-y-6">
                                         @foreach($analysisData['scores']['category_scores'] as $category => $categoryData)
                                             @if(isset($categoryData['issues']) && count($categoryData['issues']) > 0)
@@ -258,24 +258,24 @@
                         @if(isset($analysisData['crawl_data']))
                             <div class="bg-white shadow-sm rounded-lg">
                                 <div class="p-6">
-                                    <h2 class="text-lg font-medium text-gray-900 mb-6">Technical Details</h2>
+                                    <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.technical_details') }}</h2>
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">Page Size</h3>
+                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.page_size') }}</h3>
                                             <p class="text-lg font-semibold text-gray-900">
                                                 {{ isset($analysisData['crawl_data']['html_size']) ? number_format($analysisData['crawl_data']['html_size'] / 1024, 1) . ' KB' : '--' }}
                                             </p>
                                         </div>
 
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">Load Time</h3>
+                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.load_time') }}</h3>
                                             <p class="text-lg font-semibold text-gray-900">
                                                 {{ isset($analysisData['crawl_data']['load_time_ms']) ? number_format($analysisData['crawl_data']['load_time_ms']) . ' ms' : '--' }}
                                             </p>
                                         </div>
 
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">Status Code</h3>
+                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.status_code') }}</h3>
                                             <p class="text-lg font-semibold text-gray-900">
                                                 {{ $analysisData['status']['code'] ?? '--' }}
                                             </p>
@@ -285,21 +285,21 @@
                                     @if(isset($analysisData['seo_elements']['images']))
                                         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                                             <div>
-                                                <h3 class="text-sm font-medium text-gray-700 mb-2">Total Images</h3>
+                                                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.total_images') }}</h3>
                                                 <p class="text-lg font-semibold text-gray-900">
                                                     {{ $analysisData['seo_elements']['images']['total_count'] ?? 0 }}
                                                 </p>
                                             </div>
 
                                             <div>
-                                                <h3 class="text-sm font-medium text-gray-700 mb-2">Images Missing Alt</h3>
+                                                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.images_missing_alt') }}</h3>
                                                 <p class="text-lg font-semibold text-gray-900">
                                                     {{ $analysisData['seo_elements']['images']['without_alt_count'] ?? 0 }}
                                                 </p>
                                             </div>
 
                                             <div>
-                                                <h3 class="text-sm font-medium text-gray-700 mb-2">Total Links</h3>
+                                                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.total_links') }}</h3>
                                                 <p class="text-lg font-semibold text-gray-900">
                                                     {{ $analysisData['seo_elements']['links']['total_count'] ?? 0 }}
                                                 </p>

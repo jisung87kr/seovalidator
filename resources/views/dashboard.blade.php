@@ -5,8 +5,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">SEO Dashboard</h1>
-                <p class="mt-2 text-gray-600">Manage and monitor your SEO analysis results</p>
+                <h1 class="text-3xl font-bold text-gray-900">{{ __('dashboard.title') }}</h1>
+                <p class="mt-2 text-gray-600">{{ __('dashboard.subtitle') }}</p>
             </div>
 
             <!-- Statistics Cards -->
@@ -23,7 +23,7 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Total Analyses</p>
+                                <p class="text-sm font-medium text-gray-500">{{ __('dashboard.total_analyses') }}</p>
                                 <p class="text-2xl font-semibold text-gray-900">{{ $totalAnalyses }}</p>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Completed</p>
+                                <p class="text-sm font-medium text-gray-500">{{ __('dashboard.completed') }}</p>
                                 <p class="text-2xl font-semibold text-gray-900">{{ $completedAnalyses }}</p>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <p class="text-sm font-medium text-gray-500">Average Score</p>
+                                <p class="text-sm font-medium text-gray-500">{{ __('dashboard.average_score') }}</p>
                                 <p class="text-2xl font-semibold text-gray-900">
                                     {{ $averageScore ? number_format($averageScore, 1) : '--' }}
                                 </p>
@@ -73,22 +73,22 @@
                 <!-- Score Distribution -->
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                     <div class="p-6">
-                        <p class="text-sm font-medium text-gray-500 mb-3">Score Distribution</p>
+                        <p class="text-sm font-medium text-gray-500 mb-3">{{ __('dashboard.score_distribution') }}</p>
                         <div class="space-y-2">
                             <div class="flex justify-between text-sm">
-                                <span class="text-green-600">Excellent (90+)</span>
+                                <span class="text-green-600">{{ __('dashboard.excellent') }}</span>
                                 <span>{{ $scoreDistribution['excellent'] }}</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-blue-600">Good (70-89)</span>
+                                <span class="text-blue-600">{{ __('dashboard.good') }}</span>
                                 <span>{{ $scoreDistribution['good'] }}</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-yellow-600">Fair (50-69)</span>
+                                <span class="text-yellow-600">{{ __('dashboard.fair') }}</span>
                                 <span>{{ $scoreDistribution['fair'] }}</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-red-600">Poor (<50)</span>
+                                <span class="text-red-600">{{ __('dashboard.poor') }}</span>
                                 <span>{{ $scoreDistribution['poor'] }}</span>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                 <div class="lg:col-span-2">
                     <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                         <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Analyze New URL</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('dashboard.analyze_new_url') }}</h3>
                             @livewire('url-analysis-form')
                         </div>
                     </div>
@@ -110,17 +110,17 @@
                     <!-- Recent Analyses -->
                     <div class="mt-8 bg-white overflow-hidden shadow-sm rounded-lg">
                         <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Analyses</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('dashboard.recent_analyses') }}</h3>
                             @if($recentAnalyses->count() > 0)
                                 <div class="overflow-x-auto">
                                     <table class="min-w-full divide-y divide-gray-200">
                                         <thead class="bg-gray-50">
                                             <tr>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.url') }}</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.status') }}</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.score') }}</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.date') }}</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('ui.actions') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
@@ -138,7 +138,7 @@
                                                             @elseif($analysis->status === 'failed') bg-red-100 text-red-800
                                                             @else bg-gray-100 text-gray-800
                                                             @endif">
-                                                            {{ ucfirst($analysis->status) }}
+                                                            {{ __('analysis.status_' . $analysis->status) }}
                                                         </span>
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -165,7 +165,7 @@
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                         @if($analysis->status === 'completed')
-                                                            <a href="{{ route('analysis.show', $analysis->id) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
+                                                            <a href="{{ route('analysis.show', $analysis->id) }}" class="text-indigo-600 hover:text-indigo-900">{{ __('ui.view') }}</a>
                                                         @else
                                                             <span class="text-gray-400">--</span>
                                                         @endif
@@ -180,8 +180,8 @@
                                     <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                         <path d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A10.003 10.003 0 0124 26c4.21 0 7.813 2.602 9.288 6.286M30 14a6 6 0 11-12 0 6 6 0 0112 0zm12 6a4 4 0 11-8 0 4 4 0 018 0zm-28 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                     </svg>
-                                    <h3 class="mt-2 text-sm font-medium text-gray-900">No analyses yet</h3>
-                                    <p class="mt-1 text-sm text-gray-500">Get started by analyzing your first URL above.</p>
+                                    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('dashboard.no_analyses_yet') }}</h3>
+                                    <p class="mt-1 text-sm text-gray-500">{{ __('dashboard.get_started_message') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -193,7 +193,7 @@
                     <!-- Recent Activity -->
                     <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                         <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('dashboard.recent_activity') }}</h3>
                             @if($recentActivity->count() > 0)
                                 <div class="space-y-3">
                                     @foreach($recentActivity as $activity)
@@ -220,7 +220,7 @@
                                     @endforeach
                                 </div>
                             @else
-                                <p class="text-sm text-gray-500">No recent activity</p>
+                                <p class="text-sm text-gray-500">{{ __('dashboard.no_recent_activity') }}</p>
                             @endif
                         </div>
                     </div>
@@ -228,16 +228,16 @@
                     <!-- Quick Actions -->
                     <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                         <div class="p-6">
-                            <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('dashboard.quick_actions') }}</h3>
                             <div class="space-y-3">
                                 <a href="{{ route('analysis.history') }}" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
-                                    View All Analyses
+                                    {{ __('dashboard.view_all_analyses') }}
                                 </a>
                                 <a href="{{ route('analysis.compare') }}" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
-                                    Compare Results
+                                    {{ __('dashboard.compare_results') }}
                                 </a>
                                 <a href="{{ route('user.profile') }}" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
-                                    Profile Settings
+                                    {{ __('dashboard.profile_settings') }}
                                 </a>
                             </div>
                         </div>
