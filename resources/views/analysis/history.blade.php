@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-6 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
-            <div class="mb-8">
-                <div class="flex justify-between items-center">
+            <div class="mb-6 sm:mb-8">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">{{ __('analysis.history_title') }}</h1>
-                        <p class="mt-2 text-gray-600">{{ __('analysis.history_subtitle') }}</p>
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 break-keep">{{ __('analysis.history_title') }}</h1>
+                        <p class="mt-2 text-sm sm:text-base text-gray-600 break-keep">{{ __('analysis.history_subtitle') }}</p>
                     </div>
-                    <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
+                    <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 w-full sm:w-auto">
                         {{ __('analysis.back_to_dashboard') }}
                     </a>
                 </div>
             </div>
 
             <!-- Statistics Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
                                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
                                 <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
                                 <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">

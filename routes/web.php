@@ -9,7 +9,13 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 
+// Korean routes (default, no prefix)
 Route::get('/', [LandingController::class, 'index'])->name('landing');
+
+// English routes (with /en prefix)
+Route::prefix('en')->name('en.')->group(function () {
+    Route::get('/', [LandingController::class, 'index'])->name('landing');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -45,7 +51,8 @@ Route::get('/demo/analyze-url', function () {
     ]);
 });
 
-// Health Check Routes
+// Health Check Routes (temporarily commented until HealthController exists)
+/*
 Route::prefix('health')->group(function () {
     Route::get('/', [App\Http\Controllers\HealthController::class, 'index']);
     Route::get('/comprehensive', [App\Http\Controllers\HealthController::class, 'comprehensive']);
@@ -64,6 +71,7 @@ Route::get('/live', [App\Http\Controllers\HealthController::class, 'live']);
 
 // Metrics endpoint
 Route::get('/metrics', [App\Http\Controllers\HealthController::class, 'metrics']);
+*/
 
 
 require __DIR__.'/auth.php';

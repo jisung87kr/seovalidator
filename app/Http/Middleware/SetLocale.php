@@ -17,18 +17,21 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if locale is provided in the request
-        if ($request->has('locale') && in_array($request->locale, ['ko', 'en'])) {
-            Session::put('locale', $request->locale);
+        // Get the locale from URL path
+        $segment = $request->segment(1);
+
+        if ($segment === 'en') {
+            $locale = 'en';
+        } else {
+            // Default to Korean for root path and all other paths
+            $locale = 'ko';
         }
 
-        // Set locale from session or default
-        $locale = Session::get('locale', config('app.locale'));
+        // Set the application locale
+        App::setLocale($locale);
 
-        // Ensure the locale is supported
-        if (in_array($locale, ['ko', 'en'])) {
-            App::setLocale($locale);
-        }
+        // Store in session for consistency
+        Session::put('locale', $locale);
 
         return $next($request);
     }

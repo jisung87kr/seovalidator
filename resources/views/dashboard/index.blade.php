@@ -3,11 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
     <!-- Dashboard Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">SEO Dashboard</h1>
-        <p class="mt-2 text-gray-600">Analyze and track your website's SEO performance</p>
+    <div class="mb-6 sm:mb-8 px-3">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 break-keep">SEO Dashboard</h1>
+        <p class="mt-2 text-sm sm:text-base text-gray-600 break-keep">Analyze and track your website's SEO performance</p>
     </div>
 
     <!-- URL Analysis Form -->
@@ -16,9 +16,9 @@
     </div>
 
     <!-- Dashboard Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+            <div class="p-4 sm:p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
@@ -38,7 +38,7 @@
         </div>
 
         <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+            <div class="p-4 sm:p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
@@ -58,7 +58,7 @@
         </div>
 
         <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+            <div class="p-4 sm:p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-yellow-100 rounded-md flex items-center justify-center">
@@ -78,7 +78,7 @@
         </div>
 
         <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="p-5">
+            <div class="p-4 sm:p-5">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <div class="w-8 h-8 bg-red-100 rounded-md flex items-center justify-center">

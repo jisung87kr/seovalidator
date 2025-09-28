@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-6 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
-            <div class="mb-8">
-                <div class="flex justify-between items-start">
+            <div class="mb-6 sm:mb-8">
+                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div>
-                        <h1 class="text-3xl font-bold text-gray-900">{{ __('analysis.details_title') }}</h1>
-                        <p class="mt-2 text-gray-600 max-w-2xl truncate" title="{{ $analysis->url }}">{{ $analysis->url }}</p>
-                        <div class="mt-2 flex items-center space-x-4 text-sm text-gray-500">
+                        <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ __('analysis.details_title') }}</h1>
+                        <p class="mt-2 text-sm sm:text-base text-gray-600 max-w-2xl break-all sm:truncate" title="{{ $analysis->url }}">{{ $analysis->url }}</p>
+                        <div class="mt-2 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-1 sm:space-y-0 text-xs sm:text-sm text-gray-500">
                             <span>{{ __('analysis.analyzed') }}: {{ $analysis->created_at->format('M j, Y \a\t H:i') }}</span>
                             @if($analysis->analyzed_at)
                                 <span>•</span>
@@ -17,23 +17,26 @@
                             @endif
                         </div>
                     </div>
-                    <div class="flex space-x-3">
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-4 lg:mt-0">
                         @if($analysis->status === 'completed')
                             <a href="{{ route('analysis.export-pdf', $analysis->id) }}"
-                               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                                <svg class="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                {{ __('analysis.export_pdf') }}
+                                <span class="hidden sm:inline">{{ __('analysis.export_pdf') }}</span>
+                                <span class="sm:hidden ml-1">PDF</span>
                             </a>
                         @endif
                         <a href="{{ route('analysis.compare') }}?analysis1={{ $analysis->id }}"
-                           class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
-                            {{ __('analysis.compare') }}
+                           class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                            <span class="hidden sm:inline">{{ __('analysis.compare') }}</span>
+                            <span class="sm:hidden">비교</span>
                         </a>
                         <a href="{{ route('analysis.history') }}"
-                           class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                            {{ __('analysis.back_to_history') }}
+                           class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                            <span class="hidden sm:inline">{{ __('analysis.back_to_history') }}</span>
+                            <span class="sm:hidden">목록</span>
                         </a>
                     </div>
                 </div>
@@ -135,7 +138,7 @@
                                         <span class="text-sm font-medium text-gray-700">{{ __('analysis.technical_seo') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->technical_score ? number_format($analysis->technical_score, 1) : '--' }}</span>
-                                            <div class="w-20 h-2 bg-gray-200 rounded-full">
+                                            <div class="w-16 sm:w-20 h-2 bg-gray-200 rounded-full">
                                                 @if($analysis->technical_score)
                                                     <div class="h-2 rounded-full bg-blue-500" style="width: {{ $analysis->technical_score }}%"></div>
                                                 @endif
@@ -147,7 +150,7 @@
                                         <span class="text-sm font-medium text-gray-700">{{ __('analysis.content_quality') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->content_score ? number_format($analysis->content_score, 1) : '--' }}</span>
-                                            <div class="w-20 h-2 bg-gray-200 rounded-full">
+                                            <div class="w-16 sm:w-20 h-2 bg-gray-200 rounded-full">
                                                 @if($analysis->content_score)
                                                     <div class="h-2 rounded-full bg-green-500" style="width: {{ $analysis->content_score }}%"></div>
                                                 @endif
@@ -159,7 +162,7 @@
                                         <span class="text-sm font-medium text-gray-700">{{ __('analysis.performance') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->performance_score ? number_format($analysis->performance_score, 1) : '--' }}</span>
-                                            <div class="w-20 h-2 bg-gray-200 rounded-full">
+                                            <div class="w-16 sm:w-20 h-2 bg-gray-200 rounded-full">
                                                 @if($analysis->performance_score)
                                                     <div class="h-2 rounded-full bg-yellow-500" style="width: {{ $analysis->performance_score }}%"></div>
                                                 @endif
@@ -171,7 +174,7 @@
                                         <span class="text-sm font-medium text-gray-700">{{ __('analysis.accessibility') }}</span>
                                         <div class="flex items-center space-x-2">
                                             <span class="text-sm font-medium">{{ $analysis->accessibility_score ? number_format($analysis->accessibility_score, 1) : '--' }}</span>
-                                            <div class="w-20 h-2 bg-gray-200 rounded-full">
+                                            <div class="w-16 sm:w-20 h-2 bg-gray-200 rounded-full">
                                                 @if($analysis->accessibility_score)
                                                     <div class="h-2 rounded-full bg-purple-500" style="width: {{ $analysis->accessibility_score }}%"></div>
                                                 @endif
@@ -187,12 +190,12 @@
                         <!-- Key Information -->
                         @if(isset($analysisData['seo_elements']['meta']))
                             <div class="bg-white shadow-sm rounded-lg">
-                                <div class="p-6">
-                                    <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.page_information') }}</h2>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="p-4 sm:p-6">
+                                    <h2 class="text-base sm:text-lg font-medium text-gray-900 mb-4 sm:mb-6">{{ __('analysis.page_information') }}</h2>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.page_title') }}</h3>
-                                            <p class="text-sm text-gray-900 bg-gray-50 p-3 rounded">
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ __('analysis.page_title') }}</h3>
+                                            <p class="text-xs sm:text-sm text-gray-900 bg-gray-50 p-2 sm:p-3 rounded break-words">
                                                 {{ $analysisData['seo_elements']['meta']['title'] ?? __('analysis.no_title_found') }}
                                             </p>
                                             @if(isset($analysisData['seo_elements']['meta']['title_length']))
@@ -201,8 +204,8 @@
                                         </div>
 
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.meta_description') }}</h3>
-                                            <p class="text-sm text-gray-900 bg-gray-50 p-3 rounded">
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ __('analysis.meta_description') }}</h3>
+                                            <p class="text-xs sm:text-sm text-gray-900 bg-gray-50 p-2 sm:p-3 rounded break-words">
                                                 {{ $analysisData['seo_elements']['meta']['description'] ?? __('analysis.no_description_found') }}
                                             </p>
                                             @if(isset($analysisData['seo_elements']['meta']['description_length']))
@@ -217,39 +220,39 @@
                         <!-- Issues and Recommendations -->
                         @if(isset($analysisData['scores']['category_scores']))
                             <div class="bg-white shadow-sm rounded-lg">
-                                <div class="p-6">
-                                    <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.issues_and_recommendations') }}</h2>
-                                    <div class="space-y-6">
+                                <div class="p-4 sm:p-6">
+                                    <h2 class="text-base sm:text-lg font-medium text-gray-900 mb-4 sm:mb-6">{{ __('analysis.issues_and_recommendations') }}</h2>
+                                    <div class="space-y-4 sm:space-y-6">
                                         @foreach($analysisData['scores']['category_scores'] as $category => $categoryData)
                                             @if(isset($categoryData['issues']) && count($categoryData['issues']) > 0)
                                                 <div>
-                                                    <h3 class="text-md font-medium text-gray-800 mb-3 capitalize">{{ str_replace('_', ' ', $category) }}</h3>
+                                                    <h3 class="text-sm sm:text-base font-medium text-gray-800 mb-2 sm:mb-3 capitalize">{{ str_replace('_', ' ', $category) }}</h3>
                                                     <div class="space-y-2">
                                                         @foreach($categoryData['issues'] as $issue)
-                                                            <div class="flex items-start space-x-3 p-3 bg-red-50 rounded-lg">
+                                                            <div class="flex items-start space-x-2 sm:space-x-3 p-2 sm:p-3 bg-red-50 rounded-lg">
                                                                 <div class="flex-shrink-0 mt-0.5">
-                                                                    <svg class="h-4 w-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <svg class="h-3 w-3 sm:h-4 sm:w-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                                                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
                                                                     </svg>
                                                                 </div>
                                                                 <div>
-                                                                    <p class="text-sm text-red-800">{{ $issue }}</p>
+                                                                    <p class="text-xs sm:text-sm text-red-800 break-words">{{ $issue }}</p>
                                                                 </div>
                                                             </div>
                                                         @endforeach
                                                     </div>
 
                                                     @if(isset($categoryData['recommendations']) && count($categoryData['recommendations']) > 0)
-                                                        <div class="mt-4 space-y-2">
+                                                        <div class="mt-3 sm:mt-4 space-y-2">
                                                             @foreach($categoryData['recommendations'] as $recommendation)
-                                                                <div class="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                                                                <div class="flex items-start space-x-2 sm:space-x-3 p-2 sm:p-3 bg-blue-50 rounded-lg">
                                                                     <div class="flex-shrink-0 mt-0.5">
-                                                                        <svg class="h-4 w-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <svg class="h-3 w-3 sm:h-4 sm:w-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                                                                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                                                                         </svg>
                                                                     </div>
                                                                     <div>
-                                                                        <p class="text-sm text-blue-800">{{ $recommendation }}</p>
+                                                                        <p class="text-xs sm:text-sm text-blue-800 break-words">{{ $recommendation }}</p>
                                                                     </div>
                                                                 </div>
                                                             @endforeach
@@ -266,50 +269,50 @@
                         <!-- Technical Details -->
                         @if(isset($analysisData['crawl_data']))
                             <div class="bg-white shadow-sm rounded-lg">
-                                <div class="p-6">
-                                    <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.technical_details') }}</h2>
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="p-4 sm:p-6">
+                                    <h2 class="text-base sm:text-lg font-medium text-gray-900 mb-4 sm:mb-6">{{ __('analysis.technical_details') }}</h2>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.page_size') }}</h3>
-                                            <p class="text-lg font-semibold text-gray-900">
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">{{ __('analysis.page_size') }}</h3>
+                                            <p class="text-base sm:text-lg font-semibold text-gray-900">
                                                 {{ isset($analysisData['crawl_data']['html_size']) ? number_format($analysisData['crawl_data']['html_size'] / 1024, 1) . ' KB' : '--' }}
                                             </p>
                                         </div>
 
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.load_time') }}</h3>
-                                            <p class="text-lg font-semibold text-gray-900">
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">{{ __('analysis.load_time') }}</h3>
+                                            <p class="text-base sm:text-lg font-semibold text-gray-900">
                                                 {{ isset($analysisData['crawl_data']['load_time_ms']) ? number_format($analysisData['crawl_data']['load_time_ms']) . ' ms' : '--' }}
                                             </p>
                                         </div>
 
                                         <div>
-                                            <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.status_code') }}</h3>
-                                            <p class="text-lg font-semibold text-gray-900">
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">{{ __('analysis.status_code') }}</h3>
+                                            <p class="text-base sm:text-lg font-semibold text-gray-900">
                                                 {{ $analysisData['status']['code'] ?? '--' }}
                                             </p>
                                         </div>
                                     </div>
 
                                     @if(isset($analysisData['seo_elements']['images']))
-                                        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div class="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                                             <div>
-                                                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.total_images') }}</h3>
-                                                <p class="text-lg font-semibold text-gray-900">
+                                                <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">{{ __('analysis.total_images') }}</h3>
+                                                <p class="text-base sm:text-lg font-semibold text-gray-900">
                                                     {{ $analysisData['seo_elements']['images']['total_count'] ?? 0 }}
                                                 </p>
                                             </div>
 
                                             <div>
-                                                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.images_missing_alt') }}</h3>
-                                                <p class="text-lg font-semibold text-gray-900">
+                                                <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">{{ __('analysis.images_missing_alt') }}</h3>
+                                                <p class="text-base sm:text-lg font-semibold text-gray-900">
                                                     {{ $analysisData['seo_elements']['images']['without_alt_count'] ?? 0 }}
                                                 </p>
                                             </div>
 
                                             <div>
-                                                <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('analysis.total_links') }}</h3>
-                                                <p class="text-lg font-semibold text-gray-900">
+                                                <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">{{ __('analysis.total_links') }}</h3>
+                                                <p class="text-base sm:text-lg font-semibold text-gray-900">
                                                     {{ $analysisData['seo_elements']['links']['total_count'] ?? 0 }}
                                                 </p>
                                             </div>
