@@ -5,10 +5,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\UserProfileController;
-use App\Models\SeoAnalysis;
-use Illuminate\Support\Facades\App;
+use App\Http\Controllers\GuestAnalysisController;
 use Illuminate\Support\Facades\Route;
-use Barryvdh\Snappy\Facades\SnappyPdf;
 
 // Korean routes (default, no prefix)
 Route::get('/', [LandingController::class, 'index'])->name('landing');
@@ -42,17 +40,24 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Guest analysis routes
+Route::prefix('guest')->name('guest.')->group(function () {
+    Route::get('/analyses', [GuestAnalysisController::class, 'index'])->name('analyses');
+    Route::get('/analyses/{id}', [GuestAnalysisController::class, 'show'])->name('analyses.show');
+    Route::post('/analyze', [GuestAnalysisController::class, 'analyze'])->name('analyze');
+});
+
 Route::get('/demo/analyze-url', function () {
     $url = request('url', 'https://example.com');
 
-    \App\Jobs\CrawlUrl::dispatch($url, 1); // Use dummy user ID for now
+    \App\Jobs\CrawlUrl::dispatch($url, null); // null for guest users
 
     return response()->json([
         'message' => 'SEO analysis job dispatched',
         'url' => $url,
         'monitor_at' => url('/horizon')
     ]);
-});
+})->middleware('daily.limit');
 
 // Health Check Routes (temporarily commented until HealthController exists)
 /*

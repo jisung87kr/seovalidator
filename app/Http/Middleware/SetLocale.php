@@ -27,6 +27,10 @@ class SetLocale
             $locale = 'ko';
         }
 
+        if($request->input('locale')){
+            $locale = $request->input('locale');
+        }
+
         // Set the application locale
         App::setLocale($locale);
 

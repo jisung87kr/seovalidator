@@ -133,6 +133,9 @@
                             {{ __('landing.dashboard') }}
                         </a>
                     @else
+                        <a href="{{ route('guest.analyses') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
+                            {{ __('guest.my_analyses') }}
+                        </a>
                         <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
                             {{ __('landing.login') }}
                         </a>
@@ -184,6 +187,9 @@
                         {{ __('landing.dashboard') }}
                     </a>
                 @else
+                    <a href="{{ route('guest.analyses') }}" class="text-gray-700 hover:text-gray-900 block px-3 py-2 text-base font-medium">
+                        {{ __('guest.my_analyses') }}
+                    </a>
                     <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900 block px-3 py-2 text-base font-medium">
                         {{ __('landing.login') }}
                     </a>
@@ -211,6 +217,23 @@
                 <!-- URL Input Form -->
                 <div class="max-w-2xl mx-auto mb-8 sm:mb-12">
                     <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6">
+                        @guest
+                            @if($usageInfo && $usageInfo['remaining'] <= 1)
+                                <div class="mb-4 p-3 bg-orange-500/20 border border-orange-300/30 rounded-lg">
+                                    <div class="flex items-center text-white text-sm">
+                                        <svg class="w-5 h-5 mr-2 text-orange-300" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        @if($usageInfo['remaining'] > 0)
+                                            {{ __('landing.daily_limit_warning', ['remaining' => $usageInfo['remaining']]) }}
+                                        @else
+                                            {{ __('landing.daily_limit_exceeded', ['limit' => $usageInfo['limit']]) }}
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                        @endguest
+
                         <form id="seo-analyze-form" class="flex flex-col gap-3 sm:gap-4">
                             <input
                                 type="url"
@@ -221,14 +244,42 @@
                             >
                             <button
                                 type="submit"
-                                class="w-full px-6 sm:px-8 py-3 sm:py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors text-base sm:text-lg"
+                                id="analyze-button"
+                                class="w-full px-6 sm:px-8 py-3 sm:py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors text-base sm:text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                @guest @if($usageInfo && $usageInfo['remaining'] <= 0) disabled @endif @endguest
                             >
-                                {{ __('landing.analyze_button') }}
+                                @guest
+                                    @if($usageInfo && $usageInfo['remaining'] <= 0)
+                                        {{ __('landing.unlimited_with_signup') }}
+                                    @else
+                                        {{ __('landing.analyze_button') }}
+                                    @endif
+                                @else
+                                    {{ __('landing.analyze_button') }}
+                                @endguest
                             </button>
                         </form>
-                        <p class="text-white/80 text-sm mt-4">
-                            {{ __('landing.hero_features') }}
-                        </p>
+
+                        <div class="mt-4 space-y-2">
+                            @guest
+                                @if($usageInfo)
+                                    <div class="flex justify-between items-center text-white/80 text-sm">
+                                        <span>{{ __('landing.daily_limit_info', ['used' => $usageInfo['used'], 'limit' => $usageInfo['limit']]) }}</span>
+                                        <span>{{ __('landing.reset_tomorrow', ['time' => $usageInfo['reset_time']->format('H:i')]) }}</span>
+                                    </div>
+                                    <div class="w-full bg-white/20 rounded-full h-2">
+                                        <div class="bg-yellow-400 h-2 rounded-full transition-all duration-500" style="width: {{ ($usageInfo['used'] / $usageInfo['limit']) * 100 }}%"></div>
+                                    </div>
+                                @endif
+                            @endguest
+                            <p class="text-white/80 text-sm">
+                                @auth
+                                    ✓ {{ __('analysis.unlimited_for_members') }} ✓ {{ __('landing.hero_features') }}
+                                @else
+                                    {{ __('landing.hero_features') }}
+                                @endauth
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -417,6 +468,22 @@
                 <div class="mt-12 lg:mt-0">
                     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-8 text-white">
                         <h3 class="text-2xl font-bold mb-6">{{ __('landing.cta_box_title') }}</h3>
+
+                        @guest
+                            @if($usageInfo)
+                                <!-- Usage limit reminder for guests -->
+                                <div class="bg-white/10 rounded-lg p-4 mb-6 border border-white/20">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm font-medium">{{ __('landing.daily_limit_info', ['used' => $usageInfo['used'], 'limit' => $usageInfo['limit']]) }}</span>
+                                        <span class="text-xs bg-white/20 px-2 py-1 rounded">{{ __('analysis.unlimited_for_members') }}</span>
+                                    </div>
+                                    <div class="w-full bg-white/20 rounded-full h-2">
+                                        <div class="bg-white rounded-full h-2 transition-all duration-300" style="width: {{ ($usageInfo['used'] / $usageInfo['limit']) * 100 }}%"></div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endguest
+
                         <div class="space-y-4 mb-8">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
@@ -436,6 +503,14 @@
                                 </svg>
                                 {{ __('landing.cta_box_feature3') }}
                             </div>
+                            @guest
+                                <div class="flex items-center border-t border-white/20 pt-4">
+                                    <svg class="w-5 h-5 mr-3 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="font-medium">{{ __('landing.unlimited_with_signup') }}</span>
+                                </div>
+                            @endguest
                         </div>
                         @guest
                             <a href="{{ route('register') }}" class="block w-full bg-white text-indigo-600 font-semibold py-3 px-6 rounded-lg text-center hover:bg-gray-50 transition-colors">
@@ -521,16 +596,59 @@
         // SEO Analyze Form
         document.getElementById('seo-analyze-form').addEventListener('submit', function(e) {
             e.preventDefault();
+            const button = document.getElementById('analyze-button');
             const url = document.getElementById('website-url').value;
-            if (url) {
-                @auth
-                    // 로그인된 사용자는 분석 페이지로 이동
-                    window.location.href = `{{ route('dashboard') }}?analyze=${encodeURIComponent(url)}`;
-                @else
-                    // 비로그인 사용자는 회원가입 페이지로 이동
+
+            if (!url) return;
+
+            @auth
+                // 로그인된 사용자는 분석 페이지로 이동
+                window.location.href = `{{ route('dashboard') }}?analyze=${encodeURIComponent(url)}`;
+            @else
+                // 비로그인 사용자 처리
+                @if($usageInfo && $usageInfo['remaining'] <= 0)
+                    // 한도 초과 시 회원가입 페이지로 이동
                     window.location.href = `{{ route('register') }}?analyze=${encodeURIComponent(url)}`;
-                @endauth
-            }
+                @else
+                    // 한도 내일 시 데모 분석 실행
+                    button.disabled = true;
+                    button.textContent = '분석 중...';
+
+                    fetch('{{ route('guest.analyze') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ url: url })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                if (data.action_required === 'register') {
+                                    alert(data.message);
+                                    window.location.href = `{{ route('register') }}?analyze=${encodeURIComponent(url)}`;
+                                    return;
+                                }
+                                throw new Error(data.message);
+                            }
+
+                            // 분석 시작됨 - 게스트 분석 페이지로 이동
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            } else {
+                                // Fallback to guest analyses page
+                                window.location.href = '{{ route('guest.analyses') }}';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('분석 시작 중 오류가 발생했습니다: ' + error.message);
+                            button.disabled = false;
+                            button.textContent = '{{ __('landing.analyze_button') }}';
+                        });
+                @endif
+            @endauth
         });
 
         // Mobile Menu Toggle

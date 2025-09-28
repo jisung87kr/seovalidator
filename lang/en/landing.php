@@ -95,4 +95,15 @@ return [
     'footer_contact' => 'Contact Us',
     
     'footer_copyright' => '© 2025 SEO Validator. All rights reserved.',
+
+    // Daily limit messages
+    'daily_limit_info' => 'Used :used/:limit analyses today',
+    'daily_limit_warning' => ':remaining free analyses remaining today',
+    'daily_limit_exceeded' => 'You have exceeded the daily free analysis limit (:limit analyses). Sign up for unlimited analyses!',
+    'unlimited_with_signup' => 'Sign up for unlimited analyses',
+    'reset_tomorrow' => 'Resets tomorrow at :time',
+    
+    // Form labels and buttons
+    'enter_website_url' => 'Enter Website URL',
+    'analyze_now' => 'Analyze Now',
 ];

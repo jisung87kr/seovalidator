@@ -33,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Custom rate limiting for auth endpoints
         $middleware->alias([
             'auth.throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+            'daily.limit' => \App\Http\Middleware\DailyAnalysisLimit::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

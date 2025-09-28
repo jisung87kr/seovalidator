@@ -228,4 +228,9 @@ return [
     'download_report' => '리포트 다운로드',
     'seo_analysis_report' => 'SEO 분석 리포트',
     'comparison_report' => '비교 리포트',
+
+    // Daily limit messages
+    'daily_limit_exceeded' => '일일 무료 분석 한도를 초과했습니다. 무제한 분석을 위해 회원가입하세요!',
+    'unlimited_for_members' => '회원은 무제한 분석이 가능합니다',
+    'sign_up_for_unlimited' => '무제한 분석을 위해 회원가입',
 ];

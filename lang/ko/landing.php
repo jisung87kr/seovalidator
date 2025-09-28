@@ -95,4 +95,15 @@ return [
     'footer_contact' => '문의하기',
     
     'footer_copyright' => '© 2025 SEO Validator. All rights reserved.',
+
+    // Daily limit messages
+    'daily_limit_info' => '오늘 :used/:limit 회 분석 사용',
+    'daily_limit_warning' => '일일 무료 분석 :remaining회 남음',
+    'daily_limit_exceeded' => '일일 무료 분석 한도 (:limit회)를 초과했습니다. 무제한 분석을 위해 회원가입하세요!',
+    'unlimited_with_signup' => '회원가입하고 무제한 분석 받기',
+    'reset_tomorrow' => '내일 :time에 초기화',
+    
+    // Form labels and buttons
+    'enter_website_url' => '웹사이트 URL 입력',
+    'analyze_now' => '지금 분석하기',
 ];
