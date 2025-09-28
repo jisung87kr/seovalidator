@@ -255,4 +255,144 @@ return [
     'recommendation_images_missing_alt_fix' => '모든 이미지에 설명적인 alt 텍스트를 추가하세요',
     'recommendation_content_too_short' => '콘텐츠가 너무 짧습니다',
     'recommendation_content_too_short_fix' => '더 가치 있는 콘텐츠를 추가하세요 (300단어 이상 권장)',
+
+    // ScoreCalculatorService messages
+    // Title issues and recommendations
+    'score_missing_title_tag' => '페이지 제목 태그 누락',
+    'score_add_descriptive_title_tag' => '페이지에 설명적인 제목 태그를 추가하세요',
+    'score_title_too_short' => '제목이 너무 짧습니다',
+    'score_expand_title_30_60_chars' => '더 나은 가시성을 위해 제목을 30-60자로 확장하세요',
+    'score_title_too_long' => '제목이 너무 깁니다',
+    'score_shorten_title_under_60_chars' => '잘림 방지를 위해 제목을 60자 이하로 줄이세요',
+    'score_title_lacks_keyword_variety' => '제목에 키워드 다양성이 부족합니다',
+    'score_include_relevant_keywords' => '제목에 관련 키워드를 포함하세요',
+    'score_duplicate_words_in_title' => '제목에 중복된 단어가 있습니다',
+    'score_remove_duplicate_words_title' => '명확성을 위해 제목에서 중복된 단어를 제거하세요',
+
+    // Meta description issues and recommendations
+    'score_missing_meta_description' => '메타 설명 누락',
+    'score_add_compelling_meta_description' => '클릭률 향상을 위해 매력적인 메타 설명을 추가하세요',
+    'score_description_too_short' => '설명이 너무 짧습니다',
+    'score_expand_meta_description_120_160' => '메타 설명을 120-160자로 확장하세요',
+    'score_description_too_long' => '설명이 너무 깁니다',
+    'score_shorten_meta_description_160' => '메타 설명을 160자 이하로 줄이세요',
+    'score_consider_adding_cta' => '메타 설명에 클릭 유도 문구 추가를 고려하세요',
+
+    // Headings issues and recommendations
+    'score_missing_h1_tag' => 'H1 태그 누락',
+    'score_add_h1_main_topic' => '페이지의 주요 주제를 명확히 정의하기 위해 H1 제목을 추가하세요',
+    'score_multiple_h1_tags_found' => '여러 개의 H1 태그 발견',
+    'score_use_only_one_h1_tag' => '더 나은 SEO 구조를 위해 페이지당 하나의 H1 태그만 사용하세요',
+    'score_no_h2_headings_found' => 'H2 제목을 찾을 수 없음',
+    'score_use_h2_headings_structure' => '콘텐츠를 섹션으로 구조화하기 위해 H2 제목을 사용하세요',
+    'score_improper_heading_hierarchy' => '부적절한 제목 계층 구조',
+    'score_maintain_proper_heading_hierarchy' => '적절한 제목 계층 구조(H1 → H2 → H3...)를 유지하세요',
+
+    // Content issues and recommendations
+    'score_content_too_short' => '콘텐츠가 너무 짧습니다',
+    'score_expand_content_300_words' => '더 나은 SEO 가치를 위해 콘텐츠를 최소 300단어로 확장하세요',
+    'score_low_text_html_ratio' => '낮은 텍스트-HTML 비율',
+    'score_increase_text_content_ratio' => 'HTML 마크업 대비 텍스트 콘텐츠의 양을 늘리세요',
+
+    // Images issues and recommendations
+    'score_no_images_found' => '이미지를 찾을 수 없음',
+    'score_consider_adding_relevant_images' => '사용자 경험 향상을 위해 관련 이미지 추가를 고려하세요',
+    'score_images_missing_alt_text' => ':count개의 이미지에 alt 텍스트 누락',
+    'score_add_alt_text_all_images' => 'alt 속성이 누락된 :count개의 이미지에 설명적인 alt 텍스트를 추가하세요',
+    'score_consider_adding_title_attributes' => '접근성 향상을 위해 이미지에 title 속성 추가를 고려하세요',
+
+    // Links issues and recommendations
+    'score_no_links_found' => '링크를 찾을 수 없음',
+    'score_add_internal_external_links' => 'SEO와 사용자 경험 향상을 위해 내부 및 외부 링크를 추가하세요',
+    'score_no_internal_links_found' => '내부 링크를 찾을 수 없음',
+    'score_add_internal_links' => '웹사이트의 관련 페이지로 연결되는 내부 링크를 추가하세요',
+    'score_consider_external_links' => '권위 있는 소스로의 외부 링크 추가를 고려하세요',
+    'score_links_empty_anchor_text' => ':count개의 링크에 빈 앵커 텍스트',
+    'score_add_descriptive_anchor_text' => '모든 링크에 설명적인 앵커 텍스트를 추가하세요',
+
+    // Technical SEO issues and recommendations
+    'score_missing_invalid_doctype' => 'DOCTYPE 누락 또는 잘못됨',
+    'score_add_html5_doctype' => '적절한 HTML5 DOCTYPE 선언을 추가하세요',
+    'score_missing_lang_attribute' => 'lang 속성 누락',
+    'score_add_lang_attribute_html' => '접근성을 위해 HTML 태그에 lang 속성을 추가하세요',
+    'score_not_using_https' => 'HTTPS를 사용하지 않음',
+    'score_implement_https' => '더 나은 보안과 SEO를 위해 HTTPS를 구현하세요',
+    'score_too_many_inline_styles_scripts' => '인라인 스타일/스크립트가 너무 많음',
+    'score_move_inline_to_external' => '인라인 스타일과 스크립트를 외부 파일로 이동하세요',
+
+    // Social Media recommendations
+    'score_complete_open_graph_setup' => '더 나은 소셜 공유를 위해 Open Graph 태그 설정을 완료하세요',
+    'score_add_twitter_card_tags' => '더 나은 Twitter 공유를 위해 Twitter Card 태그를 추가하세요',
+
+    // Structured Data recommendations
+    'score_add_json_ld_structured_data' => '검색 엔진 이해도 향상을 위해 JSON-LD 구조화된 데이터를 추가하세요',
+    'score_implement_structured_data' => '검색 엔진이 콘텐츠를 이해할 수 있도록 구조화된 데이터 마크업을 구현하세요',
+
+    // GenerateSeoReport messages
+    // Issues
+    'report_missing_page_title' => '페이지 제목 누락',
+    'report_page_title_length_issue' => '페이지 제목 길이 (:length자)는 30-60자 사이여야 합니다',
+    'report_page_title_length_optimal' => '페이지 제목 길이가 최적입니다',
+    'report_missing_meta_description' => '메타 설명 누락',
+    'report_meta_description_length_issue' => '메타 설명 길이 (:length자)는 120-160자 사이여야 합니다',
+    'report_meta_description_length_optimal' => '메타 설명 길이가 최적입니다',
+    'report_missing_canonical_url' => '표준 URL 누락',
+    'report_canonical_url_set' => '표준 URL이 설정되어 있습니다',
+    'report_missing_h1_tag' => 'H1 태그 누락',
+    'report_multiple_h1_tags' => '여러 개의 H1 태그 발견 - 페이지당 하나만 있어야 합니다',
+    'report_single_h1_tag_found' => '단일 H1 태그 발견',
+    'report_images_missing_alt' => ':count개의 이미지에 alt 속성 누락',
+    'report_all_images_have_alt' => '모든 이미지에 alt 속성이 있습니다',
+    'report_consider_nofollow_external_links' => '일부 외부 링크에 rel="nofollow" 추가를 고려하세요',
+    'report_content_too_short' => '콘텐츠가 꽤 짧습니다 (:count 단어) - 더 많은 콘텐츠 추가를 고려하세요',
+    'report_content_length_adequate' => '콘텐츠 길이가 적절합니다',
+    'report_low_text_html_ratio' => '텍스트-HTML 비율이 낮습니다 (:ratio%) - 콘텐츠 대비 마크업이 너무 많습니다',
+    'report_non_200_status_code' => '200이 아닌 상태 코드: :code',
+    'report_page_returns_200_ok' => '페이지가 200 OK 상태를 반환합니다',
+
+    // Recommendations
+    'report_add_unique_descriptive_title' => '페이지 콘텐츠를 정확히 설명하는 고유하고 설명적인 제목 태그를 추가하세요',
+    'report_add_compelling_meta_description' => '페이지 콘텐츠를 120-160자로 요약하는 매력적인 메타 설명을 추가하세요',
+    'report_add_single_descriptive_h1' => '타겟 키워드가 포함된 단일하고 설명적인 H1 태그를 추가하세요',
+    'report_add_descriptive_alt_text' => '접근성과 SEO 향상을 위해 모든 이미지에 설명적인 alt 텍스트를 추가하세요',
+    'report_optimize_length_improve_ctr' => '검색 엔진 표시와 클릭률 향상을 위해 길이를 최적화하세요',
+    'report_add_more_valuable_content' => '사용자 경험과 SEO 향상을 위해 더 가치 있고 관련성 있는 콘텐츠를 추가하세요',
+
+    // HTML Report
+    'report_seo_analysis_report' => 'SEO 분석 리포트',
+    'report_url' => 'URL',
+    'report_generated' => '생성일',
+    'report_overall_seo_score' => '전체 SEO 점수',
+    'report_issues_critical' => '문제점 (심각)',
+    'report_warnings_improvements_needed' => '경고 (개선 필요)',
+    'report_whats_working_well' => '잘 되고 있는 부분',
+
+    // ContentExtractor quality recommendations
+    'content_increase_length_recommendation' => '더 나은 깊이를 위해 콘텐츠 길이를 최소 500단어로 늘리세요',
+    'content_improve_readability_recommendation' => '더 짧은 문장과 간단한 단어를 사용하여 가독성을 향상시키세요',
+    'content_add_structure_recommendation' => '더 많은 제목, 단락, 구조적 요소를 추가하세요',
+    'content_increase_engagement_recommendation' => '질문, 목록, 다양한 문장 길이로 참여도를 높이세요',
+
+    // ContentExtractor readability grades
+    'readability_elementary_school' => '초등학교 수준',
+    'readability_middle_school' => '중학교 수준',
+    'readability_high_school' => '고등학교 수준',
+    'readability_college' => '대학교 수준',
+    'readability_graduate' => '대학원 수준',
+
+    // ContentExtractor reading difficulty
+    'reading_very_easy' => '매우 쉬움',
+    'reading_easy' => '쉬움',
+    'reading_fairly_easy' => '꽤 쉬움',
+    'reading_standard' => '표준',
+    'reading_fairly_difficult' => '꽤 어려움',
+    'reading_difficult' => '어려움',
+    'reading_very_difficult' => '매우 어려움',
+
+    // ContentExtractor quality grades
+    'quality_excellent' => '우수',
+    'quality_good' => '좋음',
+    'quality_fair' => '보통',
+    'quality_poor' => '개선 필요',
+    'quality_very_poor' => '매우 개선 필요',
 ];

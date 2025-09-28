@@ -250,4 +250,144 @@ return [
     'recommendation_images_missing_alt_fix' => 'Add descriptive alt text to all images',
     'recommendation_content_too_short' => 'Content is too short',
     'recommendation_content_too_short_fix' => 'Add more valuable content (aim for 300+ words)',
+
+    // ScoreCalculatorService messages
+    // Title issues and recommendations
+    'score_missing_title_tag' => 'Missing title tag',
+    'score_add_descriptive_title_tag' => 'Add a descriptive title tag to your page',
+    'score_title_too_short' => 'Title too short',
+    'score_expand_title_30_60_chars' => 'Expand your title to 30-60 characters for better visibility',
+    'score_title_too_long' => 'Title too long',
+    'score_shorten_title_under_60_chars' => 'Shorten your title to under 60 characters to prevent truncation',
+    'score_title_lacks_keyword_variety' => 'Title lacks keyword variety',
+    'score_include_relevant_keywords' => 'Include relevant keywords in your title',
+    'score_duplicate_words_in_title' => 'Duplicate words in title',
+    'score_remove_duplicate_words_title' => 'Remove duplicate words from title for clarity',
+
+    // Meta description issues and recommendations
+    'score_missing_meta_description' => 'Missing meta description',
+    'score_add_compelling_meta_description' => 'Add a compelling meta description to improve click-through rates',
+    'score_description_too_short' => 'Description too short',
+    'score_expand_meta_description_120_160' => 'Expand your meta description to 120-160 characters',
+    'score_description_too_long' => 'Description too long',
+    'score_shorten_meta_description_160' => 'Shorten your meta description to under 160 characters',
+    'score_consider_adding_cta' => 'Consider adding a call-to-action in your meta description',
+
+    // Headings issues and recommendations
+    'score_missing_h1_tag' => 'Missing H1 tag',
+    'score_add_h1_main_topic' => 'Add an H1 heading to clearly define the main topic of your page',
+    'score_multiple_h1_tags_found' => 'Multiple H1 tags found',
+    'score_use_only_one_h1_tag' => 'Use only one H1 tag per page for better SEO structure',
+    'score_no_h2_headings_found' => 'No H2 headings found',
+    'score_use_h2_headings_structure' => 'Use H2 headings to structure your content into sections',
+    'score_improper_heading_hierarchy' => 'Improper heading hierarchy',
+    'score_maintain_proper_heading_hierarchy' => 'Maintain proper heading hierarchy (H1 → H2 → H3...)',
+
+    // Content issues and recommendations
+    'score_content_too_short' => 'Content too short',
+    'score_expand_content_300_words' => 'Expand your content to at least 300 words for better SEO value',
+    'score_low_text_html_ratio' => 'Low text-to-HTML ratio',
+    'score_increase_text_content_ratio' => 'Increase the amount of text content relative to HTML markup',
+
+    // Images issues and recommendations
+    'score_no_images_found' => 'No images found',
+    'score_consider_adding_relevant_images' => 'Consider adding relevant images to enhance user experience',
+    'score_images_missing_alt_text' => ':count images missing alt text',
+    'score_add_alt_text_all_images' => 'Add descriptive alt text to all :count images missing alt attributes',
+    'score_consider_adding_title_attributes' => 'Consider adding title attributes to images for better accessibility',
+
+    // Links issues and recommendations
+    'score_no_links_found' => 'No links found',
+    'score_add_internal_external_links' => 'Add both internal and external links to improve SEO and user experience',
+    'score_no_internal_links_found' => 'No internal links found',
+    'score_add_internal_links' => 'Add internal links to related pages on your website',
+    'score_consider_external_links' => 'Consider adding external links to authoritative sources',
+    'score_links_empty_anchor_text' => ':count links with empty anchor text',
+    'score_add_descriptive_anchor_text' => 'Add descriptive anchor text to all links',
+
+    // Technical SEO issues and recommendations
+    'score_missing_invalid_doctype' => 'Missing or invalid DOCTYPE',
+    'score_add_html5_doctype' => 'Add proper HTML5 DOCTYPE declaration',
+    'score_missing_lang_attribute' => 'Missing lang attribute',
+    'score_add_lang_attribute_html' => 'Add lang attribute to HTML tag for accessibility',
+    'score_not_using_https' => 'Not using HTTPS',
+    'score_implement_https' => 'Implement HTTPS for better security and SEO',
+    'score_too_many_inline_styles_scripts' => 'Too many inline styles/scripts',
+    'score_move_inline_to_external' => 'Move inline styles and scripts to external files',
+
+    // Social Media recommendations
+    'score_complete_open_graph_setup' => 'Complete Open Graph tags setup for better social sharing',
+    'score_add_twitter_card_tags' => 'Add Twitter Card tags for better Twitter sharing',
+
+    // Structured Data recommendations
+    'score_add_json_ld_structured_data' => 'Add JSON-LD structured data for better search engine understanding',
+    'score_implement_structured_data' => 'Implement structured data markup to help search engines understand your content',
+
+    // GenerateSeoReport messages
+    // Issues
+    'report_missing_page_title' => 'Missing page title',
+    'report_page_title_length_issue' => 'Page title length (:length chars) should be between 30-60 characters',
+    'report_page_title_length_optimal' => 'Page title length is optimal',
+    'report_missing_meta_description' => 'Missing meta description',
+    'report_meta_description_length_issue' => 'Meta description length (:length chars) should be between 120-160 characters',
+    'report_meta_description_length_optimal' => 'Meta description length is optimal',
+    'report_missing_canonical_url' => 'Missing canonical URL',
+    'report_canonical_url_set' => 'Canonical URL is set',
+    'report_missing_h1_tag' => 'Missing H1 tag',
+    'report_multiple_h1_tags' => 'Multiple H1 tags found - should have only one per page',
+    'report_single_h1_tag_found' => 'Single H1 tag found',
+    'report_images_missing_alt' => ':count images missing alt attributes',
+    'report_all_images_have_alt' => 'All images have alt attributes',
+    'report_consider_nofollow_external_links' => 'Consider adding rel="nofollow" to some external links',
+    'report_content_too_short' => 'Content is quite short (:count words) - consider adding more content',
+    'report_content_length_adequate' => 'Content length is adequate',
+    'report_low_text_html_ratio' => 'Text to HTML ratio is low (:ratio%) - too much markup relative to content',
+    'report_non_200_status_code' => 'Non-200 status code: :code',
+    'report_page_returns_200_ok' => 'Page returns 200 OK status',
+
+    // Recommendations
+    'report_add_unique_descriptive_title' => 'Add a unique, descriptive title tag that accurately describes the page content',
+    'report_add_compelling_meta_description' => 'Add a compelling meta description that summarizes the page content in 120-160 characters',
+    'report_add_single_descriptive_h1' => 'Add a single, descriptive H1 tag that includes your target keywords',
+    'report_add_descriptive_alt_text' => 'Add descriptive alt text to all images for better accessibility and SEO',
+    'report_optimize_length_improve_ctr' => 'Optimize the length to improve search engine display and click-through rates',
+    'report_add_more_valuable_content' => 'Add more valuable, relevant content to improve user experience and SEO',
+
+    // HTML Report
+    'report_seo_analysis_report' => 'SEO Analysis Report',
+    'report_url' => 'URL',
+    'report_generated' => 'Generated',
+    'report_overall_seo_score' => 'Overall SEO Score',
+    'report_issues_critical' => 'Issues (Critical)',
+    'report_warnings_improvements_needed' => 'Warnings (Improvements Needed)',
+    'report_whats_working_well' => 'What\'s Working Well',
+
+    // ContentExtractor quality recommendations
+    'content_increase_length_recommendation' => 'Increase content length to at least 500 words for better depth',
+    'content_improve_readability_recommendation' => 'Improve readability by using shorter sentences and simpler words',
+    'content_add_structure_recommendation' => 'Add more headings, paragraphs, and structural elements',
+    'content_increase_engagement_recommendation' => 'Increase engagement with questions, lists, and varied sentence lengths',
+
+    // ContentExtractor readability grades
+    'readability_elementary_school' => 'Elementary School',
+    'readability_middle_school' => 'Middle School',
+    'readability_high_school' => 'High School',
+    'readability_college' => 'College',
+    'readability_graduate' => 'Graduate',
+
+    // ContentExtractor reading difficulty
+    'reading_very_easy' => 'Very Easy',
+    'reading_easy' => 'Easy',
+    'reading_fairly_easy' => 'Fairly Easy',
+    'reading_standard' => 'Standard',
+    'reading_fairly_difficult' => 'Fairly Difficult',
+    'reading_difficult' => 'Difficult',
+    'reading_very_difficult' => 'Very Difficult',
+
+    // ContentExtractor quality grades
+    'quality_excellent' => 'Excellent',
+    'quality_good' => 'Good',
+    'quality_fair' => 'Fair',
+    'quality_poor' => 'Poor',
+    'quality_very_poor' => 'Very Poor',
 ];

@@ -95,63 +95,63 @@ class GenerateSeoReport implements ShouldQueue
         $meta = $seoElements['meta'] ?? [];
 
         if (empty($meta['title'] ?? null)) {
-            $issues[] = 'Missing page title';
+            $issues[] = __('analysis.report_missing_page_title');
         } elseif (($meta['title_length'] ?? 0) < 30 || ($meta['title_length'] ?? 0) > 60) {
-            $warnings[] = "Page title length (" . ($meta['title_length'] ?? 0) . " chars) should be between 30-60 characters";
+            $warnings[] = __('analysis.report_page_title_length_issue', ['length' => ($meta['title_length'] ?? 0)]);
         } else {
-            $successes[] = 'Page title length is optimal';
+            $successes[] = __('analysis.report_page_title_length_optimal');
         }
 
         if (empty($meta['description'] ?? null)) {
-            $issues[] = 'Missing meta description';
+            $issues[] = __('analysis.report_missing_meta_description');
         } elseif (($meta['description_length'] ?? 0) < 120 || ($meta['description_length'] ?? 0) > 160) {
-            $warnings[] = "Meta description length ({$meta['description_length']} chars) should be between 120-160 characters";
+            $warnings[] = __('analysis.report_meta_description_length_issue', ['length' => ($meta['description_length'] ?? 0)]);
         } else {
-            $successes[] = 'Meta description length is optimal';
+            $successes[] = __('analysis.report_meta_description_length_optimal');
         }
 
         if (empty($meta['canonical'])) {
-            $warnings[] = 'Missing canonical URL';
+            $warnings[] = __('analysis.report_missing_canonical_url');
         } else {
-            $successes[] = 'Canonical URL is set';
+            $successes[] = __('analysis.report_canonical_url_set');
         }
 
         // Analyze headings
         $headings = $seoElements['headings'] ?? [];
         if (empty($headings['h1'])) {
-            $issues[] = 'Missing H1 tag';
+            $issues[] = __('analysis.report_missing_h1_tag');
         } elseif (count($headings['h1']) > 1) {
-            $warnings[] = 'Multiple H1 tags found - should have only one per page';
+            $warnings[] = __('analysis.report_multiple_h1_tags');
         } else {
-            $successes[] = 'Single H1 tag found';
+            $successes[] = __('analysis.report_single_h1_tag_found');
         }
 
         // Analyze images
         $images = $seoElements['images'] ?? [];
         if ($images['without_alt_count'] > 0) {
-            $issues[] = "{$images['without_alt_count']} images missing alt attributes";
+            $issues[] = __('analysis.report_images_missing_alt', ['count' => $images['without_alt_count']]);
         }
 
         if ($images['total_count'] > 0 && $images['without_alt_count'] === 0) {
-            $successes[] = 'All images have alt attributes';
+            $successes[] = __('analysis.report_all_images_have_alt');
         }
 
         // Analyze links
         $links = $seoElements['links'] ?? [];
         if ($links['external_count'] > 0 && $links['nofollow_count'] === 0) {
-            $warnings[] = 'Consider adding rel="nofollow" to some external links';
+            $warnings[] = __('analysis.report_consider_nofollow_external_links');
         }
 
         // Analyze content
         $content = $seoElements['content'] ?? [];
         if ($content['word_count'] < 300) {
-            $warnings[] = "Content is quite short ({$content['word_count']} words) - consider adding more content";
+            $warnings[] = __('analysis.report_content_too_short', ['count' => $content['word_count']]);
         } elseif ($content['word_count'] > 300) {
-            $successes[] = 'Content length is adequate';
+            $successes[] = __('analysis.report_content_length_adequate');
         }
 
         if ($content['text_to_html_ratio'] < 15) {
-            $warnings[] = "Text to HTML ratio is low ({$content['text_to_html_ratio']}%) - too much markup relative to content";
+            $warnings[] = __('analysis.report_low_text_html_ratio', ['ratio' => $content['text_to_html_ratio']]);
         }
 
         // Analyze technical aspects - check from the main analysis data structure
@@ -159,9 +159,9 @@ class GenerateSeoReport implements ShouldQueue
         $statusCode = $this->analysisData['status']['code'] ?? $technical['status_code'] ?? 200;
 
         if ($statusCode !== 200) {
-            $issues[] = "Non-200 status code: {$statusCode}";
+            $issues[] = __('analysis.report_non_200_status_code', ['code' => $statusCode]);
         } else {
-            $successes[] = 'Page returns 200 OK status';
+            $successes[] = __('analysis.report_page_returns_200_ok');
         }
 
         return [
@@ -252,7 +252,7 @@ class GenerateSeoReport implements ShouldQueue
                     'type' => 'critical',
                     'category' => 'meta',
                     'issue' => $issue,
-                    'recommendation' => 'Add a unique, descriptive title tag that accurately describes the page content'
+                    'recommendation' => __('analysis.report_add_unique_descriptive_title')
                 ];
             }
 
@@ -261,7 +261,7 @@ class GenerateSeoReport implements ShouldQueue
                     'type' => 'critical',
                     'category' => 'meta',
                     'issue' => $issue,
-                    'recommendation' => 'Add a compelling meta description that summarizes the page content in 120-160 characters'
+                    'recommendation' => __('analysis.report_add_compelling_meta_description')
                 ];
             }
 
@@ -270,7 +270,7 @@ class GenerateSeoReport implements ShouldQueue
                     'type' => 'critical',
                     'category' => 'content',
                     'issue' => $issue,
-                    'recommendation' => 'Add a single, descriptive H1 tag that includes your target keywords'
+                    'recommendation' => __('analysis.report_add_single_descriptive_h1')
                 ];
             }
 
@@ -279,7 +279,7 @@ class GenerateSeoReport implements ShouldQueue
                     'type' => 'important',
                     'category' => 'images',
                     'issue' => $issue,
-                    'recommendation' => 'Add descriptive alt text to all images for better accessibility and SEO'
+                    'recommendation' => __('analysis.report_add_descriptive_alt_text')
                 ];
             }
         }
@@ -290,7 +290,7 @@ class GenerateSeoReport implements ShouldQueue
                     'type' => 'improvement',
                     'category' => 'meta',
                     'issue' => $warning,
-                    'recommendation' => 'Optimize the length to improve search engine display and click-through rates'
+                    'recommendation' => __('analysis.report_optimize_length_improve_ctr')
                 ];
             }
 
@@ -299,7 +299,7 @@ class GenerateSeoReport implements ShouldQueue
                     'type' => 'improvement',
                     'category' => 'content',
                     'issue' => $warning,
-                    'recommendation' => 'Add more valuable, relevant content to improve user experience and SEO'
+                    'recommendation' => __('analysis.report_add_more_valuable_content')
                 ];
             }
         }
@@ -378,7 +378,7 @@ class GenerateSeoReport implements ShouldQueue
         return "<!DOCTYPE html>
 <html>
 <head>
-    <title>SEO Report for {$url}</title>
+    <title>" . __('analysis.report_seo_analysis_report') . " for {$url}</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
         .header { border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
@@ -393,24 +393,24 @@ class GenerateSeoReport implements ShouldQueue
 </head>
 <body>
     <div class='header'>
-        <h1>SEO Analysis Report</h1>
-        <p><strong>URL:</strong> {$url}</p>
-        <p><strong>Generated:</strong> {$generatedAt}</p>
-        <p><strong>Overall SEO Score:</strong> <span class='score'>{$score}/100</span></p>
+        <h1>" . __('analysis.report_seo_analysis_report') . "</h1>
+        <p><strong>" . __('analysis.report_url') . ":</strong> {$url}</p>
+        <p><strong>" . __('analysis.report_generated') . ":</strong> {$generatedAt}</p>
+        <p><strong>" . __('analysis.report_overall_seo_score') . ":</strong> <span class='score'>{$score}/100</span></p>
     </div>
 
     <div class='section'>
-        <h2>Issues (Critical)</h2>
+        <h2>" . __('analysis.report_issues_critical') . "</h2>
         <ul>{$issuesList}</ul>
     </div>
 
     <div class='section'>
-        <h2>Warnings (Improvements Needed)</h2>
+        <h2>" . __('analysis.report_warnings_improvements_needed') . "</h2>
         <ul>{$warningsList}</ul>
     </div>
 
     <div class='section'>
-        <h2>What's Working Well</h2>
+        <h2>" . __('analysis.report_whats_working_well') . "</h2>
         <ul>{$successesList}</ul>
     </div>
 </body>

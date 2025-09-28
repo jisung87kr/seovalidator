@@ -651,22 +651,22 @@ class ContentExtractor
 
     private function getReadabilityGrade(float $score): string
     {
-        if ($score <= 6) return 'Elementary School';
-        if ($score <= 8) return 'Middle School';
-        if ($score <= 12) return 'High School';
-        if ($score <= 16) return 'College';
-        return 'Graduate';
+        if ($score <= 6) return __('analysis.readability_elementary_school');
+        if ($score <= 8) return __('analysis.readability_middle_school');
+        if ($score <= 12) return __('analysis.readability_high_school');
+        if ($score <= 16) return __('analysis.readability_college');
+        return __('analysis.readability_graduate');
     }
 
     private function getReadingDifficulty(float $score): string
     {
-        if ($score >= 90) return 'Very Easy';
-        if ($score >= 80) return 'Easy';
-        if ($score >= 70) return 'Fairly Easy';
-        if ($score >= 60) return 'Standard';
-        if ($score >= 50) return 'Fairly Difficult';
-        if ($score >= 30) return 'Difficult';
-        return 'Very Difficult';
+        if ($score >= 90) return __('analysis.reading_very_easy');
+        if ($score >= 80) return __('analysis.reading_easy');
+        if ($score >= 70) return __('analysis.reading_fairly_easy');
+        if ($score >= 60) return __('analysis.reading_standard');
+        if ($score >= 50) return __('analysis.reading_fairly_difficult');
+        if ($score >= 30) return __('analysis.reading_difficult');
+        return __('analysis.reading_very_difficult');
     }
 
     // Keyword analysis methods
@@ -845,11 +845,11 @@ class ContentExtractor
 
     private function getQualityGrade(float $score): string
     {
-        if ($score >= 90) return 'Excellent';
-        if ($score >= 80) return 'Good';
-        if ($score >= 70) return 'Fair';
-        if ($score >= 60) return 'Poor';
-        return 'Very Poor';
+        if ($score >= 90) return __('analysis.quality_excellent');
+        if ($score >= 80) return __('analysis.quality_good');
+        if ($score >= 70) return __('analysis.quality_fair');
+        if ($score >= 60) return __('analysis.quality_poor');
+        return __('analysis.quality_very_poor');
     }
 
     private function generateQualityRecommendations(array $qualityFactors, string $text, string $html): array
@@ -857,19 +857,19 @@ class ContentExtractor
         $recommendations = [];
 
         if ($qualityFactors['word_count_score'] < 70) {
-            $recommendations[] = 'Increase content length to at least 500 words for better depth';
+            $recommendations[] = __('analysis.content_increase_length_recommendation');
         }
 
         if ($qualityFactors['readability_score'] < 70) {
-            $recommendations[] = 'Improve readability by using shorter sentences and simpler words';
+            $recommendations[] = __('analysis.content_improve_readability_recommendation');
         }
 
         if ($qualityFactors['structure_score'] < 80) {
-            $recommendations[] = 'Add more headings, paragraphs, and structural elements';
+            $recommendations[] = __('analysis.content_add_structure_recommendation');
         }
 
         if ($qualityFactors['engagement_score'] < 70) {
-            $recommendations[] = 'Increase engagement with questions, lists, and varied sentence lengths';
+            $recommendations[] = __('analysis.content_increase_engagement_recommendation');
         }
 
         return $recommendations;

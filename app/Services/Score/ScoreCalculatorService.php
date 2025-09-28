@@ -132,8 +132,8 @@ class ScoreCalculatorService
         $titleLength = $metaData['title_length'] ?? 0;
 
         if (empty($title)) {
-            $issues[] = 'Missing title tag';
-            $recommendations[] = 'Add a descriptive title tag to your page';
+            $issues[] = __('analysis.score_missing_title_tag');
+            $recommendations[] = __('analysis.score_add_descriptive_title_tag');
         } else {
             $score += 40; // Base score for having a title
 
@@ -143,19 +143,19 @@ class ScoreCalculatorService
             } elseif ($titleLength >= 20 && $titleLength <= 70) {
                 $score += 20; // Acceptable length
             } elseif ($titleLength < 30) {
-                $issues[] = 'Title too short';
-                $recommendations[] = 'Expand your title to 30-60 characters for better visibility';
+                $issues[] = __('analysis.score_title_too_short');
+                $recommendations[] = __('analysis.score_expand_title_30_60_chars');
             } elseif ($titleLength > 60) {
-                $issues[] = 'Title too long';
-                $recommendations[] = 'Shorten your title to under 60 characters to prevent truncation';
+                $issues[] = __('analysis.score_title_too_long');
+                $recommendations[] = __('analysis.score_shorten_title_under_60_chars');
             }
 
             // Check for keywords (simplified - would need actual target keywords)
             if ($this->hasVariedWords($title)) {
                 $score += 15;
             } else {
-                $issues[] = 'Title lacks keyword variety';
-                $recommendations[] = 'Include relevant keywords in your title';
+                $issues[] = __('analysis.score_title_lacks_keyword_variety');
+                $recommendations[] = __('analysis.score_include_relevant_keywords');
             }
 
             // Brand mention (if title ends with brand name pattern)
@@ -166,8 +166,8 @@ class ScoreCalculatorService
             // Duplicate words penalty
             if ($this->hasDuplicateWords($title)) {
                 $score -= 5;
-                $issues[] = 'Duplicate words in title';
-                $recommendations[] = 'Remove duplicate words from title for clarity';
+                $issues[] = __('analysis.score_duplicate_words_in_title');
+                $recommendations[] = __('analysis.score_remove_duplicate_words_title');
             }
         }
 
@@ -199,8 +199,8 @@ class ScoreCalculatorService
         $descriptionLength = $metaData['description_length'] ?? 0;
 
         if (empty($description)) {
-            $issues[] = 'Missing meta description';
-            $recommendations[] = 'Add a compelling meta description to improve click-through rates';
+            $issues[] = __('analysis.score_missing_meta_description');
+            $recommendations[] = __('analysis.score_add_compelling_meta_description');
         } else {
             $score += 50; // Base score for having a description
 
@@ -210,18 +210,18 @@ class ScoreCalculatorService
             } elseif ($descriptionLength >= 100 && $descriptionLength <= 170) {
                 $score += 25; // Acceptable length
             } elseif ($descriptionLength < 120) {
-                $issues[] = 'Description too short';
-                $recommendations[] = 'Expand your meta description to 120-160 characters';
+                $issues[] = __('analysis.score_description_too_short');
+                $recommendations[] = __('analysis.score_expand_meta_description_120_160');
             } elseif ($descriptionLength > 160) {
-                $issues[] = 'Description too long';
-                $recommendations[] = 'Shorten your meta description to under 160 characters';
+                $issues[] = __('analysis.score_description_too_long');
+                $recommendations[] = __('analysis.score_shorten_meta_description_160');
             }
 
             // Call-to-action check
             if ($this->hasCallToAction($description)) {
                 $score += 10;
             } else {
-                $recommendations[] = 'Consider adding a call-to-action in your meta description';
+                $recommendations[] = __('analysis.score_consider_adding_cta');
             }
 
             // Uniqueness check (simplified)
@@ -260,14 +260,14 @@ class ScoreCalculatorService
 
         // H1 analysis
         if ($h1Count === 0) {
-            $issues[] = 'Missing H1 tag';
-            $recommendations[] = 'Add an H1 heading to clearly define the main topic of your page';
+            $issues[] = __('analysis.score_missing_h1_tag');
+            $recommendations[] = __('analysis.score_add_h1_main_topic');
         } elseif ($h1Count === 1) {
             $score += 40; // Perfect H1 structure
         } else {
             $score += 20; // Multiple H1s are acceptable but not optimal
-            $issues[] = 'Multiple H1 tags found';
-            $recommendations[] = 'Use only one H1 tag per page for better SEO structure';
+            $issues[] = __('analysis.score_multiple_h1_tags_found');
+            $recommendations[] = __('analysis.score_use_only_one_h1_tag');
         }
 
         // H2-H6 structure
@@ -277,8 +277,8 @@ class ScoreCalculatorService
                 $score += 15; // Good hierarchical structure
             }
         } else {
-            $issues[] = 'No H2 headings found';
-            $recommendations[] = 'Use H2 headings to structure your content into sections';
+            $issues[] = __('analysis.score_no_h2_headings_found');
+            $recommendations[] = __('analysis.score_use_h2_headings_structure');
         }
 
         // Heading content quality
@@ -289,8 +289,8 @@ class ScoreCalculatorService
         if ($this->hasProperHierarchy($headingsData)) {
             $score += 10;
         } else {
-            $issues[] = 'Improper heading hierarchy';
-            $recommendations[] = 'Maintain proper heading hierarchy (H1 → H2 → H3...)';
+            $issues[] = __('analysis.score_improper_heading_hierarchy');
+            $recommendations[] = __('analysis.score_maintain_proper_heading_hierarchy');
         }
 
         return [
@@ -334,8 +334,8 @@ class ScoreCalculatorService
                 $score += 25; // Acceptable content length
             }
         } else {
-            $issues[] = 'Content too short';
-            $recommendations[] = 'Expand your content to at least 300 words for better SEO value';
+            $issues[] = __('analysis.score_content_too_short');
+            $recommendations[] = __('analysis.score_expand_content_300_words');
         }
 
         // Text-to-HTML ratio
@@ -344,8 +344,8 @@ class ScoreCalculatorService
         } elseif ($textToHtmlRatio >= 15) {
             $score += 15; // Acceptable content density
         } else {
-            $issues[] = 'Low text-to-HTML ratio';
-            $recommendations[] = 'Increase the amount of text content relative to HTML markup';
+            $issues[] = __('analysis.score_low_text_html_ratio');
+            $recommendations[] = __('analysis.score_increase_text_content_ratio');
         }
 
         // Reading time assessment
@@ -395,8 +395,8 @@ class ScoreCalculatorService
                 'score' => $score,
                 'max_score' => $maxScore,
                 'weight' => $this->weights['images'],
-                'issues' => ['No images found'],
-                'recommendations' => ['Consider adding relevant images to enhance user experience'],
+                'issues' => [__('analysis.score_no_images_found')],
+                'recommendations' => [__('analysis.score_consider_adding_relevant_images')],
                 'metrics' => ['total_images' => 0]
             ];
         }
@@ -405,15 +405,15 @@ class ScoreCalculatorService
         if ($withoutAlt > 0) {
             $penaltyPercent = ($withoutAlt / $totalImages) * 100;
             $score -= $penaltyPercent;
-            $issues[] = "{$withoutAlt} images missing alt text";
-            $recommendations[] = "Add descriptive alt text to all {$withoutAlt} images missing alt attributes";
+            $issues[] = __('analysis.score_images_missing_alt_text', ['count' => $withoutAlt]);
+            $recommendations[] = __('analysis.score_add_alt_text_all_images', ['count' => $withoutAlt]);
         }
 
         // Image title attributes (optional but beneficial)
         $withoutTitle = $imagesData['without_title_count'] ?? 0;
         if ($withoutTitle > 0 && $withoutTitle === $totalImages) {
             $score -= 10; // Minor penalty for no title attributes
-            $recommendations[] = 'Consider adding title attributes to images for better accessibility';
+            $recommendations[] = __('analysis.score_consider_adding_title_attributes');
         }
 
         return [
@@ -446,8 +446,8 @@ class ScoreCalculatorService
         $emptyAnchorCount = $linksData['empty_anchor_count'] ?? 0;
 
         if ($totalLinks === 0) {
-            $issues[] = 'No links found';
-            $recommendations[] = 'Add both internal and external links to improve SEO and user experience';
+            $issues[] = __('analysis.score_no_links_found');
+            $recommendations[] = __('analysis.score_add_internal_external_links');
             return [
                 'score' => 0,
                 'max_score' => $maxScore,
@@ -465,8 +465,8 @@ class ScoreCalculatorService
                 $score += 10; // Excellent internal linking
             }
         } else {
-            $issues[] = 'No internal links found';
-            $recommendations[] = 'Add internal links to related pages on your website';
+            $issues[] = __('analysis.score_no_internal_links_found');
+            $recommendations[] = __('analysis.score_add_internal_links');
         }
 
         // External linking
@@ -476,7 +476,7 @@ class ScoreCalculatorService
                 $score += 10; // Good balance
             }
         } else {
-            $recommendations[] = 'Consider adding external links to authoritative sources';
+            $recommendations[] = __('analysis.score_consider_external_links');
         }
 
         // Anchor text quality
@@ -485,8 +485,8 @@ class ScoreCalculatorService
         } else {
             $penaltyPercent = min(($emptyAnchorCount / $totalLinks) * 50, 20);
             $score -= $penaltyPercent;
-            $issues[] = "{$emptyAnchorCount} links with empty anchor text";
-            $recommendations[] = 'Add descriptive anchor text to all links';
+            $issues[] = __('analysis.score_links_empty_anchor_text', ['count' => $emptyAnchorCount]);
+            $recommendations[] = __('analysis.score_add_descriptive_anchor_text');
         }
 
         // Link ratio analysis
@@ -526,8 +526,8 @@ class ScoreCalculatorService
         if (str_contains(strtolower($doctype), 'html')) {
             $score += 15;
         } else {
-            $issues[] = 'Missing or invalid DOCTYPE';
-            $recommendations[] = 'Add proper HTML5 DOCTYPE declaration';
+            $issues[] = __('analysis.score_missing_invalid_doctype');
+            $recommendations[] = __('analysis.score_add_html5_doctype');
         }
 
         // Language attribute
@@ -535,8 +535,8 @@ class ScoreCalculatorService
         if (!empty($langAttribute)) {
             $score += 15;
         } else {
-            $issues[] = 'Missing lang attribute';
-            $recommendations[] = 'Add lang attribute to HTML tag for accessibility';
+            $issues[] = __('analysis.score_missing_lang_attribute');
+            $recommendations[] = __('analysis.score_add_lang_attribute_html');
         }
 
         // SSL/HTTPS
@@ -544,8 +544,8 @@ class ScoreCalculatorService
         if ($sslRequired) {
             $score += 20;
         } else {
-            $issues[] = 'Not using HTTPS';
-            $recommendations[] = 'Implement HTTPS for better security and SEO';
+            $issues[] = __('analysis.score_not_using_https');
+            $recommendations[] = __('analysis.score_implement_https');
         }
 
         // Meta viewport (mobile-friendly)
@@ -557,7 +557,7 @@ class ScoreCalculatorService
         if ($schemaPresent) {
             $score += 20;
         } else {
-            $recommendations[] = 'Add structured data markup to enhance search results';
+            $recommendations[] = __('analysis.score_add_json_ld_structured_data');
         }
 
         // Open Graph presence
@@ -565,7 +565,7 @@ class ScoreCalculatorService
         if ($ogPresent) {
             $score += 10;
         } else {
-            $recommendations[] = 'Add Open Graph tags for better social media sharing';
+            $recommendations[] = __('analysis.score_complete_open_graph_setup');
         }
 
         // Performance hints
@@ -575,8 +575,8 @@ class ScoreCalculatorService
         if ($inlineStyles === 0 && $inlineScripts === 0) {
             $score += 5; // Clean separation of concerns
         } elseif ($inlineStyles + $inlineScripts > 10) {
-            $issues[] = 'Too many inline styles/scripts';
-            $recommendations[] = 'Move inline styles and scripts to external files';
+            $issues[] = __('analysis.score_too_many_inline_styles_scripts');
+            $recommendations[] = __('analysis.score_move_inline_to_external');
         }
 
         return [
@@ -618,7 +618,7 @@ class ScoreCalculatorService
             }
         }
         if ($ogScore < 60) {
-            $recommendations[] = 'Complete Open Graph tags setup for better social sharing';
+            $recommendations[] = __('analysis.score_complete_open_graph_setup');
         }
 
         // Twitter Cards scoring
@@ -629,7 +629,7 @@ class ScoreCalculatorService
                 $twitterScore += 20;
             }
         } else {
-            $recommendations[] = 'Add Twitter Card tags for better Twitter sharing';
+            $recommendations[] = __('analysis.score_add_twitter_card_tags');
         }
 
         $score = ($ogScore * 0.7) + ($twitterScore * 0.3);
@@ -669,7 +669,7 @@ class ScoreCalculatorService
                 $score += 20; // Multiple schema types
             }
         } else {
-            $recommendations[] = 'Add JSON-LD structured data for better search engine understanding';
+            $recommendations[] = __('analysis.score_add_json_ld_structured_data');
         }
 
         // Microdata/RDFa as alternatives
@@ -678,7 +678,7 @@ class ScoreCalculatorService
         }
 
         if ($score === 0) {
-            $recommendations[] = 'Implement structured data markup to help search engines understand your content';
+            $recommendations[] = __('analysis.score_implement_structured_data');
         }
 
         return [

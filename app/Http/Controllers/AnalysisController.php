@@ -126,7 +126,7 @@ class AnalysisController extends Controller
         // Generate PDF using wkhtmltopdf with Korean font support
         try {
             // Create wkhtmltopdf instance with Korean font options
-            $pdf = new Pdf('/usr/local/bin/wkhtmltopdf');
+            $pdf = new Pdf(config('snappy.pdf.binary'));
 
             // Set options for Korean character support
             $pdf->setOptions([
@@ -134,6 +134,7 @@ class AnalysisController extends Controller
                 'orientation' => 'portrait',
                 'encoding' => 'utf-8',
                 'enable-local-file-access' => true,
+                'load-error-handling' => 'ignore',
                 'margin-top' => '10mm',
                 'margin-bottom' => '10mm',
                 'margin-left' => '10mm',
@@ -162,6 +163,11 @@ class AnalysisController extends Controller
         } catch (\Exception $e) {
             // Log error and provide user-friendly message
             \Log::error('PDF generation failed: ' . $e->getMessage());
+
+            // Check for specific wkhtmltopdf errors
+            if (strpos($e->getMessage(), 'Host') !== false || strpos($e->getMessage(), 'network') !== false) {
+                \Log::error('wkhtmltopdf network/path error detected');
+            }
 
             return response()->json([
                 'error' => 'PDF 생성에 실패했습니다. 다시 시도해주세요.',
@@ -199,7 +205,7 @@ class AnalysisController extends Controller
         // Generate PDF using wkhtmltopdf with Korean font support
         try {
             // Create wkhtmltopdf instance with Korean font options
-            $pdf = new Pdf('/usr/local/bin/wkhtmltopdf');
+            $pdf = new Pdf(config('snappy.pdf.binary'));
 
             // Set options for Korean character support
             $pdf->setOptions([
@@ -207,6 +213,7 @@ class AnalysisController extends Controller
                 'orientation' => 'portrait',
                 'encoding' => 'utf-8',
                 'enable-local-file-access' => true,
+                'load-error-handling' => 'ignore',
                 'margin-top' => '10mm',
                 'margin-bottom' => '10mm',
                 'margin-left' => '10mm',
@@ -232,6 +239,11 @@ class AnalysisController extends Controller
         } catch (\Exception $e) {
             // Log error and provide user-friendly message
             \Log::error('Comparison PDF generation failed: ' . $e->getMessage());
+
+            // Check for specific wkhtmltopdf errors
+            if (strpos($e->getMessage(), 'Host') !== false || strpos($e->getMessage(), 'network') !== false) {
+                \Log::error('wkhtmltopdf network/path error detected in comparison');
+            }
 
             return response()->json([
                 'error' => '비교 리포트 PDF 생성에 실패했습니다. 다시 시도해주세요.',
