@@ -3,30 +3,43 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SEO Validator - 무료 웹사이트 SEO 분석 도구</title>
-    <meta name="description" content="SEO Validator로 웹사이트의 검색엔진 최적화 상태를 무료로 분석하세요. 상세한 리포트와 개선 방안을 제공합니다.">
-    <meta name="keywords" content="SEO 분석, 웹사이트 최적화, 검색엔진 최적화, SEO 도구, 무료 SEO 분석">
+    <title>{{ __('landing.page_title') }}</title>
+    <meta name="description" content="{{ __('landing.page_description') }}">
+    <meta name="keywords" content="{{ __('landing.page_keywords') }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="SEO Validator - 무료 웹사이트 SEO 분석 도구">
-    <meta property="og:description" content="웹사이트의 SEO 상태를 즉시 분석하고 상세한 개선 방안을 받아보세요.">
+    <meta property="og:title" content="{{ __('landing.og_title') }}">
+    <meta property="og:description" content="{{ __('landing.og_description') }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url('/') }}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SEO Validator - 무료 웹사이트 SEO 분석 도구">
-    <meta name="twitter:description" content="웹사이트의 SEO 상태를 즉시 분석하고 상세한 개선 방안을 받아보세요.">
+    <meta name="twitter:title" content="{{ __('landing.twitter_title') }}">
+    <meta name="twitter:description" content="{{ __('landing.twitter_description') }}">
+
+    <!-- Hreflang for SEO -->
+    <link rel="alternate" hreflang="ko" href="{{ url('/') }}">
+    <link rel="alternate" hreflang="en" href="{{ url('/en') }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url('/') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Additional Styles -->
     <style>
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            background-color: #f9fafb;
+            color: #111827;
+        }
+
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -36,9 +49,6 @@
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .hero-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         .stats-counter {
             font-size: 2.5rem;
@@ -58,16 +68,35 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <!-- Language Switcher -->
+                    <div class="flex items-center space-x-2">
+                        @if(app()->getLocale() === 'ko')
+                            <a href="{{ url('/en') }}" class="text-gray-500 hover:text-gray-700 px-2 py-1 text-sm font-medium border border-gray-300 rounded">
+                                EN
+                            </a>
+                            <span class="text-indigo-600 px-2 py-1 text-sm font-medium border border-indigo-600 rounded bg-indigo-50">
+                                한국어
+                            </span>
+                        @else
+                            <span class="text-indigo-600 px-2 py-1 text-sm font-medium border border-indigo-600 rounded bg-indigo-50">
+                                EN
+                            </span>
+                            <a href="{{ url('/') }}" class="text-gray-500 hover:text-gray-700 px-2 py-1 text-sm font-medium border border-gray-300 rounded">
+                                한국어
+                            </a>
+                        @endif
+                    </div>
+
                     @auth
                         <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
-                            대시보드
+                            {{ __('landing.dashboard') }}
                         </a>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">
-                            로그인
+                            {{ __('landing.login') }}
                         </a>
                         <a href="{{ route('register') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                            회원가입
+                            {{ __('landing.register') }}
                         </a>
                     @endauth
                 </div>
@@ -79,14 +108,13 @@
     <section class="gradient-bg hero-pattern pt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div class="text-center">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
-                    웹사이트 SEO를
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6" style="font-weight: 900">
+                    {{ __('landing.hero_title') }}
                     <br>
-                    <span class="text-yellow-300">무료로 분석</span>하세요
+                    <span class="text-yellow-300">{{ __('landing.hero_title_highlight') }}</span>
                 </h1>
-                <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-                    단 몇 분만에 웹사이트의 검색엔진 최적화 상태를 분석하고
-                    상세한 개선 방안을 받아보세요
+                <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto break-keep">
+                    {{ __('landing.hero_subtitle') }}
                 </p>
 
                 <!-- URL Input Form -->
@@ -96,7 +124,7 @@
                             <input
                                 type="url"
                                 id="website-url"
-                                placeholder="https://example.com"
+                                placeholder="{{ __('landing.url_placeholder') }}"
                                 required
                                 class="flex-1 px-6 py-4 rounded-lg border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-yellow-300 text-lg"
                             >
@@ -104,30 +132,30 @@
                                 type="submit"
                                 class="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors text-lg"
                             >
-                                무료 분석 시작
+                                {{ __('landing.analyze_button') }}
                             </button>
                         </form>
                         <p class="text-white/80 text-sm mt-4">
-                            ✓ 완전 무료 ✓ 회원가입 불필요 ✓ 즉시 결과 확인
+                            {{ __('landing.hero_features') }}
                         </p>
                     </div>
                 </div>
 
                 <!-- Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                    <div class="text-center">
-                        <div class="stats-counter text-white">50K+</div>
-                        <p class="text-white/80">분석 완료</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="stats-counter text-white">98%</div>
-                        <p class="text-white/80">정확도</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="stats-counter text-white">24/7</div>
-                        <p class="text-white/80">서비스 제공</p>
-                    </div>
-                </div>
+{{--                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">--}}
+{{--                    <div class="text-center">--}}
+{{--                        <div class="stats-counter text-white">50K+</div>--}}
+{{--                        <p class="text-white/80">분석 완료</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="text-center">--}}
+{{--                        <div class="stats-counter text-white">98%</div>--}}
+{{--                        <p class="text-white/80">정확도</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="text-center">--}}
+{{--                        <div class="stats-counter text-white">24/7</div>--}}
+{{--                        <p class="text-white/80">서비스 제공</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
         </div>
     </section>
@@ -137,10 +165,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    강력한 SEO 분석 기능
+                    {{ __('landing.features_title') }}
                 </h2>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    전문적인 SEO 분석 도구로 웹사이트의 모든 측면을 꼼꼼히 검사합니다
+                    {{ __('landing.features_subtitle') }}
                 </p>
             </div>
 
@@ -152,9 +180,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">종합 SEO 점수</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('landing.feature_comprehensive_title') }}</h3>
                     <p class="text-gray-600">
-                        기술적 SEO, 콘텐츠 품질, 성능, 접근성을 종합한 정확한 SEO 점수를 제공합니다.
+                        {{ __('landing.feature_comprehensive_desc') }}
                     </p>
                 </div>
 
@@ -165,9 +193,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">상세한 문제 진단</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('landing.feature_diagnosis_title') }}</h3>
                     <p class="text-gray-600">
-                        메타 태그, 제목, 이미지 alt 속성 등 SEO에 영향을 미치는 모든 요소를 자세히 분석합니다.
+                        {{ __('landing.feature_diagnosis_desc') }}
                     </p>
                 </div>
 
@@ -178,9 +206,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">실행 가능한 개선안</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('landing.feature_recommendations_title') }}</h3>
                     <p class="text-gray-600">
-                        단순한 문제 지적이 아닌, 구체적이고 실행 가능한 개선 방안을 제시합니다.
+                        {{ __('landing.feature_recommendations_desc') }}
                     </p>
                 </div>
 
@@ -191,9 +219,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">실시간 분석</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('landing.feature_realtime_title') }}</h3>
                     <p class="text-gray-600">
-                        URL 입력 후 몇 분 내에 완전한 SEO 분석 결과를 확인할 수 있습니다.
+                        {{ __('landing.feature_realtime_desc') }}
                     </p>
                 </div>
 
@@ -204,9 +232,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">PDF 리포트 다운로드</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('landing.feature_pdf_title') }}</h3>
                     <p class="text-gray-600">
-                        분석 결과를 깔끔한 PDF 리포트로 다운로드하여 팀과 공유하거나 보관할 수 있습니다.
+                        {{ __('landing.feature_pdf_desc') }}
                     </p>
                 </div>
 
@@ -217,9 +245,9 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">히스토리 관리</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ __('landing.feature_history_title') }}</h3>
                     <p class="text-gray-600">
-                        과거 분석 결과를 저장하고 비교하여 SEO 개선 진행 상황을 추적할 수 있습니다.
+                        {{ __('landing.feature_history_desc') }}
                     </p>
                 </div>
             </div>
@@ -232,8 +260,8 @@
             <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
                 <div>
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-                        왜 SEO Validator를
-                        <span class="text-indigo-600">선택해야 할까요?</span>
+                        {{ __('landing.benefits_title') }}
+                        <span class="text-indigo-600">{{ __('landing.benefits_title_highlight') }}</span>
                     </h2>
 
                     <div class="space-y-6">
@@ -246,8 +274,8 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-lg font-semibold text-gray-900">전문가 수준의 분석</h3>
-                                <p class="text-gray-600">SEO 전문가들이 사용하는 기준으로 웹사이트를 분석합니다.</p>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ __('landing.benefit_expert_title') }}</h3>
+                                <p class="text-gray-600">{{ __('landing.benefit_expert_desc') }}</p>
                             </div>
                         </div>
 
@@ -260,8 +288,8 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-lg font-semibold text-gray-900">사용하기 쉬운 인터페이스</h3>
-                                <p class="text-gray-600">복잡한 설정 없이 URL만 입력하면 즉시 분석이 시작됩니다.</p>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ __('landing.benefit_easy_title') }}</h3>
+                                <p class="text-gray-600">{{ __('landing.benefit_easy_desc') }}</p>
                             </div>
                         </div>
 
@@ -274,8 +302,8 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-lg font-semibold text-gray-900">지속적인 모니터링</h3>
-                                <p class="text-gray-600">정기적으로 분석하여 SEO 성과 변화를 추적할 수 있습니다.</p>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ __('landing.benefit_monitoring_title') }}</h3>
+                                <p class="text-gray-600">{{ __('landing.benefit_monitoring_desc') }}</p>
                             </div>
                         </div>
 
@@ -288,8 +316,8 @@
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <h3 class="text-lg font-semibold text-gray-900">완전 무료</h3>
-                                <p class="text-gray-600">숨겨진 비용이나 제한 없이 모든 기능을 무료로 사용할 수 있습니다.</p>
+                                <h3 class="text-lg font-semibold text-gray-900">{{ __('landing.benefit_free_title') }}</h3>
+                                <p class="text-gray-600">{{ __('landing.benefit_free_desc') }}</p>
                             </div>
                         </div>
                     </div>
@@ -297,34 +325,34 @@
 
                 <div class="mt-12 lg:mt-0">
                     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-8 text-white">
-                        <h3 class="text-2xl font-bold mb-6">지금 바로 시작하세요!</h3>
+                        <h3 class="text-2xl font-bold mb-6">{{ __('landing.cta_box_title') }}</h3>
                         <div class="space-y-4 mb-8">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                 </svg>
-                                URL 입력 후 1분 내 결과 확인
+                                {{ __('landing.cta_box_feature1') }}
                             </div>
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                 </svg>
-                                20개 이상의 SEO 요소 분석
+                                {{ __('landing.cta_box_feature2') }}
                             </div>
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                 </svg>
-                                PDF 리포트 무료 다운로드
+                                {{ __('landing.cta_box_feature3') }}
                             </div>
                         </div>
                         @guest
                             <a href="{{ route('register') }}" class="block w-full bg-white text-indigo-600 font-semibold py-3 px-6 rounded-lg text-center hover:bg-gray-50 transition-colors">
-                                무료 회원가입
+                                {{ __('landing.cta_box_button_guest') }}
                             </a>
                         @else
                             <a href="{{ route('dashboard') }}" class="block w-full bg-white text-indigo-600 font-semibold py-3 px-6 rounded-lg text-center hover:bg-gray-50 transition-colors">
-                                대시보드로 이동
+                                {{ __('landing.cta_box_button_auth') }}
                             </a>
                         @endguest
                     </div>
@@ -337,23 +365,23 @@
     <section class="py-20 bg-gray-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-                웹사이트의 SEO를 개선할 준비가 되셨나요?
+                {{ __('landing.final_cta_title') }}
             </h2>
             <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-                지금 바로 분석을 시작하고 검색 엔진에서 더 높은 순위를 차지해보세요
+                {{ __('landing.final_cta_subtitle') }}
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                 @guest
                     <a href="{{ route('register') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
-                        무료로 시작하기
+                        {{ __('landing.final_cta_button_start') }}
                     </a>
                     <a href="#seo-analyze-form" class="border border-gray-300 text-gray-300 hover:text-white hover:border-white font-semibold py-3 px-8 rounded-lg transition-colors">
-                        바로 분석하기
+                        {{ __('landing.final_cta_button_analyze') }}
                     </a>
                 @else
                     <a href="{{ route('dashboard') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
-                        대시보드로 이동
+                        {{ __('landing.final_cta_button_dashboard') }}
                     </a>
                 @endguest
             </div>
@@ -367,33 +395,32 @@
                 <div class="col-span-1 md:col-span-2">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">SEO Validator</h3>
                     <p class="text-gray-600 mb-4">
-                        웹사이트의 검색엔진 최적화 상태를 분석하고 개선 방안을 제공하는
-                        무료 SEO 분석 도구입니다.
+                        {{ __('landing.footer_description') }}
                     </p>
                 </div>
 
                 <div>
-                    <h4 class="text-lg font-semibold text-gray-900 mb-4">서비스</h4>
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">{{ __('landing.footer_services') }}</h4>
                     <ul class="space-y-2 text-gray-600">
-                        <li><a href="#" class="hover:text-gray-900">SEO 분석</a></li>
-                        <li><a href="#" class="hover:text-gray-900">PDF 리포트</a></li>
-                        <li><a href="#" class="hover:text-gray-900">히스토리 관리</a></li>
+                        <li><a href="#" class="hover:text-gray-900">{{ __('landing.footer_seo_analysis') }}</a></li>
+                        <li><a href="#" class="hover:text-gray-900">{{ __('landing.footer_pdf_report') }}</a></li>
+                        <li><a href="#" class="hover:text-gray-900">{{ __('landing.footer_history_management') }}</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-lg font-semibold text-gray-900 mb-4">회사</h4>
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">{{ __('landing.footer_company') }}</h4>
                     <ul class="space-y-2 text-gray-600">
-                        <li><a href="#" class="hover:text-gray-900">이용약관</a></li>
-                        <li><a href="#" class="hover:text-gray-900">개인정보처리방침</a></li>
-                        <li><a href="#" class="hover:text-gray-900">문의하기</a></li>
+                        <li><a href="#" class="hover:text-gray-900">{{ __('landing.footer_terms') }}</a></li>
+                        <li><a href="#" class="hover:text-gray-900">{{ __('landing.footer_privacy') }}</a></li>
+                        <li><a href="#" class="hover:text-gray-900">{{ __('landing.footer_contact') }}</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="border-t border-gray-200 mt-8 pt-8 text-center">
                 <p class="text-gray-600">
-                    © 2025 SEO Validator. All rights reserved.
+                    {{ __('landing.footer_copyright') }}
                 </p>
             </div>
         </div>
