@@ -32,4 +32,5 @@ return [
     'english' => 'English',
     'select_language' => 'Select Language',
     'view' => 'View',
+    'generated_at' => 'Generated at',
 ];

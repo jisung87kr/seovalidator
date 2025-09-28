@@ -210,6 +210,9 @@
                                                         <span class="text-gray-300">|</span>
                                                         <a href="{{ route('analysis.compare') }}?analysis1={{ $analysis->id }}"
                                                            class="text-green-600 hover:text-green-900">{{ __('analysis.compare') }}</a>
+                                                        <span class="text-gray-300">|</span>
+                                                        <a href="{{ route('analysis.export-pdf', $analysis->id) }}"
+                                                           class="text-blue-600 hover:text-blue-900">PDF</a>
                                                     </div>
                                                 @else
                                                     <span class="text-gray-400">--</span>

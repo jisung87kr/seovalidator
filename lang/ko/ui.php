@@ -32,4 +32,5 @@ return [
     'english' => 'English',
     'select_language' => '언어 선택',
     'view' => '보기',
+    'generated_at' => '생성일시',
 ];

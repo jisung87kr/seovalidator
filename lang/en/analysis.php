@@ -47,6 +47,35 @@ return [
     'images_missing_alt' => 'Images Missing Alt',
     'total_links' => 'Total Links',
 
+    // Category names
+    'category_title' => 'Page Title',
+    'category_meta_description' => 'Meta Description',
+    'category_headings' => 'Headings',
+    'category_content' => 'Content Quality',
+    'category_images' => 'Images',
+    'category_technical' => 'Technical SEO',
+    'category_links' => 'Links',
+    'category_performance' => 'Performance',
+
+    // Issue messages
+    'issue_missing_title_tag' => 'Missing title tag',
+    'issue_title_too_short' => 'Title too short',
+    'issue_title_too_long' => 'Title too long',
+    'issue_missing_meta_description' => 'Missing meta description',
+    'issue_missing_h1_tag' => 'Missing H1 tag',
+    'issue_multiple_h1_tags_found' => 'Multiple H1 tags found',
+    'issue_content_too_short' => 'Content too short',
+    'issue_images_missing_alt_text' => ':count images missing alt text',
+    
+    // Recommendation messages
+    'recommendation_add_a_descriptive_title_tag_to_your_page' => 'Add a descriptive title tag to your page',
+    'recommendation_optimize_title_length_(30-60_characters)' => 'Optimize title length (30-60 characters)',
+    'recommendation_add_a_compelling_meta_description' => 'Add a compelling meta description',
+    'recommendation_add_a_single_h1_tag_to_your_page' => 'Add a single H1 tag to your page',
+    'recommendation_use_only_one_h1_tag_per_page' => 'Use only one H1 tag per page',
+    'recommendation_expand_your_content_for_better_seo' => 'Expand your content for better SEO',
+    'recommendation_add_alt_text_to_all_images' => 'Add alt text to all images',
+
     // Status messages
     'status_pending' => 'Pending',
     'status_processing' => 'Processing',
@@ -178,4 +207,11 @@ return [
     'analyze_more_urls' => 'Analyze More URLs',
     'select_to_compare' => 'Select analyses to compare',
     'choose_two_analyses' => 'Choose two analyses from the dropdowns above to see a detailed comparison.',
+
+    // PDF Export
+    'export_pdf' => 'Export PDF',
+    'export_comparison_pdf' => 'Export Comparison PDF',
+    'download_report' => 'Download Report',
+    'seo_analysis_report' => 'SEO Analysis Report',
+    'comparison_report' => 'Comparison Report',
 ];

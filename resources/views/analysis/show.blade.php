@@ -18,6 +18,15 @@
                         </div>
                     </div>
                     <div class="flex space-x-3">
+                        @if($analysis->status === 'completed')
+                            <a href="{{ route('analysis.export-pdf', $analysis->id) }}"
+                               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                {{ __('analysis.export_pdf') }}
+                            </a>
+                        @endif
                         <a href="{{ route('analysis.compare') }}?analysis1={{ $analysis->id }}"
                            class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
                             {{ __('analysis.compare') }}
@@ -85,7 +94,7 @@
                 <!-- Analysis Results -->
                 <div class="space-y-8">
                     <!-- Score Overview -->
-                    <div class="bg-white shadow-sm rounded-lg">
+                    <div class="bg-white shadow-sm rounded-xl">
                         <div class="p-6">
                             <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.overall_seo_score') }}</h2>
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -103,7 +112,7 @@
                                                 <div class="text-sm text-gray-500">/ 100</div>
                                             </div>
                                         </div>
-                                        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+                                        <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-nowrap">
                                             <span class="inline-flex px-3 py-1 text-sm font-medium rounded-full
                                                 @if($analysis->overall_score >= 90) bg-green-100 text-green-800
                                                 @elseif($analysis->overall_score >= 70) bg-blue-100 text-blue-800

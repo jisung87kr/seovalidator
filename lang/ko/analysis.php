@@ -47,6 +47,35 @@ return [
     'images_missing_alt' => 'Alt 누락 이미지',
     'total_links' => '총 링크 수',
 
+    // Category names
+    'category_title' => '페이지 제목',
+    'category_meta_description' => '메타 설명',
+    'category_headings' => '제목 구조',
+    'category_content' => '콘텐츠 품질',
+    'category_images' => '이미지',
+    'category_technical' => '기술적 SEO',
+    'category_links' => '링크',
+    'category_performance' => '성능',
+
+    // Issue messages
+    'issue_missing_title_tag' => '페이지 제목 태그가 없습니다',
+    'issue_title_too_short' => '제목이 너무 짧습니다',
+    'issue_title_too_long' => '제목이 너무 깁니다',
+    'issue_missing_meta_description' => '메타 설명이 없습니다',
+    'issue_missing_h1_tag' => 'H1 태그가 없습니다',
+    'issue_multiple_h1_tags_found' => '여러 개의 H1 태그가 발견되었습니다',
+    'issue_content_too_short' => '콘텐츠가 너무 짧습니다',
+    'issue_images_missing_alt_text' => ':count개의 이미지에 alt 텍스트가 없습니다',
+    
+    // Recommendation messages
+    'recommendation_add_a_descriptive_title_tag_to_your_page' => '페이지에 설명적인 제목 태그를 추가하세요',
+    'recommendation_optimize_title_length_(30-60_characters)' => '제목 길이를 최적화하세요 (30-60자)',
+    'recommendation_add_a_compelling_meta_description' => '매력적인 메타 설명을 추가하세요',
+    'recommendation_add_a_single_h1_tag_to_your_page' => '페이지에 하나의 H1 태그를 추가하세요',
+    'recommendation_use_only_one_h1_tag_per_page' => '페이지당 하나의 H1 태그만 사용하세요',
+    'recommendation_expand_your_content_for_better_seo' => '더 나은 SEO를 위해 콘텐츠를 확장하세요',
+    'recommendation_add_alt_text_to_all_images' => '모든 이미지에 alt 텍스트를 추가하세요',
+
     // Status messages
     'status_pending' => '대기 중',
     'status_processing' => '처리 중',
@@ -178,4 +207,11 @@ return [
     'analyze_more_urls' => '더 많은 URL 분석',
     'select_to_compare' => '비교할 분석을 선택하세요',
     'choose_two_analyses' => '위의 드롭다운에서 두 분석을 선택하여 자세한 비교를 확인하세요.',
+
+    // PDF Export
+    'export_pdf' => 'PDF 내보내기',
+    'export_comparison_pdf' => '비교 리포트 PDF 내보내기',
+    'download_report' => '리포트 다운로드',
+    'seo_analysis_report' => 'SEO 분석 리포트',
+    'comparison_report' => '비교 리포트',
 ];
