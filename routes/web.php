@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnalysisController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\UserProfileController;
 use App\Models\SeoAnalysis;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
@@ -26,9 +27,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/analysis/compare', [AnalysisController::class, 'compare'])->name('analysis.compare');
     Route::get('/analysis/{id}', [AnalysisController::class, 'show'])->name('analysis.show');
 
-    Route::get('/user/profile', function () {
-        return view('dashboard.profile');
-    })->name('user.profile');
+    Route::get('/user/profile', [UserProfileController::class, 'show'])->name('user.profile');
+    Route::put('/user/profile', [UserProfileController::class, 'updateProfile'])->name('user.profile.update');
+    Route::put('/user/password', [UserProfileController::class, 'updatePassword'])->name('user.password.update');
+    Route::put('/user/notifications', [UserProfileController::class, 'updateNotifications'])->name('user.notifications.update');
+    Route::get('/user/export-data', [UserProfileController::class, 'exportData'])->name('user.export-data');
 
     Route::get('/user/api-keys', function () {
         return view('dashboard.api-keys');
