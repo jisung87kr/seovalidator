@@ -7,8 +7,12 @@ return [
         'timeout' => false,
         'options' => [
             'enable-local-file-access' => true,
+            'load-error-handling' => 'ignore',
+            'disable-smart-shrinking' => true,
         ],
-        'env' => [],
+        'env' => [
+            'QTWEBKIT_DRT_MODE' => '1',
+        ],
     ],
     'image' => [
         'enabled' => true,

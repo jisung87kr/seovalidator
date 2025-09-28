@@ -128,24 +128,22 @@ class AnalysisController extends Controller
             // Create wkhtmltopdf instance with Korean font options
             $pdf = new Pdf(config('snappy.pdf.binary'));
 
-            // Set options for Korean character support
-            $pdf->setOptions([
+            // Render the view to HTML first
+            $html = view('pdf.analysis-report', compact('analysis', 'analysisData'))->render();
+
+            // Generate PDF from HTML string directly
+            $pdfContent = $pdf->getOutputFromHtml($html, [
                 'page-size' => 'A4',
                 'orientation' => 'portrait',
                 'encoding' => 'utf-8',
                 'enable-local-file-access' => true,
                 'load-error-handling' => 'ignore',
+                'disable-smart-shrinking' => true,
                 'margin-top' => '10mm',
                 'margin-bottom' => '10mm',
                 'margin-left' => '10mm',
                 'margin-right' => '10mm'
             ]);
-
-            // Render the view to HTML
-            $html = view('pdf.analysis-report', compact('analysis', 'analysisData'))->render();
-
-            // Generate PDF from HTML
-            $pdfContent = $pdf->getOutputFromHtml($html);
 
             // Generate filename with URL domain and date
             $urlParts = parse_url($analysis->url);
@@ -207,24 +205,22 @@ class AnalysisController extends Controller
             // Create wkhtmltopdf instance with Korean font options
             $pdf = new Pdf(config('snappy.pdf.binary'));
 
-            // Set options for Korean character support
-            $pdf->setOptions([
+            // Render the view to HTML first
+            $html = view('pdf.comparison-report', compact('comparison'))->render();
+
+            // Generate PDF from HTML string directly
+            $pdfContent = $pdf->getOutputFromHtml($html, [
                 'page-size' => 'A4',
                 'orientation' => 'portrait',
                 'encoding' => 'utf-8',
                 'enable-local-file-access' => true,
                 'load-error-handling' => 'ignore',
+                'disable-smart-shrinking' => true,
                 'margin-top' => '10mm',
                 'margin-bottom' => '10mm',
                 'margin-left' => '10mm',
                 'margin-right' => '10mm'
             ]);
-
-            // Render the view to HTML
-            $html = view('pdf.comparison-report', compact('comparison'))->render();
-
-            // Generate PDF from HTML
-            $pdfContent = $pdf->getOutputFromHtml($html);
 
             $date = now()->format('Y-m-d');
             $filename = "seo-comparison-report-{$date}.pdf";
