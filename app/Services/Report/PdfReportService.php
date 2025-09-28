@@ -2,7 +2,7 @@
 
 namespace App\Services\Report;
 
-use Dompdf\Dompdf;
+//use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;

@@ -1,0 +1,71 @@
+# Dockerfile for Laravel with wkhtmltopdf Korean support
+# 한글 PDF 내보내기 지원을 위한 Laravel Docker 이미지
+
+FROM php:8.2-fpm
+
+# 시스템 패키지 업데이트 및 기본 도구 설치
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    wget \
+    fontconfig \
+    libfontconfig1 \
+    libjpeg-turbo-progs \
+    libssl3 \
+    libx11-6 \
+    libxcb1 \
+    libxext6 \
+    libxrender1 \
+    xfonts-75dpi \
+    xfonts-base
+
+# 한글 폰트 설치
+RUN apt-get install -y \
+    fonts-noto-cjk \
+    fonts-nanum \
+    fonts-nanum-coding \
+    fonts-nanum-extra
+
+# PHP 확장 설치
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+# Composer 설치
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# wkhtmltopdf 설치
+RUN wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb \
+    && dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || apt-get install -f -y \
+    && rm wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+
+# wkhtmltopdf 심볼릭 링크 생성
+RUN ln -sf /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
+
+# 폰트 캐시 업데이트
+RUN fc-cache -fv
+
+# 작업 디렉토리 설정
+WORKDIR /var/www
+
+# Laravel 프로젝트 파일 복사
+COPY . /var/www
+
+# Composer 의존성 설치
+RUN composer install --no-dev --optimize-autoloader
+
+# 권한 설정
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 755 /var/www/storage \
+    && chmod -R 755 /var/www/bootstrap/cache
+
+# wkhtmltopdf 실행 권한 설정
+RUN chmod +x /usr/local/bin/wkhtmltopdf
+
+# 포트 노출
+EXPOSE 9000
+
+CMD ["php-fpm"]
