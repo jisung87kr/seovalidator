@@ -20,7 +20,7 @@ Route::prefix('en')->name('en.')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/analysis/export-comparison-pdf', [AnalysisController::class, 'exportComparisonPdf'])->name('analysis.export-comparison-pdf');
+    Route::post('/analysis/export-comparison-pdf', [AnalysisController::class, 'exportComparisonPdf'])->name('analysis.export-comparison-pdf');
     Route::get('/analysis/{id}/export-pdf', [AnalysisController::class, 'exportPdf'])->name('analysis.export-pdf');
     Route::get('/analysis/history', [AnalysisController::class, 'history'])->name('analysis.history');
     Route::get('/analysis/compare', [AnalysisController::class, 'compare'])->name('analysis.compare');

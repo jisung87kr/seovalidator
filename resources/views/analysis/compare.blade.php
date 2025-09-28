@@ -10,11 +10,28 @@
                         <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ __('analysis.compare_title') }}</h1>
                         <p class="mt-2 text-sm sm:text-base text-gray-600">{{ __('analysis.compare_subtitle') }}</p>
                     </div>
-                    <a href="{{ route('analysis.history') }}"
-                       class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                        <span class="hidden sm:inline">{{ __('analysis.back_to_history') }}</span>
-                        <span class="sm:hidden">목록</span>
-                    </a>
+                    <div class="flex items-center gap-1">
+                        @if($comparison)
+                            <form method="POST" action="{{ route('analysis.export-comparison-pdf') }}" class="mt-3 sm:mt-0 sm:inline-block sm:ml-3">
+                                @csrf
+                                <input type="hidden" name="analysis1" value="{{ request('analysis1') }}">
+                                <input type="hidden" name="analysis2" value="{{ request('analysis2') }}">
+                                <button type="submit"
+                                        class="inline-flex items-center justify-center w-full sm:w-auto px-3 sm:px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <span class="hidden sm:inline">{{ __('analysis.export_comparison_pdf') }}</span>
+                                    <span class="sm:hidden ml-1">PDF</span>
+                                </button>
+                            </form>
+                        @endif
+                        <a href="{{ route('analysis.history') }}"
+                           class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                            <span class="hidden sm:inline">{{ __('analysis.back_to_history') }}</span>
+                            <span class="sm:hidden">목록</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -22,7 +39,7 @@
             <div class="bg-white shadow-sm rounded-lg mb-6 sm:mb-8">
                 <div class="p-4 sm:p-6">
                     <h2 class="text-base sm:text-lg font-medium text-gray-900 mb-4 sm:mb-6">{{ __('analysis.select_analyses_to_compare') }}</h2>
-                    <form method="GET" action="{{ route('analysis.export-comparison-pdf') }}" class="space-y-4 lg:space-y-0 lg:flex lg:items-end lg:space-x-4">
+                    <form method="GET" action="{{ route('analysis.compare') }}" class="space-y-4 lg:space-y-0 lg:flex lg:items-end lg:space-x-4">
                         <div class="flex-1">
                             <label for="analysis1" class="block text-xs sm:text-sm font-medium text-gray-700">{{ __('analysis.first_analysis') }}</label>
                             <select id="analysis1" name="analysis1" class="mt-1 block w-full text-xs sm:text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -52,21 +69,6 @@
                                     class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
                                 {{ __('analysis.compare_button') }}
                             </button>
-                            @if($comparison)
-                                <form method="POST" action="{{ route('analysis.export-comparison-pdf') }}" class="inline">
-                                    @csrf
-                                    <input type="hidden" name="analysis1" value="{{ request('analysis1') }}">
-                                    <input type="hidden" name="analysis2" value="{{ request('analysis2') }}">
-                                    <button type="submit"
-                                            class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
-                                        <svg class="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                        </svg>
-                                        <span class="hidden sm:inline">{{ __('analysis.export_comparison_pdf') }}</span>
-                                        <span class="sm:hidden ml-1">PDF</span>
-                                    </button>
-                                </form>
-                            @endif
                         </div>
                     </form>
                 </div>
@@ -270,7 +272,7 @@
                         <div class="bg-white shadow-sm rounded-lg">
                             <div class="p-4 sm:p-6">
                                 <h2 class="text-base sm:text-lg font-medium text-gray-900 mb-4 sm:mb-6">{{ __('analysis.technical_comparison') }}</h2>
-                                
+
                                 <!-- Mobile Card View -->
                                 <div class="block sm:hidden space-y-4">
                                     <div class="border border-gray-200 rounded-lg p-3">
@@ -301,7 +303,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="border border-gray-200 rounded-lg p-3">
                                         <h3 class="text-sm font-medium text-gray-900 mb-2">{{ __('analysis.load_time') }}</h3>
                                         <div class="grid grid-cols-3 gap-2 text-xs">
@@ -331,7 +333,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Desktop Table View -->
                                 <div class="hidden sm:block overflow-x-auto">
                                     <table class="min-w-full divide-y divide-gray-200">
