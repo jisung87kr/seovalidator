@@ -5,20 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ __('analysis.compare_title') }}</title>
     <style>
-        @font-face {
-            font-family: 'NanumGothic';
-            src: url('{{ asset("fonts/NanumGothic.ttf") }}') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'NanumGothic';
-            src: url('{{ asset("fonts/NanumGothicBold.ttf") }}') format('truetype');
-            font-weight: bold;
-            font-style: normal;
-        }
         body {
-            font-family: 'NanumGothic', 'DejaVu Sans', 'Arial Unicode MS', sans-serif;
+            font-family: 'Noto Sans CJK KR', 'NanumGothic', 'Malgun Gothic', 'Arial Unicode MS', 'DejaVu Sans', sans-serif;
             line-height: 1.6;
             color: #333;
             margin: 0;
