@@ -3,14 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnalysisController;
+use App\Http\Controllers\LandingController;
 use App\Models\SeoAnalysis;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 
-Route::get('/', function () {
-    return redirect()->route('dashboard');
-});
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
