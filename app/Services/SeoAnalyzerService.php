@@ -173,25 +173,25 @@ class SeoAnalyzerService
             $recommendations[] = [
                 'type' => 'error',
                 'category' => 'meta',
-                'message' => 'Missing page title tag',
+                'message' => __('analysis.recommendation_missing_title_tag'),
                 'impact' => 'high',
-                'fix' => 'Add a descriptive <title> tag to your page'
+                'fix' => __('analysis.recommendation_missing_title_tag_fix')
             ];
         } elseif (strlen($parsedData['meta']['title']) < 30) {
             $recommendations[] = [
                 'type' => 'warning',
                 'category' => 'meta',
-                'message' => 'Title tag is too short',
+                'message' => __('analysis.recommendation_title_too_short'),
                 'impact' => 'medium',
-                'fix' => 'Expand your title tag to 30-60 characters'
+                'fix' => __('analysis.recommendation_title_too_short_fix')
             ];
         } elseif (strlen($parsedData['meta']['title']) > 60) {
             $recommendations[] = [
                 'type' => 'warning',
                 'category' => 'meta',
-                'message' => 'Title tag is too long',
+                'message' => __('analysis.recommendation_title_too_long'),
                 'impact' => 'medium',
-                'fix' => 'Shorten your title tag to under 60 characters'
+                'fix' => __('analysis.recommendation_title_too_long_fix')
             ];
         }
 
@@ -200,25 +200,25 @@ class SeoAnalyzerService
             $recommendations[] = [
                 'type' => 'error',
                 'category' => 'meta',
-                'message' => 'Missing meta description',
+                'message' => __('analysis.recommendation_missing_meta_description'),
                 'impact' => 'high',
-                'fix' => 'Add a descriptive meta description tag'
+                'fix' => __('analysis.recommendation_missing_meta_description_fix')
             ];
         } elseif (strlen($parsedData['meta']['description']) < 120) {
             $recommendations[] = [
                 'type' => 'warning',
                 'category' => 'meta',
-                'message' => 'Meta description is too short',
+                'message' => __('analysis.recommendation_meta_description_too_short'),
                 'impact' => 'medium',
-                'fix' => 'Expand your meta description to 120-160 characters'
+                'fix' => __('analysis.recommendation_meta_description_too_short_fix')
             ];
         } elseif (strlen($parsedData['meta']['description']) > 160) {
             $recommendations[] = [
                 'type' => 'warning',
                 'category' => 'meta',
-                'message' => 'Meta description is too long',
+                'message' => __('analysis.recommendation_meta_description_too_long'),
                 'impact' => 'medium',
-                'fix' => 'Shorten your meta description to under 160 characters'
+                'fix' => __('analysis.recommendation_meta_description_too_long_fix')
             ];
         }
 
@@ -228,17 +228,17 @@ class SeoAnalyzerService
             $recommendations[] = [
                 'type' => 'error',
                 'category' => 'headings',
-                'message' => 'Missing H1 heading',
+                'message' => __('analysis.recommendation_missing_h1'),
                 'impact' => 'high',
-                'fix' => 'Add an H1 heading to your page'
+                'fix' => __('analysis.recommendation_missing_h1_fix')
             ];
         } elseif ($h1Count > 1) {
             $recommendations[] = [
                 'type' => 'warning',
                 'category' => 'headings',
-                'message' => 'Multiple H1 headings found',
+                'message' => __('analysis.recommendation_multiple_h1'),
                 'impact' => 'medium',
-                'fix' => 'Use only one H1 heading per page'
+                'fix' => __('analysis.recommendation_multiple_h1_fix')
             ];
         }
 
@@ -248,9 +248,9 @@ class SeoAnalyzerService
             $recommendations[] = [
                 'type' => 'warning',
                 'category' => 'images',
-                'message' => "{$imagesWithoutAlt} images missing alt text",
+                'message' => __('analysis.recommendation_images_missing_alt', ['count' => $imagesWithoutAlt]),
                 'impact' => 'medium',
-                'fix' => 'Add descriptive alt text to all images'
+                'fix' => __('analysis.recommendation_images_missing_alt_fix')
             ];
         }
 
@@ -260,9 +260,9 @@ class SeoAnalyzerService
             $recommendations[] = [
                 'type' => 'warning',
                 'category' => 'content',
-                'message' => 'Content is too short',
+                'message' => __('analysis.recommendation_content_too_short'),
                 'impact' => 'medium',
-                'fix' => 'Add more valuable content (aim for 300+ words)'
+                'fix' => __('analysis.recommendation_content_too_short_fix')
             ];
         }
 
