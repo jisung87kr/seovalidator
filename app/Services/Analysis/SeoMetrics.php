@@ -243,8 +243,8 @@ class SeoMetrics
 
         // Base presence score
         if (empty($title)) {
-            $issues[] = 'Missing title tag';
-            $recommendations[] = 'Add a descriptive title tag to your page';
+            $issues[] = __('analysis.issue_missing_title_tag');
+            $recommendations[] = __('analysis.recommendation_add_a_descriptive_title_tag_to_your_page');
             return $this->buildScoreResult($score, $maxScore, 'title', $issues, $recommendations, $metrics);
         }
 
@@ -453,13 +453,13 @@ class SeoMetrics
             $score = 15; // Acceptable length
         } elseif ($length < $optimalMin) {
             $score = max(0, 10 - ($optimalMin - $length));
-            $issues[] = 'Title too short for optimal SEO';
-            $recommendations[] = "Expand title to {$optimalMin}-{$optimalMax} characters for better visibility";
+            $issues[] = __('analysis.issue_title_too_short');
+            $recommendations[] = __('analysis.recommendation_expand_title_length', ['min' => $optimalMin, 'max' => $optimalMax]);
         } elseif ($length > $optimalMax) {
             $penalty = min(15, ($length - $optimalMax) * 0.5);
             $score = max(0, 15 - $penalty);
-            $issues[] = 'Title may be truncated in search results';
-            $recommendations[] = "Shorten title to under {$optimalMax} characters to prevent truncation";
+            $issues[] = __('analysis.issue_title_too_long');
+            $recommendations[] = __('analysis.recommendation_shorten_title_length', ['max' => $optimalMax]);
         }
 
         return ['score' => $score, 'issues' => $issues, 'recommendations' => $recommendations];
@@ -492,11 +492,11 @@ class SeoMetrics
         }
 
         if ($totalDensity === 0) {
-            $issues[] = 'No target keywords found in title';
-            $recommendations[] = 'Include primary keywords in your title tag';
+            $issues[] = __('analysis.issue_no_keywords_in_title');
+            $recommendations[] = __('analysis.recommendation_include_keywords_in_title');
         } elseif ($totalDensity > 20) {
-            $issues[] = 'Keyword stuffing detected in title';
-            $recommendations[] = 'Reduce keyword density for more natural title';
+            $issues[] = __('analysis.issue_keyword_stuffing_in_title');
+            $recommendations[] = __('analysis.recommendation_reduce_keyword_density');
             $score *= 0.5; // Penalty for over-optimization
         }
 
@@ -518,16 +518,16 @@ class SeoMetrics
         if ($this->hasVariedWords($title)) {
             $score += 5;
         } else {
-            $issues[] = 'Title lacks word variety';
-            $recommendations[] = 'Use more diverse vocabulary in title';
+            $issues[] = __('analysis.issue_title_lacks_variety');
+            $recommendations[] = __('analysis.recommendation_use_diverse_vocabulary');
         }
 
         // Check for duplicate words
         if (!$this->hasDuplicateWords($title)) {
             $score += 5;
         } else {
-            $issues[] = 'Duplicate words found in title';
-            $recommendations[] = 'Remove duplicate words for clarity';
+            $issues[] = __('analysis.issue_duplicate_words_in_title');
+            $recommendations[] = __('analysis.recommendation_remove_duplicate_words');
         }
 
         // Check readability (simple heuristic)
@@ -609,8 +609,8 @@ class SeoMetrics
         } elseif ($wordCount >= $thresholds['minimum_words']) {
             $score = 15; // Acceptable content length
         } else {
-            $issues[] = 'Content too short for optimal SEO';
-            $recommendations[] = "Expand content to at least {$thresholds['minimum_words']} words";
+            $issues[] = __('analysis.issue_content_too_short');
+            $recommendations[] = __('analysis.recommendation_expand_content_words', ['min_words' => $thresholds['minimum_words']]);
         }
 
         return ['score' => $score, 'issues' => $issues, 'recommendations' => $recommendations];

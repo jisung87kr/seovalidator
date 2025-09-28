@@ -12,44 +12,14 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-route::get('/test', function(){
-    // 한글이 포함된 HTML을 직접 테스트
-    $html = '<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <style>
-        body { font-family: "DejaVu Sans", serif; font-size: 16px; }
-    </style>
-</head>
-<body>
-    <h1>SEO 분석 결과</h1>
-    <p>URL: https://example.com</p>
-    <p>분석 날짜: 2024-01-01</p>
-    <p>전체 점수: 85점</p>
-    <p>기술적 SEO: 좋음</p>
-    <p>콘텐츠 품질: 우수</p>
-    <p>성능: 보통</p>
-    <p>접근성: 양호</p>
-</body>
-</html>';
-    
-    return SnappyPdf::loadHTML($html)
-        ->setOption('page-size', 'A4')
-        ->setOption('orientation', 'portrait')
-        ->setOption('encoding', 'utf-8')
-        ->stream('seo-analysis.pdf');
-});
-
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/analysis/export-comparison-pdf', [AnalysisController::class, 'exportComparisonPdf'])->name('analysis.export-comparison-pdf');
+    Route::get('/analysis/{id}/export-pdf', [AnalysisController::class, 'exportPdf'])->name('analysis.export-pdf');
     Route::get('/analysis/history', [AnalysisController::class, 'history'])->name('analysis.history');
     Route::get('/analysis/compare', [AnalysisController::class, 'compare'])->name('analysis.compare');
     Route::get('/analysis/{id}', [AnalysisController::class, 'show'])->name('analysis.show');
-    Route::get('/analysis/{id}/export-pdf', [AnalysisController::class, 'exportPdf'])->name('analysis.export-pdf');
-    Route::post('/analysis/export-comparison-pdf', [AnalysisController::class, 'exportComparisonPdf'])->name('analysis.export-comparison-pdf');
 
     Route::get('/user/profile', function () {
         return view('dashboard.profile');

@@ -75,6 +75,20 @@ return [
     'recommendation_use_only_one_h1_tag_per_page' => '페이지당 하나의 H1 태그만 사용하세요',
     'recommendation_expand_your_content_for_better_seo' => '더 나은 SEO를 위해 콘텐츠를 확장하세요',
     'recommendation_add_alt_text_to_all_images' => '모든 이미지에 alt 텍스트를 추가하세요',
+    'recommendation_expand_title_length' => '더 나은 가시성을 위해 제목을 :min-:max 글자로 확장하세요',
+    'recommendation_shorten_title_length' => '잘림 방지를 위해 제목을 :max 글자 이하로 줄이세요',
+    'recommendation_include_keywords_in_title' => '제목 태그에 주요 키워드를 포함하세요',
+    'recommendation_reduce_keyword_density' => '더 자연스러운 제목을 위해 키워드 밀도를 줄이세요',
+    'recommendation_use_diverse_vocabulary' => '제목에 더 다양한 어휘를 사용하세요',
+    'recommendation_remove_duplicate_words' => '명확성을 위해 중복된 단어를 제거하세요',
+    'recommendation_expand_content_words' => '콘텐츠를 최소 :min_words 단어로 확장하세요',
+
+    // Additional issue messages
+    'issue_title_too_short' => '최적 SEO를 위해 제목이 너무 짧습니다',
+    'issue_no_keywords_in_title' => '제목에서 타겟 키워드를 찾을 수 없습니다',
+    'issue_keyword_stuffing_in_title' => '제목에서 키워드 stuffing이 감지되었습니다',
+    'issue_title_lacks_variety' => '제목에 단어 다양성이 부족합니다',
+    'issue_duplicate_words_in_title' => '제목에서 중복된 단어가 발견되었습니다',
 
     // Status messages
     'status_pending' => '대기 중',

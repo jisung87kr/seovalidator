@@ -75,6 +75,20 @@ return [
     'recommendation_use_only_one_h1_tag_per_page' => 'Use only one H1 tag per page',
     'recommendation_expand_your_content_for_better_seo' => 'Expand your content for better SEO',
     'recommendation_add_alt_text_to_all_images' => 'Add alt text to all images',
+    'recommendation_expand_title_length' => 'Expand title to :min-:max characters for better visibility',
+    'recommendation_shorten_title_length' => 'Shorten title to under :max characters to prevent truncation',
+    'recommendation_include_keywords_in_title' => 'Include primary keywords in your title tag',
+    'recommendation_reduce_keyword_density' => 'Reduce keyword density for more natural title',
+    'recommendation_use_diverse_vocabulary' => 'Use more diverse vocabulary in title',
+    'recommendation_remove_duplicate_words' => 'Remove duplicate words for clarity',
+    'recommendation_expand_content_words' => 'Expand content to at least :min_words words',
+
+    // Additional issue messages
+    'issue_title_too_short' => 'Title too short for optimal SEO',
+    'issue_no_keywords_in_title' => 'No target keywords found in title',
+    'issue_keyword_stuffing_in_title' => 'Keyword stuffing detected in title',
+    'issue_title_lacks_variety' => 'Title lacks word variety',
+    'issue_duplicate_words_in_title' => 'Duplicate words found in title',
 
     // Status messages
     'status_pending' => 'Pending',

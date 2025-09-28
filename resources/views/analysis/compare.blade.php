@@ -21,7 +21,7 @@
             <div class="bg-white shadow-sm rounded-lg mb-8">
                 <div class="p-6">
                     <h2 class="text-lg font-medium text-gray-900 mb-6">{{ __('analysis.select_analyses_to_compare') }}</h2>
-                    <form method="GET" action="{{ route('analysis.compare') }}" class="space-y-4 sm:space-y-0 sm:flex sm:items-end sm:space-x-4">
+                    <form method="GET" action="{{ route('analysis.export-comparison-pdf') }}" class="space-y-4 sm:space-y-0 sm:flex sm:items-end sm:space-x-4">
                         <div class="flex-1">
                             <label for="analysis1" class="block text-sm font-medium text-gray-700">{{ __('analysis.first_analysis') }}</label>
                             <select id="analysis1" name="analysis1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
