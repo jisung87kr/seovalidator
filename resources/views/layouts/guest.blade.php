@@ -14,7 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'SEO Validator') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -31,52 +31,51 @@
                 word-break: keep-all;
             }
 
-            /* Mobile-specific optimizations */
             @media (max-width: 768px) {
                 .break-keep {
                     word-break: keep-all;
                     line-height: 1.6;
                 }
 
-                /* Touch-friendly interactive elements */
                 button, a[href] {
                     min-height: 44px;
                     min-width: 44px;
                 }
 
-                /* Better focus states for mobile */
                 button:focus, a:focus, input:focus, select:focus, textarea:focus {
                     outline: 3px solid #3b82f6;
                     outline-offset: 2px;
                 }
 
-                /* Prevent zoom on input focus */
                 input[type="url"], input[type="text"], input[type="email"], input[type="password"], input[type="search"], textarea, select {
                     font-size: 16px;
                 }
 
-                /* Prevent horizontal scroll */
                 body {
                     overflow-x: hidden;
-                }
-
-                /* Better form spacing */
-                .form-container {
-                    padding: 1rem;
                 }
             }
         </style>
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 px-4 sm:px-0">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-16 h-16 sm:w-20 sm:h-20 fill-current text-gray-500" />
-                </a>
-            </div>
+    <body class="font-sans antialiased bg-surface-muted text-content">
+        <div class="min-h-screen flex flex-col justify-center items-center py-8 sm:py-12 px-4">
+            <!-- Logo -->
+            <a href="/" class="mb-8">
+                <span class="text-2xl font-bold text-primary">SEO Validator</span>
+            </a>
 
-            <div class="w-full sm:max-w-md mt-4 sm:mt-6 px-4 sm:px-6 py-4 sm:py-6 bg-white shadow-md overflow-hidden sm:rounded-lg form-container">
-                {{ $slot }}
+            <!-- Auth Card -->
+            <div class="w-full max-w-md">
+                <div class="bg-white rounded-2xl border border-border p-6 sm:p-8 shadow-card">
+                    {{ $slot }}
+                </div>
+
+                <!-- Footer -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-content-muted">
+                        &copy; {{ date('Y') }} SEO Validator. All rights reserved.
+                    </p>
+                </div>
             </div>
         </div>
     </body>

@@ -1,62 +1,84 @@
 <x-guest-layout>
     <!-- Header -->
-    <div class="text-center mb-6 sm:mb-8">
-        <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{{ __('auth.register_title') }}</h1>
-        <p class="mt-2 text-sm sm:text-base text-gray-600">{{ __('auth.register_subtitle') }}</p>
+    <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-primary">{{ __('auth.register_title') }}</h1>
+        <p class="mt-2 text-sm text-content-secondary">{{ __('auth.register_subtitle') }}</p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" class="space-y-5">
         @csrf
 
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('auth.name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <label for="name" class="block text-sm font-medium text-content mb-2">{{ __('auth.name') }}</label>
+            <input id="name"
+                   type="text"
+                   name="name"
+                   value="{{ old('name') }}"
+                   required
+                   autofocus
+                   autocomplete="name"
+                   class="w-full px-4 py-3 bg-surface-subtle border border-border rounded-xl text-content placeholder-content-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all {{ $errors->has('name') ? 'border-error ring-1 ring-error' : '' }}">
+            @error('name')
+                <p class="mt-2 text-sm text-error">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('auth.email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div>
+            <label for="email" class="block text-sm font-medium text-content mb-2">{{ __('auth.email') }}</label>
+            <input id="email"
+                   type="email"
+                   name="email"
+                   value="{{ old('email') }}"
+                   required
+                   autocomplete="username"
+                   class="w-full px-4 py-3 bg-surface-subtle border border-border rounded-xl text-content placeholder-content-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all {{ $errors->has('email') ? 'border-error ring-1 ring-error' : '' }}">
+            @error('email')
+                <p class="mt-2 text-sm text-error">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('auth.password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div>
+            <label for="password" class="block text-sm font-medium text-content mb-2">{{ __('auth.password') }}</label>
+            <input id="password"
+                   type="password"
+                   name="password"
+                   required
+                   autocomplete="new-password"
+                   class="w-full px-4 py-3 bg-surface-subtle border border-border rounded-xl text-content placeholder-content-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all {{ $errors->has('password') ? 'border-error ring-1 ring-error' : '' }}">
+            @error('password')
+                <p class="mt-2 text-sm text-error">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('auth.confirm_password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div>
+            <label for="password_confirmation" class="block text-sm font-medium text-content mb-2">{{ __('auth.confirm_password') }}</label>
+            <input id="password_confirmation"
+                   type="password"
+                   name="password_confirmation"
+                   required
+                   autocomplete="new-password"
+                   class="w-full px-4 py-3 bg-surface-subtle border border-border rounded-xl text-content placeholder-content-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all {{ $errors->has('password_confirmation') ? 'border-error ring-1 ring-error' : '' }}">
+            @error('password_confirmation')
+                <p class="mt-2 text-sm text-error">{{ $message }}</p>
+            @enderror
         </div>
 
         <!-- Register Button -->
-        <div class="mt-6">
-            <x-primary-button class="w-full justify-center">
+        <div class="pt-2">
+            <button type="submit" class="w-full px-6 py-3 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors">
                 {{ __('auth.register_button') }}
-            </x-primary-button>
+            </button>
         </div>
 
         <!-- Sign in link -->
-        <div class="mt-4 text-center">
-            <p class="text-sm text-gray-600">
+        <div class="text-center pt-2">
+            <p class="text-sm text-content-secondary">
                 {{ __('auth.already_registered') }}
-                <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-900">
+                <a href="{{ route('login') }}" class="font-medium text-accent hover:text-accent-hover transition-colors">
                     {{ __('auth.sign_in') }}
                 </a>
             </p>

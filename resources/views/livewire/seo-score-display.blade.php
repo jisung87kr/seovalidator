@@ -1,223 +1,229 @@
-<div class="bg-white shadow rounded-lg p-6">
+<div>
     @if($analysis && $analysis['status'] === 'completed')
-        <!-- Header -->
-        <div class="mb-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900">SEO Analysis Results</h3>
-                    <p class="text-sm text-gray-600">{{ $analysis['url'] }}</p>
-                </div>
-                <div class="text-right">
-                    <div class="text-2xl font-bold text-{{ $this->getScoreColor($analysis['overall_score']) }}-600">
-                        {{ $analysis['overall_score'] }}/100
+        <div class="bg-white rounded-2xl border border-border overflow-hidden">
+            <!-- Header -->
+            <div class="p-6 sm:p-8 border-b border-border">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-primary">{{ __('analysis.results_title') }}</h3>
+                        <p class="text-sm text-content-secondary mt-1 font-mono">{{ $analysis['url'] }}</p>
                     </div>
-                    <div class="text-sm text-gray-500">
-                        Grade: {{ $this->getScoreGrade($analysis['overall_score']) }}
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1.5 rounded-lg text-sm font-medium bg-{{ $this->getScoreColor($analysis['overall_score']) }}-100 text-{{ $this->getScoreColor($analysis['overall_score']) }}-700">
+                            {{ $this->getScoreGrade($analysis['overall_score']) }}
+                        </span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Overall Score Circle -->
-        <div class="flex justify-center mb-8">
-            <div class="relative w-32 h-32">
-                <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
-                    <!-- Background circle -->
-                    <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="12" class="text-gray-200"></circle>
-                    <!-- Progress circle -->
-                    <circle
-                        cx="60"
-                        cy="60"
-                        r="54"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="12"
-                        stroke-linecap="round"
-                        class="text-{{ $this->getScoreColor($analysis['overall_score']) }}-500"
-                        style="stroke-dasharray: {{ 2 * pi() * 54 }}; stroke-dashoffset: {{ 2 * pi() * 54 * (1 - $analysis['overall_score'] / 100) }}"
-                    ></circle>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <span class="text-2xl font-bold text-gray-900">{{ $analysis['overall_score'] }}</span>
-                </div>
-            </div>
-        </div>
+            <!-- Score Section -->
+            <div class="p-6 sm:p-8">
+                <div class="flex flex-col lg:flex-row lg:items-center gap-8">
+                    <!-- Overall Score Circle -->
+                    <div class="flex justify-center lg:justify-start">
+                        <div class="relative w-36 h-36">
+                            <svg class="w-36 h-36 transform -rotate-90" viewBox="0 0 120 120">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="currentColor" stroke-width="10" class="text-surface-subtle"></circle>
+                                <circle
+                                    cx="60"
+                                    cy="60"
+                                    r="50"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="10"
+                                    stroke-linecap="round"
+                                    class="text-{{ $this->getScoreColor($analysis['overall_score']) }}-500"
+                                    style="stroke-dasharray: {{ 2 * pi() * 50 }}; stroke-dashoffset: {{ 2 * pi() * 50 * (1 - $analysis['overall_score'] / 100) }}"
+                                ></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span class="text-4xl font-bold text-primary">{{ $analysis['overall_score'] }}</span>
+                                <span class="text-sm text-content-muted">/100</span>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Score Breakdown -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="text-center">
-                <div class="text-2xl font-bold text-{{ $this->getScoreColor($analysis['technical_score']) }}-600">
-                    {{ $analysis['technical_score'] }}
-                </div>
-                <div class="text-sm text-gray-600">Technical SEO</div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-{{ $this->getScoreColor($analysis['technical_score']) }}-600 h-2 rounded-full" style="width: {{ $analysis['technical_score'] }}%"></div>
-                </div>
-            </div>
+                    <!-- Score Breakdown -->
+                    <div class="flex-1 grid grid-cols-2 gap-6">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-content">{{ __('analysis.technical_seo') }}</span>
+                                <span class="text-sm font-bold text-{{ $this->getScoreColor($analysis['technical_score']) }}-600">{{ $analysis['technical_score'] }}</span>
+                            </div>
+                            <div class="h-2 bg-surface-subtle rounded-full overflow-hidden">
+                                <div class="h-full bg-{{ $this->getScoreColor($analysis['technical_score']) }}-500 rounded-full transition-all duration-500" style="width: {{ $analysis['technical_score'] }}%"></div>
+                            </div>
+                        </div>
 
-            <div class="text-center">
-                <div class="text-2xl font-bold text-{{ $this->getScoreColor($analysis['content_score']) }}-600">
-                    {{ $analysis['content_score'] }}
-                </div>
-                <div class="text-sm text-gray-600">Content</div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-{{ $this->getScoreColor($analysis['content_score']) }}-600 h-2 rounded-full" style="width: {{ $analysis['content_score'] }}%"></div>
-                </div>
-            </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-content">{{ __('analysis.content') }}</span>
+                                <span class="text-sm font-bold text-{{ $this->getScoreColor($analysis['content_score']) }}-600">{{ $analysis['content_score'] }}</span>
+                            </div>
+                            <div class="h-2 bg-surface-subtle rounded-full overflow-hidden">
+                                <div class="h-full bg-{{ $this->getScoreColor($analysis['content_score']) }}-500 rounded-full transition-all duration-500" style="width: {{ $analysis['content_score'] }}%"></div>
+                            </div>
+                        </div>
 
-            <div class="text-center">
-                <div class="text-2xl font-bold text-{{ $this->getScoreColor($analysis['performance_score']) }}-600">
-                    {{ $analysis['performance_score'] }}
-                </div>
-                <div class="text-sm text-gray-600">Performance</div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-{{ $this->getScoreColor($analysis['performance_score']) }}-600 h-2 rounded-full" style="width: {{ $analysis['performance_score'] }}%"></div>
-                </div>
-            </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-content">{{ __('analysis.performance') }}</span>
+                                <span class="text-sm font-bold text-{{ $this->getScoreColor($analysis['performance_score']) }}-600">{{ $analysis['performance_score'] }}</span>
+                            </div>
+                            <div class="h-2 bg-surface-subtle rounded-full overflow-hidden">
+                                <div class="h-full bg-{{ $this->getScoreColor($analysis['performance_score']) }}-500 rounded-full transition-all duration-500" style="width: {{ $analysis['performance_score'] }}%"></div>
+                            </div>
+                        </div>
 
-            <div class="text-center">
-                <div class="text-2xl font-bold text-{{ $this->getScoreColor($analysis['accessibility_score']) }}-600">
-                    {{ $analysis['accessibility_score'] }}
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-content">{{ __('analysis.accessibility') }}</span>
+                                <span class="text-sm font-bold text-{{ $this->getScoreColor($analysis['accessibility_score']) }}-600">{{ $analysis['accessibility_score'] }}</span>
+                            </div>
+                            <div class="h-2 bg-surface-subtle rounded-full overflow-hidden">
+                                <div class="h-full bg-{{ $this->getScoreColor($analysis['accessibility_score']) }}-500 rounded-full transition-all duration-500" style="width: {{ $analysis['accessibility_score'] }}%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-sm text-gray-600">Accessibility</div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                    <div class="bg-{{ $this->getScoreColor($analysis['accessibility_score']) }}-600 h-2 rounded-full" style="width: {{ $analysis['accessibility_score'] }}%"></div>
+
+                <!-- Toggle Details Button -->
+                <div class="flex justify-center mt-8">
+                    <button
+                        wire:click="toggleDetails"
+                        class="inline-flex items-center px-5 py-2.5 bg-surface-subtle hover:bg-surface-muted text-sm font-medium text-content-secondary rounded-xl transition-colors"
+                    >
+                        {{ $showDetails ? __('analysis.hide_details') : __('analysis.show_details') }}
+                        <svg class="ml-2 w-4 h-4 transition-transform {{ $showDetails ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
                 </div>
-            </div>
-        </div>
 
-        <!-- Toggle Details Button -->
-        <div class="flex justify-center">
-            <button
-                wire:click="toggleDetails"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-                {{ $showDetails ? 'Hide Details' : 'Show Details' }}
-                <svg class="ml-2 -mr-1 h-4 w-4 transform {{ $showDetails ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </button>
-        </div>
+                <!-- Detailed Breakdown -->
+                @if($showDetails)
+                    <div class="mt-8 pt-8 border-t border-border">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Technical SEO Details -->
+                            <div class="bg-surface-subtle rounded-xl p-5">
+                                <h4 class="text-base font-semibold text-primary mb-4">{{ __('analysis.technical_seo') }}</h4>
+                                <div class="space-y-3">
+                                    @foreach($analysis['analysis_data']['technical'] as $item => $data)
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-content-secondary capitalize">{{ str_replace('_', ' ', $item) }}</span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-sm font-medium text-{{ $this->getScoreColor($data['score']) }}-600">{{ $data['score'] }}</span>
+                                                @if($data['issues'] > 0)
+                                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-error-light text-error-dark">
+                                                        {{ $data['issues'] }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
 
-        <!-- Detailed Breakdown -->
-        @if($showDetails)
-            <div class="mt-6 border-t border-gray-200 pt-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Technical SEO Details -->
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h4 class="text-lg font-medium text-gray-900 mb-3">Technical SEO</h4>
-                        <div class="space-y-3">
-                            @foreach($analysis['analysis_data']['technical'] as $item => $data)
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600 capitalize">{{ str_replace('_', ' ', $item) }}</span>
-                                    <div class="flex items-center space-x-2">
-                                        <span class="text-sm font-medium text-{{ $this->getScoreColor($data['score']) }}-600">{{ $data['score'] }}/100</span>
-                                        @if($data['issues'] > 0)
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-800">
-                                                {{ $data['issues'] }} issues
-                                            </span>
-                                        @endif
+                            <!-- Content Details -->
+                            <div class="bg-surface-subtle rounded-xl p-5">
+                                <h4 class="text-base font-semibold text-primary mb-4">{{ __('analysis.content') }}</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-content-secondary">{{ __('analysis.word_count') }}</span>
+                                        <span class="text-sm font-medium text-content">{{ $analysis['analysis_data']['content']['word_count'] }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-content-secondary">{{ __('analysis.readability') }}</span>
+                                        <span class="text-sm font-medium text-{{ $this->getScoreColor($analysis['analysis_data']['content']['readability']) }}-600">
+                                            {{ $analysis['analysis_data']['content']['readability'] }}
+                                        </span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-content-secondary">{{ __('analysis.keyword_density') }}</span>
+                                        <span class="text-sm font-medium text-content">{{ $analysis['analysis_data']['content']['keyword_density'] }}%</span>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
-                    </div>
+                            </div>
 
-                    <!-- Content Details -->
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h4 class="text-lg font-medium text-gray-900 mb-3">Content Analysis</h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Word Count</span>
-                                <span class="text-sm font-medium">{{ $analysis['analysis_data']['content']['word_count'] }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Readability</span>
-                                <span class="text-sm font-medium text-{{ $this->getScoreColor($analysis['analysis_data']['content']['readability']) }}-600">
-                                    {{ $analysis['analysis_data']['content']['readability'] }}/100
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Keyword Density</span>
-                                <span class="text-sm font-medium">{{ $analysis['analysis_data']['content']['keyword_density'] }}%</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Performance Details -->
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h4 class="text-lg font-medium text-gray-900 mb-3">Performance</h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Page Size</span>
-                                <span class="text-sm font-medium">{{ $analysis['analysis_data']['performance']['page_size'] }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Load Time</span>
-                                <span class="text-sm font-medium">{{ $analysis['analysis_data']['performance']['load_time'] }}s</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">HTTP Requests</span>
-                                <span class="text-sm font-medium">{{ $analysis['analysis_data']['performance']['requests'] }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Accessibility Details -->
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h4 class="text-lg font-medium text-gray-900 mb-3">Accessibility</h4>
-                        <div class="space-y-3">
-                            @foreach($analysis['analysis_data']['accessibility'] as $item => $score)
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-600 capitalize">{{ str_replace('_', ' ', $item) }}</span>
-                                    <span class="text-sm font-medium text-{{ $this->getScoreColor($score) }}-600">{{ $score }}/100</span>
+                            <!-- Performance Details -->
+                            <div class="bg-surface-subtle rounded-xl p-5">
+                                <h4 class="text-base font-semibold text-primary mb-4">{{ __('analysis.performance') }}</h4>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-content-secondary">{{ __('analysis.page_size') }}</span>
+                                        <span class="text-sm font-medium text-content">{{ $analysis['analysis_data']['performance']['page_size'] }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-content-secondary">{{ __('analysis.load_time') }}</span>
+                                        <span class="text-sm font-medium text-content">{{ $analysis['analysis_data']['performance']['load_time'] }}s</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm text-content-secondary">{{ __('analysis.http_requests') }}</span>
+                                        <span class="text-sm font-medium text-content">{{ $analysis['analysis_data']['performance']['requests'] }}</span>
+                                    </div>
                                 </div>
-                            @endforeach
+                            </div>
+
+                            <!-- Accessibility Details -->
+                            <div class="bg-surface-subtle rounded-xl p-5">
+                                <h4 class="text-base font-semibold text-primary mb-4">{{ __('analysis.accessibility') }}</h4>
+                                <div class="space-y-3">
+                                    @foreach($analysis['analysis_data']['accessibility'] as $item => $score)
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-content-secondary capitalize">{{ str_replace('_', ' ', $item) }}</span>
+                                            <span class="text-sm font-medium text-{{ $this->getScoreColor($score) }}-600">{{ $score }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
-        @endif
 
-        <!-- Action Buttons -->
-        <div class="mt-6 border-t border-gray-200 pt-6">
-            <div class="flex space-x-3">
-                <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Download Report
-                </button>
-                <button class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
-                    </svg>
-                    Share
-                </button>
-                <button class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    Re-analyze
-                </button>
+            <!-- Action Buttons -->
+            <div class="px-6 sm:px-8 py-5 bg-surface-subtle border-t border-border">
+                <div class="flex flex-wrap gap-3">
+                    <a href="{{ route('analysis.show', $analysis['id']) }}" class="inline-flex items-center px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-medium rounded-xl transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        {{ __('analysis.view_full_report') }}
+                    </a>
+                    <button class="inline-flex items-center px-5 py-2.5 bg-white border border-border hover:bg-surface-subtle text-sm font-medium text-content-secondary rounded-xl transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        {{ __('analysis.re_analyze') }}
+                    </button>
+                </div>
             </div>
         </div>
 
     @elseif($analysis && $analysis['status'] === 'processing')
         <!-- Processing State -->
-        <div class="text-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-            <h3 class="text-lg font-medium text-gray-900">Analyzing {{ $analysis['url'] }}</h3>
-            <p class="text-gray-600">This may take a few moments...</p>
+        <div class="bg-white rounded-2xl border border-border p-12 text-center">
+            <div class="w-16 h-16 mx-auto mb-6">
+                <svg class="w-16 h-16 text-accent animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-primary">{{ __('analysis.analyzing') }}</h3>
+            <p class="text-content-secondary mt-2 font-mono text-sm">{{ $analysis['url'] }}</p>
+            <p class="text-content-muted text-sm mt-4">{{ __('analysis.please_wait') }}</p>
         </div>
     @else
         <!-- No Analysis State -->
-        <div class="text-center py-12">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No analysis yet</h3>
-            <p class="mt-1 text-sm text-gray-500">Start by analyzing a URL above.</p>
+        <div class="bg-white rounded-2xl border border-border p-12 text-center">
+            <div class="w-16 h-16 bg-surface-subtle rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-content-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-base font-semibold text-primary">{{ __('analysis.no_analysis') }}</h3>
+            <p class="mt-2 text-sm text-content-secondary">{{ __('analysis.start_analyzing') }}</p>
         </div>
     @endif
 </div>
