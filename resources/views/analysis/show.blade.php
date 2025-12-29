@@ -28,6 +28,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-4 lg:mt-0">
+                        {{-- PDF export disabled - wkhtmltopdf not configured
                         @if($analysis->status === 'completed')
                             <a href="{{ route('analysis.export-pdf', $analysis->id) }}"
                                class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
@@ -38,6 +39,7 @@
                                 <span class="sm:hidden ml-1">PDF</span>
                             </a>
                         @endif
+                        --}}
                         <a href="{{ route('analysis.compare') }}?analysis1={{ $analysis->id }}"
                            class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
                             <span class="hidden sm:inline">{{ __('analysis.compare') }}</span>
