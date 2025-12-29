@@ -17,14 +17,14 @@
 
 ```bash
 # seo_analysis 큐 실행 (권장)
-php artisan queue:work --queue=seo_analysis
+php artisan queue:work --queue=high,seo_analysis,seo_reporting,default
 
 # 한 번만 실행
-php artisan queue:work --queue=seo_analysis --once
+php artisan queue:work --queue=high,seo_analysis,seo_reporting,default --once
 
 # 상세 로그 출력
-php artisan queue:work --queue=seo_analysis -v
-php artisan queue:work --queue=seo_analysis -vvv
+php artisan queue:work --queue=high,seo_analysis,seo_reporting,default -v
+php artisan queue:work --queue=high,seo_analysis,seo_reporting,default -vvv
 ```
 
 ### 옵션 설명
@@ -106,6 +106,54 @@ php artisan tinker
 >>> DB::table('jobs')->truncate()
 >>> DB::table('failed_jobs')->truncate()
 ```
+
+## 백그라운드 실행
+
+### 백그라운드로 실행
+
+```bash
+# nohup으로 백그라운드 실행
+nohup php artisan queue:work --queue=high,seo_analysis,seo_reporting,default --tries=2 --timeout=300 > storage/logs/queue.log 2>&1 &
+
+# 프로세스 ID 확인
+echo $!
+
+# 또는 jobs 명령으로 확인
+jobs -l
+```
+
+### 실행 중인 워커 확인
+
+```bash
+# 프로세스 확인
+ps aux | grep "queue:work"
+
+# 또는
+pgrep -f "queue:work"
+```
+
+### 워커 종료
+
+```bash
+# 프로세스 ID로 종료 (graceful)
+kill <PID>
+
+# 모든 queue:work 프로세스 종료
+pkill -f "queue:work"
+
+# 강제 종료 (권장하지 않음)
+kill -9 <PID>
+```
+
+### Laravel 명령으로 종료
+
+```bash
+# 현재 job 완료 후 종료 (graceful restart)
+php artisan queue:restart
+```
+
+> `queue:restart`는 워커를 즉시 종료하지 않고, 현재 처리 중인 job이 완료되면 종료합니다.
+> Supervisor 등에서 자동 재시작 설정 시 새 워커가 시작됩니다.
 
 ## 프로덕션 실행
 
