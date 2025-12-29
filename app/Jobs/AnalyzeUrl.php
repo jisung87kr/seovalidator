@@ -52,7 +52,7 @@ class AnalyzeUrl implements ShouldQueue
                 'seo_elements_keys' => isset($analysis['seo_elements']) ? array_keys($analysis['seo_elements']) : [],
                 'overall_score' => $analysis['scores']['overall_score'] ?? 0,
                 'grade' => $analysis['scores']['grade'] ?? 'N/A',
-                'analysis_duration' => $analysis['analysis_duration_ms'] ?? 0
+                'analysis_duration' => $analysis['analysis_duration_ms'] ?? 0,
             ]);
 
             // Save analysis results to database

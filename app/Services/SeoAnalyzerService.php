@@ -157,7 +157,8 @@ class SeoAnalyzerService
             'metadata' => [
                 'analysis_version' => '1.0.0',
                 'options' => $options
-            ]
+            ],
+            'robots_txt' => $crawlData['robots_txt'] ?? null,
         ];
     }
 

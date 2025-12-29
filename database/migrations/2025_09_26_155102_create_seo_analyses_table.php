@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('content_score', 5, 2)->nullable();
             $table->decimal('performance_score', 5, 2)->nullable();
             $table->decimal('accessibility_score', 5, 2)->nullable();
-            $table->json('analysis_data')->nullable();
+            $table->longText('analysis_data')->nullable();
             $table->text('error_message')->nullable();
             $table->timestamp('analyzed_at')->nullable();
             $table->timestamps();

@@ -14,6 +14,12 @@ class HtmlParserService
     private DOMDocument $dom;
     private DOMXPath $xpath;
     private string $baseUrl;
+    private RobotsParser $robotsParser;
+    
+    public function __construct()
+    {
+        $this->robotsParser = new RobotsParser();
+    }
 
     /**
      * Parse HTML content and extract SEO-relevant data
@@ -30,8 +36,11 @@ class HtmlParserService
         try {
             $this->initializeDom($html);
 
+            // Extract meta tags first to get robots meta tag
+            $metaTags = $this->extractMetaTags();
+            
             $parsedData = [
-                'meta' => $this->extractMetaTags(),
+                'meta' => $metaTags,
                 'headings' => $this->extractHeadings(),
                 'images' => $this->extractImages(),
                 'links' => $this->extractLinks(),
@@ -40,7 +49,8 @@ class HtmlParserService
                 'structured_data' => $this->extractStructuredData(),
                 'social_media' => $this->extractSocialMediaTags(),
                 'seo_tags' => $this->extractSeoSpecificTags(),
-                'performance' => $this->extractPerformanceHints()
+                'performance' => $this->extractPerformanceHints(),
+                'robots' => $this->robotsParser->parseRobots($url, $metaTags['robots'] ?? null)
             ];
 
             Log::debug('HTML parsing completed successfully', [

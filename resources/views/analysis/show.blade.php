@@ -212,6 +212,71 @@
                                                 <p class="text-xs text-gray-500 mt-1">{{ __('analysis.length') }}: {{ $analysisData['seo_elements']['meta']['description_length'] }} {{ __('analysis.characters') }}</p>
                                             @endif
                                         </div>
+
+                                        <div>
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ __('analysis.meta_keywords') }}</h3>
+                                            <p class="text-xs sm:text-sm text-gray-900 bg-gray-50 p-2 sm:p-3 rounded break-words">
+                                                {{ $analysisData['seo_elements']['meta']['keywords'] ?? __('analysis.no_keywords_found') }}
+                                            </p>
+                                            @if(isset($analysisData['seo_elements']['meta']['keywords_count']))
+                                                <p class="text-xs text-gray-500 mt-1">{{ __('analysis.count') }}: {{ $analysisData['seo_elements']['meta']['keywords_count'] }}</p>
+                                            @endif
+                                        </div>
+
+                                        <div>
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ __('analysis.og_image') }}</h3>
+                                            @if(isset($analysisData['seo_elements']['social_media']['open_graph']) && $analysisData['seo_elements']['social_media']['open_graph']['image'])
+                                                <div class="bg-gray-50 p-2 sm:p-3 rounded">
+                                                    <img src="{{ $analysisData['seo_elements']['social_media']['open_graph']['image'] }}"
+                                                         alt="Open Graph Image"
+                                                         class="w-full h-auto rounded mb-2"
+                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                    <p class="text-xs sm:text-sm text-gray-900 break-all hidden">
+                                                        {{ $analysisData['seo_elements']['social_media']['open_graph']['image'] }}
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 mt-1">URL: {{ Str::limit($analysisData['seo_elements']['social_media']['open_graph']['image'], 50) }}</p>
+                                                </div>
+                                            @else
+                                                <p class="text-xs sm:text-sm text-gray-900 bg-gray-50 p-2 sm:p-3 rounded">
+                                                    {{ __('analysis.no_og_image_found') }}
+                                                </p>
+                                            @endif
+                                        </div>
+
+                                        <div>
+                                            <h3 class="text-xs sm:text-sm font-medium text-gray-700 mb-2">{{ __('analysis.robot_crawlability') }}</h3>
+                                            <div class="bg-gray-50 p-2 sm:p-3 rounded">
+                                                @if(isset($analysisData['seo_elements']['robots']))
+                                                    @if($analysisData['seo_elements']['robots']['is_allowed'])
+                                                        <div class="flex items-center space-x-2">
+                                                            <svg class="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                            </svg>
+                                                            <span class="text-xs sm:text-sm text-green-700">{{ __('analysis.crawlable') }}</span>
+                                                        </div>
+                                                        @if(isset($analysisData['seo_elements']['robots']['meta_robots']))
+                                                            <p class="text-xs text-gray-600 mt-2">
+                                                                Meta Robots: {{ $analysisData['seo_elements']['robots']['meta_robots'] }}
+                                                            </p>
+                                                        @endif
+                                                    @else
+                                                        <div class="flex items-center space-x-2">
+                                                            <svg class="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                                            </svg>
+                                                            <span class="text-xs sm:text-sm text-red-700">{{ __('analysis.not_crawlable') }}</span>
+                                                        </div>
+                                                        @if(isset($analysisData['seo_elements']['robots']['disallow_reason']))
+                                                            <p class="text-xs text-gray-600 mt-2">
+                                                                {{ __('analysis.reason') }}: {{ $analysisData['seo_elements']['robots']['disallow_reason'] }}
+                                                            </p>
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                    <p class="text-xs sm:text-sm text-gray-600">{{ __('analysis.robots_info_unavailable') }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
