@@ -1,0 +1,153 @@
+# Queue 명령어 가이드
+
+## Job 설정
+
+### AnalyzeUrl Job
+
+| 설정 | 값 | 설명 |
+|------|-----|------|
+| Queue | `seo_analysis` | 큐 이름 |
+| Timeout | 300초 (5분) | 작업 최대 실행 시간 |
+| Tries | 2 | 재시도 횟수 |
+| Backoff | 15초 | 재시도 간격 |
+
+## 기본 명령어
+
+### 큐 워커 실행
+
+```bash
+# seo_analysis 큐 실행 (권장)
+php artisan queue:work --queue=seo_analysis
+
+# 한 번만 실행
+php artisan queue:work --queue=seo_analysis --once
+
+# 상세 로그 출력
+php artisan queue:work --queue=seo_analysis -v
+php artisan queue:work --queue=seo_analysis -vvv
+```
+
+### 옵션 설명
+
+```bash
+php artisan queue:work --queue=seo_analysis \
+    --timeout=300 \    # Job 타임아웃 (초)
+    --tries=2 \        # 재시도 횟수
+    --sleep=3 \        # Job 없을 때 대기 시간 (초)
+    --memory=128       # 메모리 제한 (MB)
+```
+
+## 상태 확인
+
+### 대기 중인 Jobs
+
+```bash
+# Tinker로 확인
+php artisan tinker
+>>> DB::table('jobs')->count()
+>>> DB::table('jobs')->get()
+```
+
+```sql
+-- SQL로 확인
+SELECT id, queue,
+       FROM_UNIXTIME(available_at) AS available_time,
+       FROM_UNIXTIME(created_at) AS created_time,
+       attempts
+FROM jobs;
+```
+
+### 실패한 Jobs
+
+```bash
+# 실패 목록 조회
+php artisan queue:failed
+
+# 특정 Job 상세 보기
+php artisan queue:failed --id=5
+```
+
+## 문제 해결
+
+### Job이 처리되지 않을 때
+
+1. **큐 이름 확인** - 반드시 `--queue=seo_analysis` 지정
+   ```bash
+   php artisan queue:work --queue=seo_analysis --once -v
+   ```
+
+2. **reserved 상태 확인**
+   ```sql
+   SELECT id, reserved_at, attempts FROM jobs;
+   ```
+
+3. **워커 재시작**
+   ```bash
+   php artisan queue:restart
+   ```
+
+### 실패한 Jobs 처리
+
+```bash
+# 모든 실패 Job 재시도
+php artisan queue:retry all
+
+# 특정 Job 재시도
+php artisan queue:retry 5
+
+# 모든 실패 Job 삭제
+php artisan queue:flush
+```
+
+### 강제 정리 (개발 환경)
+
+```bash
+php artisan tinker
+>>> DB::table('jobs')->truncate()
+>>> DB::table('failed_jobs')->truncate()
+```
+
+## 프로덕션 실행
+
+### Supervisor 설정
+
+`/etc/supervisor/conf.d/seovalidator-worker.conf`:
+
+```ini
+[program:seovalidator-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /path/to/seovalidator/artisan queue:work --queue=seo_analysis --sleep=3 --tries=2 --timeout=300
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+user=www-data
+numprocs=2
+redirect_stderr=true
+stdout_logfile=/path/to/seovalidator/storage/logs/worker.log
+stopwaitsecs=3600
+```
+
+```bash
+# Supervisor 적용
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start seovalidator-worker:*
+```
+
+### 코드 배포 후
+
+```bash
+# 워커 재시작 (graceful)
+php artisan queue:restart
+```
+
+## 로그 확인
+
+```bash
+# Laravel 로그
+tail -f storage/logs/laravel.log
+
+# 특정 키워드 필터
+tail -f storage/logs/laravel.log | grep -E "(AnalyzeUrl|queue)"
+```

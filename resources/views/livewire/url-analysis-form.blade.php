@@ -1,4 +1,4 @@
-<div class="bg-white shadow rounded-lg p-6">
+<div class="bg-white shadow rounded-lg p-6" @if($isAnalyzing) wire:poll.2s="checkStatus" @endif>
     <div class="mb-4">
         <h2 class="text-xl font-semibold text-gray-900">{{ __('dashboard.analyze_url') }}</h2>
         <p class="text-sm text-gray-600">{{ __('dashboard.enter_url_to_start') }}</p>

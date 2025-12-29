@@ -65,7 +65,7 @@
                         </svg>
                         {{ __('guest.new_analysis') }}
                     </h3>
-                    
+
                     <form id="quick-analysis-form" action="{{ route('guest.analyze') }}" method="POST" class="space-y-4">
                         @csrf
                         <div>
@@ -74,10 +74,10 @@
                             </label>
                             <div class="flex flex-col sm:flex-row gap-3">
                                 <div class="flex-1">
-                                    <input type="url" 
-                                           id="url" 
-                                           name="url" 
-                                           placeholder="https://example.com" 
+                                    <input type="url"
+                                           id="url"
+                                           name="url"
+                                           placeholder="https://example.com"
                                            required
                                            value="{{ old('url') }}"
                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
@@ -86,7 +86,7 @@
                                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                <button type="submit" 
+                                <button type="submit"
                                         id="analyze-btn"
                                         class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
                                     <span id="btn-text" class="flex items-center">
@@ -98,7 +98,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <p class="text-sm text-gray-600">
                             {{ __('guest.quick_analysis_info') }}
                         </p>
@@ -196,7 +196,7 @@
                 </svg>
                 <h3 class="text-lg font-medium text-gray-900 mb-2">{{ __('guest.no_analyses_yet') }}</h3>
                 <p class="text-gray-600 mb-8">{{ __('guest.start_analyzing_desc') }}</p>
-                
+
                 @if($usageInfo['remaining'] > 0)
                     <!-- Quick Start Form -->
                     <div class="max-w-md mx-auto">
@@ -206,10 +206,10 @@
                                 <label for="empty-url" class="block text-sm font-medium text-gray-700 mb-2">
                                     {{ __('landing.enter_website_url') }}
                                 </label>
-                                <input type="url" 
-                                       id="empty-url" 
-                                       name="url" 
-                                       placeholder="https://example.com" 
+                                <input type="url"
+                                       id="empty-url"
+                                       name="url"
+                                       placeholder="https://example.com"
                                        required
                                        value="{{ old('url') }}"
                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
@@ -218,7 +218,7 @@
                                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <button type="submit" 
+                            <button type="submit"
                                     id="empty-analyze-btn"
                                     class="w-full flex items-center justify-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                 <span id="empty-btn-text" class="flex items-center">
@@ -295,13 +295,13 @@
         if (quickForm) {
             quickForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 const url = document.getElementById('url').value;
                 const btn = document.getElementById('analyze-btn');
                 const btnIcon = document.getElementById('btn-icon');
                 const btnLabel = document.getElementById('btn-label');
                 const errorEl = document.getElementById('url-error');
-                
+
                 submitAnalysis(url, btn, btnIcon, btnLabel, errorEl);
             });
         }
@@ -310,13 +310,13 @@
         if (emptyForm) {
             emptyForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 const url = document.getElementById('empty-url').value;
                 const btn = document.getElementById('empty-analyze-btn');
                 const btnIcon = document.getElementById('empty-btn-icon');
                 const btnLabel = document.getElementById('empty-btn-label');
                 const errorEl = document.getElementById('empty-url-error');
-                
+
                 submitAnalysis(url, btn, btnIcon, btnLabel, errorEl);
             });
         }
@@ -334,7 +334,7 @@
             `;
             btnIcon.classList.add('animate-spin');
             btnLabel.textContent = '{{ __("guest.processing") }}...';
-            
+
             // Get CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]');
 
@@ -355,7 +355,7 @@
                 if (data.success) {
                     // Show success message
                     showNotification('{{ __("guest.analysis_started") }}', 'success');
-                    
+
                     // Redirect to analyses page after a short delay
                     setTimeout(() => {
                         window.location.href = '{{ route("guest.analyses") }}';
@@ -393,7 +393,7 @@
             notification.innerHTML = `
                 <div class="flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        ${type === 'success' 
+                        ${type === 'success'
                             ? '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>'
                             : '<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>'
                         }

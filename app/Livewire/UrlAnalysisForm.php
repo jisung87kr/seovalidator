@@ -14,10 +14,40 @@ class UrlAnalysisForm extends Component
 
     public $isAnalyzing = false;
     public $currentAnalysis = null;
+    public $analysisId = null;
 
     public function mount()
     {
         $this->resetForm();
+    }
+
+    /**
+     * Check analysis status (called by polling)
+     */
+    public function checkStatus()
+    {
+        if (!$this->analysisId) {
+            return;
+        }
+
+        $analysis = SeoAnalysis::find($this->analysisId);
+
+        if (!$analysis) {
+            $this->resetForm();
+            return;
+        }
+
+        $this->currentAnalysis = $analysis;
+
+        if ($analysis->status === 'completed') {
+            $this->isAnalyzing = false;
+            return redirect()->route('analysis.show', $analysis->id);
+        }
+
+        if ($analysis->status === 'failed') {
+            $this->isAnalyzing = false;
+            $this->addError('url', $analysis->error_message ?? __('dashboard.analysis_failed'));
+        }
     }
 
     public function updatedUrl()
@@ -67,11 +97,7 @@ class UrlAnalysisForm extends Component
 
             AnalyzeUrl::dispatch($analysis->url, auth()->id());
             $this->currentAnalysis = $analysis;
-
-            // Simulate processing time
-            //$this->dispatch('analysis-started', $this->currentAnalysis);
-
-            session()->flash('success', 'Analysis started for: ' . $this->url);
+            $this->analysisId = $analysis->id;
 
         } catch (\Exception $e) {
             $this->addError('url', 'Failed to start analysis: ' . $e->getMessage());
@@ -84,6 +110,7 @@ class UrlAnalysisForm extends Component
         $this->url = '';
         $this->isAnalyzing = false;
         $this->currentAnalysis = null;
+        $this->analysisId = null;
         $this->resetErrorBag();
     }
 

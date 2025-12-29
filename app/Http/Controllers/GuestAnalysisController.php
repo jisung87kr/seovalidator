@@ -51,7 +51,12 @@ class GuestAnalysisController extends Controller
 
         $analysis = SeoAnalysis::findOrFail($id);
 
-        return view('guest.show', compact('analysis'));
+        // Decode analysis data JSON
+        $analysisData = $analysis->analysis_data
+            ? json_decode($analysis->analysis_data, true)
+            : [];
+
+        return view('guest.show', compact('analysis', 'analysisData'));
     }
 
     public function analyze(Request $request)
